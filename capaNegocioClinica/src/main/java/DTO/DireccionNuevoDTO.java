@@ -11,6 +11,7 @@ import java.time.LocalDate;
  * @author sonic
  */
 public class DireccionNuevoDTO {
+
     private int idDireccion;
     private int idPaciente;
     private String calle;
@@ -44,10 +45,5 @@ public class DireccionNuevoDTO {
     public String getCp() {
         return cp;
     }
-    
-    
 
-    
-    
-    
 }

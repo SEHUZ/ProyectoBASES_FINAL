@@ -11,7 +11,7 @@ import java.time.LocalDate;
  * @author Daniel M
  */
 public class PacienteViejoDTO {
-    
+
     private String idPaciente;
     private String idUsuario;
     private String nombres;
@@ -102,5 +102,5 @@ public class PacienteViejoDTO {
     public String toString() {
         return "PacienteViejoDTO{" + "idPaciente=" + idPaciente + ", idUsuario=" + idUsuario + ", nombres=" + nombres + ", apellidoPaterno=" + apellidoPaterno + ", apellidoMaterno=" + apellidoMaterno + ", telefono=" + telefono + ", fechaNacimiento=" + fechaNacimiento + '}';
     }
-    
+
 }

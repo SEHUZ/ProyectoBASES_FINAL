@@ -19,11 +19,11 @@ public class DireccionPacienteMapper {
             return null;
         }
         return new DireccionNuevoDTO(
-            direccion.getIdDireccion(),
-            direccion.getIdPaciente(),
-            direccion.getCalle(),
-            direccion.getNumero(),
-            direccion.getCp()
+                direccion.getIdDireccion(),
+                direccion.getIdPaciente(),
+                direccion.getCalle(),
+                direccion.getNumero(),
+                direccion.getCp()
         );
     }
 
@@ -33,11 +33,11 @@ public class DireccionPacienteMapper {
             return null;
         }
         return new DireccionPaciente(
-            direccionDTO.getIdDireccion(),  // Puede ser 0 o nulo si es nuevo y se asigna luego el ID
-            direccionDTO.getIdPaciente(),   // Igualmente, se asigna cuando se conoce el idPaciente
-            direccionDTO.getCalle(),
-            direccionDTO.getNumero(),
-            direccionDTO.getCp()
+                direccionDTO.getIdDireccion(), // Puede ser 0 o nulo si es nuevo y se asigna luego el ID
+                direccionDTO.getIdPaciente(), // Igualmente, se asigna cuando se conoce el idPaciente
+                direccionDTO.getCalle(),
+                direccionDTO.getNumero(),
+                direccionDTO.getCp()
         );
     }
 }
