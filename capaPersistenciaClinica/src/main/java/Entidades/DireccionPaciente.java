@@ -9,7 +9,6 @@ package Entidades;
  * @author sonic
  */
 public class DireccionPaciente {
-    
 
     private int idDireccion;
     private int idPaciente;
@@ -36,8 +35,6 @@ public class DireccionPaciente {
 
     public DireccionPaciente() {
     }
-    
-    
 
     // Getters y setters
     public int getIdDireccion() {
@@ -83,14 +80,12 @@ public class DireccionPaciente {
     // Método toString() para representar la dirección como un string
     @Override
     public String toString() {
-        return "DireccionPaciente{" +
-                "idDireccion=" + idDireccion +
-                ", idPaciente=" + idPaciente +
-                ", calle='" + calle + '\'' +
-                ", numero='" + numero + '\'' +
-                ", cp='" + cp + '\'' +
-                '}';
+        return "DireccionPaciente{"
+                + "idDireccion=" + idDireccion
+                + ", idPaciente=" + idPaciente
+                + ", calle='" + calle + '\''
+                + ", numero='" + numero + '\''
+                + ", cp='" + cp + '\''
+                + '}';
     }
 }
-
-

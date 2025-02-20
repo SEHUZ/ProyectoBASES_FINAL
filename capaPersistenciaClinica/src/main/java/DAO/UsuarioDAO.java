@@ -4,7 +4,6 @@
  */
 package DAO;
 
-import Conexion.ConexionBD;
 import Conexion.IConexionBD;
 import Entidades.Usuario;
 import Exception.PersistenciaClinicaException;
@@ -13,17 +12,14 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
  *
  * @author sonic
  */
-public class UsuarioDAO implements IUsuarioDAO{
-    
+public class UsuarioDAO implements IUsuarioDAO {
+
     IConexionBD conexion;
 
     public UsuarioDAO(IConexionBD conexion) {
@@ -34,11 +30,10 @@ public class UsuarioDAO implements IUsuarioDAO{
     @Override
     public boolean registrarUsuario(Usuario usuario) throws PersistenciaClinicaException {
         String sentenciaSQL = "INSERT INTO USUARIOS (correoElectronico, contrasenia, rol) VALUES (?,?,?)";
-        
-        try (Connection con = conexion.crearConexion();
-                PreparedStatement ps = con.prepareStatement(sentenciaSQL, Statement.RETURN_GENERATED_KEYS)) {
 
-            ps.setString(1, usuario.getCorreoElectronico()); 
+        try (Connection con = conexion.crearConexion(); PreparedStatement ps = con.prepareStatement(sentenciaSQL, Statement.RETURN_GENERATED_KEYS)) {
+
+            ps.setString(1, usuario.getCorreoElectronico());
             ps.setString(2, usuario.getContrasenia());
             ps.setString(3, usuario.getRol());
 
@@ -48,7 +43,7 @@ public class UsuarioDAO implements IUsuarioDAO{
             }
 
             try (ResultSet generatedKeys = ps.getGeneratedKeys()) {
-                if (generatedKeys.next()) { 
+                if (generatedKeys.next()) {
                     usuario.setIdUsuario(generatedKeys.getInt(1));
                     logger.info("Usuario creado con exito: " + usuario.getIdUsuario());
                     return true;
@@ -61,15 +56,13 @@ public class UsuarioDAO implements IUsuarioDAO{
         }
 
     }
-    
-    
+
     @Override
     public Usuario consultarUsuarioPorID(int idUsuario) throws PersistenciaClinicaException {
         String consultaSQL = "SELECT idUsuario, correoElectronico, contrasenia, rol FROM usuarios WHERE idUsuario = ?";
-        
+
         Usuario usuario = null;
-        try (Connection con = conexion.crearConexion();
-                PreparedStatement ps = con.prepareStatement(consultaSQL, Statement.RETURN_GENERATED_KEYS)) {
+        try (Connection con = conexion.crearConexion(); PreparedStatement ps = con.prepareStatement(consultaSQL, Statement.RETURN_GENERATED_KEYS)) {
             ps.setInt(1, idUsuario);
             try (ResultSet rs = ps.executeQuery()) {
                 if (rs.next()) {
@@ -86,14 +79,13 @@ public class UsuarioDAO implements IUsuarioDAO{
         }
         return usuario;
     }
-    
-    @Override 
+
+    @Override
     public Usuario consultarUsuarioPorCorreo(String correoElectronico) throws PersistenciaClinicaException {
         String consultaSQL = "SELECT idUsuario, correoElectronico, contrasenia, rol FROM usuarios WHERE correoElectronico = ?";
-        
+
         Usuario usuario = null;
-        try (Connection con = conexion.crearConexion();
-                PreparedStatement ps = con.prepareStatement (consultaSQL, Statement.RETURN_GENERATED_KEYS)) {
+        try (Connection con = conexion.crearConexion(); PreparedStatement ps = con.prepareStatement(consultaSQL, Statement.RETURN_GENERATED_KEYS)) {
             ps.setString(1, correoElectronico);
             try (ResultSet rs = ps.executeQuery()) {
                 if (rs.next()) {
@@ -104,10 +96,10 @@ public class UsuarioDAO implements IUsuarioDAO{
                             rs.getString("rol")
                     );
                 }
-                
+
             }
-        }catch (SQLException e){
-            throw new PersistenciaClinicaException ("Error al obtener el usuario: Correo inexistente", e);
+        } catch (SQLException e) {
+            throw new PersistenciaClinicaException("Error al obtener el usuario: Correo inexistente", e);
         }
         return usuario;
     }

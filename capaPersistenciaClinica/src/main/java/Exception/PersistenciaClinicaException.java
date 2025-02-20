@@ -8,7 +8,7 @@ package Exception;
  *
  * @author sonic
  */
-public class PersistenciaClinicaException extends Exception{
+public class PersistenciaClinicaException extends Exception {
 
     public PersistenciaClinicaException(String message) {
         super(message);
@@ -17,5 +17,5 @@ public class PersistenciaClinicaException extends Exception{
     public PersistenciaClinicaException(String message, Throwable cause) {
         super(message, cause);
     }
-    
+
 }

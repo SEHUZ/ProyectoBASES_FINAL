@@ -12,7 +12,7 @@ import java.sql.Connection;
  * @author sonic
  */
 public interface IConexionBD {
-    
+
     public Connection crearConexion() throws PersistenciaClinicaException;
-    
+
 }

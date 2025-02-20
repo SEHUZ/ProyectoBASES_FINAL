@@ -11,8 +11,7 @@ import Exception.PersistenciaClinicaException;
  *
  * @author sonic
  */
-
-    public interface IDireccionPacienteDAO {
+public interface IDireccionPacienteDAO {
 
     // Método para agregar una nueva dirección para un paciente
     public boolean agregarDireccion(DireccionPaciente direccion) throws PersistenciaClinicaException;
@@ -22,6 +21,4 @@ import Exception.PersistenciaClinicaException;
 
     // Método para actualizar la dirección de un paciente
     public boolean actualizarDireccion(DireccionPaciente direccion) throws PersistenciaClinicaException;
-    }
-
-
+}

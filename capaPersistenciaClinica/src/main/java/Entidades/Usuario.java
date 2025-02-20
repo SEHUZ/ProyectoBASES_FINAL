@@ -9,6 +9,7 @@ package Entidades;
  * @author sonic
  */
 public class Usuario {
+
     private int idUsuario;
     private String correoElectronico;
     private String contrasenia;
@@ -66,8 +67,5 @@ public class Usuario {
     public String toString() {
         return "Usuario{" + "idUsuario=" + idUsuario + ", correoElectronico=" + correoElectronico + ", contrasenia=" + contrasenia + ", rol=" + rol + '}';
     }
-    
-    
-    
-    
+
 }
