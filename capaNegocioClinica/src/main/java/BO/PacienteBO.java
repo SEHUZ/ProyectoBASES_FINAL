@@ -30,8 +30,14 @@ public class PacienteBO {
         this.pacienteDAO = new PacienteDAO(conexion);
     }
 
-    public boolean registrarUsuario(PacienteNuevoDTO pacientenuevoDTO) throws NegocioException {
+    public boolean registrarPaciente(PacienteNuevoDTO pacienteNuevoDTO) throws NegocioException {
+        if(pacienteNuevoDTO == null) {
+            throw new NegocioException("El paciente debe tener todos sus datos.");
+        }
         
+        // seguir validaciones
+        
+        return false;
     }
 
     public static String contraseñaHash(String contraseña) {
