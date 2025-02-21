@@ -17,11 +17,6 @@ public class pruebasClinica {
      */
     public static void main(String[] args) {
         
-        try {
-            
-        } catch (NegocioException e) {
-            
-        }
     }
     
 }
