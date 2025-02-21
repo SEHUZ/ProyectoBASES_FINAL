@@ -33,6 +33,13 @@ public class DireccionPaciente {
         this.codigoPostal = codigoPostal;
     }
 
+    public DireccionPaciente(String calle, String numero, String codigoPostal) {
+        this.calle = calle;
+        this.numero = numero;
+        this.codigoPostal = codigoPostal;
+    }
+    
+
     public DireccionPaciente() {
     }
 
