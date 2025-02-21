@@ -1,0 +1,61 @@
+import java.util.List;
+
+public class Main {
+    public static void main(String[] args) {
+        // Crear una instancia de la implementación de IConexionBD (por ejemplo, ConexionBD)
+        IConexionBD conexion = new ConexionBD();
+
+        // Crear una instancia de CitaDAO
+        CitaDAO citaDAO = new CitaDAO(conexion);
+
+        // Crear un paciente, médico y estado para la prueba
+        Paciente paciente = new Paciente();
+        paciente.setIdPaciente(1);  // Suponiendo que ya tienes un paciente en la base de datos
+        paciente.setNombres("Juan Pérez");
+
+        Medico medico = new Medico();
+        medico.setIdMedico(1);  // Suponiendo que ya tienes un médico en la base de datos
+        medico.setNombres("Dr. Martínez");
+
+        EstadoCita estado = new EstadoCita();
+        estado.setIdEstado(1);  // Suponiendo que ya tienes un estado en la base de datos
+        estado.setDescripcion("Programada");
+
+        // Crear una cita con el paciente, médico y estado
+        Cita cita = new Cita(0, paciente, medico, estado, java.time.LocalDate.of(2025, 3, 1));  // Fecha ejemplo
+
+        // Probar la inserción de una cita
+        boolean citaInsertada = citaDAO.insertarCita(cita);
+        if (citaInsertada) {
+            System.out.println("Cita insertada correctamente.");
+        } else {
+            System.out.println("Error al insertar la cita.");
+        }
+
+        // Probar la obtención de todas las citas
+        List<Cita> citas = citaDAO.obtenerTodasLasCitas();
+        System.out.println("Citas registradas:");
+        for (Cita c : citas) {
+            System.out.println("ID Cita: " + c.getIdCita() +
+                               ", Paciente: " + c.getPaciente().getNombres() +
+                               ", Médico: " + c.getMedico().getNombres() +
+                               ", Fecha: " + c.getFechaHora());
+        }
+
+        // Probar la actualización del estado de una cita (Ejemplo: cambiar estado)
+        boolean estadoActualizado = citaDAO.actualizarEstadoCita(1, 2);  // 2 sería otro estado
+        if (estadoActualizado) {
+            System.out.println("Estado de la cita actualizado.");
+        } else {
+            System.out.println("Error al actualizar el estado de la cita.");
+        }
+
+        // Probar la eliminación de una cita
+        boolean citaEliminada = citaDAO.eliminarCita(1);
+        if (citaEliminada) {
+            System.out.println("Cita eliminada.");
+        } else {
+            System.out.println("Error al eliminar la cita.");
+        }
+    }
+}

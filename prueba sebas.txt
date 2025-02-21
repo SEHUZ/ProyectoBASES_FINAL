@@ -1,0 +1,89 @@
+ // Suponiendo que existe una implementación de IConexionBD, por ejemplo, ConexionBDImpl
+        IConexionBD conexion = new ConexionBD();
+        
+        // Instanciar el DAO con la conexión
+        IPacienteDAO pacienteDAO = new PacienteDAO(conexion);
+        /**
+        try {
+            // 1. Registrar un nuevo paciente
+            Paciente nuevoPaciente = new Paciente();
+            nuevoPaciente.setNombres("sEBASTIAN");
+            nuevoPaciente.setApellidoPaterno("Borquez");
+            nuevoPaciente.setApellidoMaterno("Perez");
+            nuevoPaciente.setFechaNacimiento(LocalDate.of(1991, 5, 15));
+            nuevoPaciente.setTelefono("896456456");
+            nuevoPaciente.setEmail("sebastian@gmail.com");
+            
+            Usuario nuevoUsuario = new Usuario();
+            nuevoUsuario.setUser("sebasloco");
+            nuevoUsuario.setContrasenia("diamantepuro123");
+            nuevoUsuario.setRol("Paciente");
+            
+            DireccionPaciente nuevaDireccion = new DireccionPaciente();
+            nuevaDireccion.setCalle("Real del arco");
+            nuevaDireccion.setNumero("2008");
+            nuevaDireccion.setCodigoPostal("1686");
+        
+            
+            Paciente pacienteRegistrado = pacienteDAO.registrarPaciente(nuevoPaciente, nuevoUsuario, nuevaDireccion);
+            System.out.println("Paciente registrado con ID: " + pacienteRegistrado.getIdPaciente());
+            
+            System.out.println("---------------------------------------------------------------------------------------------------");
+            System.out.println("CONSULTAR POR ID: ");
+        
+            // 2. Consultar el paciente recién registrado por ID
+            System.out.println("Consultando paciente por ID...");
+            Paciente pacienteConsultado = pacienteDAO.consultarPacientePorID(4);
+            if (pacienteConsultado != null) {
+                System.out.println("Paciente encontrado");
+            } else {
+                System.out.println("Paciente no encontrado.");
+            }
+            */
+            System.out.println("---------------------------------------------------------------------------------------------------");
+            System.out.println("ACTUALIZAR EL PACIENTE: ");
+            
+             //3. Actualizar el paciente
+             //Por ejemplo, se actualiza el nombre y se deja el teléfono vacío para que se mantenga su valor actual.
+             int idPaciente = 4;
+             Paciente paciente = pacienteDAO.consultarPacientePorID(idPaciente);
+
+            if (paciente != null) {
+                System.out.println("Paciente antes de la actualización: " + paciente);
+
+                // 2. Modificar los datos del paciente
+                paciente.setNombres("Juan Carlos");
+                paciente.setApellidoPaterno("Gómez");
+                paciente.setApellidoMaterno("Rodríguez");
+                paciente.setTelefono("555-1234");
+                paciente.setEmail("juan.gomez@example.com");
+                paciente.setFechaNacimiento(LocalDate.of(1995, 8, 20));
+
+                // 3. Modificar los datos de la dirección (si existe)
+                if (paciente.getDireccion() != null) {
+                    paciente.getDireccion().setCalle("Avenida Siempre Viva");
+                    paciente.getDireccion().setNumero("742");
+                    paciente.getDireccion().setCodigoPostal("12345");
+                }
+
+                // 4. Modificar los datos del usuario (si existe)
+                if (paciente.getUsuario() != null) {
+                    paciente.getUsuario().setUser("juancarlos95");
+                    paciente.getUsuario().setContrasenia("nuevaclave123");
+                    paciente.getUsuario().setRol("paciente");
+                }
+
+                // 5. Llamar al método para actualizar en la BD
+                Paciente pacienteActualizado = pacienteDAO.actualizarPaciente(paciente);
+
+                // 6. Consultar nuevamente el paciente para verificar los cambios
+                Paciente pacienteVerificado = pacienteDAO.consultarPacientePorID(idPaciente);
+
+                // 7. Mostrar el resultado después de la actualización
+                System.out.println("Paciente después de la actualización: " + pacienteVerificado);
+            } else {
+                System.out.println("No se encontró el paciente con ID: " + idPaciente);
+        }
+    }
+}
+
