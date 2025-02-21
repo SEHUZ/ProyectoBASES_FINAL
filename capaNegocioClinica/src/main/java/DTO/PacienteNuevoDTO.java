@@ -4,6 +4,8 @@
  */
 package DTO;
 
+import Entidades.DireccionPaciente;
+import Entidades.Usuario;
 import java.time.LocalDate;
 
 /**
@@ -13,42 +15,62 @@ import java.time.LocalDate;
 public class PacienteNuevoDTO {
     
     
-    private String nombres;
+    private int idPaciente;
+    private DireccionPaciente direccion;
+    private Usuario usuario;
+    private String nombre;
     private String apellidoPaterno;
     private String apellidoMaterno;
-    private String telefono;
-    private String calle;
-    private String numero;
-    private String cp;
-    private String User;
-    private String contrasenia;
-    private String rol;
     private LocalDate fechaNacimiento;
+    private String email;
+    private String telefono;
     
 
     public PacienteNuevoDTO() {
     }
 
-    public PacienteNuevoDTO(String nombres, String apellidoPaterno, String apellidoMaterno, String telefono, String calle, String numero, String cp, String User, String contrasenia, String rol, LocalDate fechaNacimiento) {
-        this.nombres = nombres;
+    public PacienteNuevoDTO(int idPaciente, DireccionPaciente direccion, Usuario usuario, String nombre, String apellidoPaterno, String apellidoMaterno, LocalDate fechaNacimiento, String email, String telefono) {
+        this.idPaciente = idPaciente;
+        this.direccion = direccion;
+        this.usuario = usuario;
+        this.nombre = nombre;
         this.apellidoPaterno = apellidoPaterno;
         this.apellidoMaterno = apellidoMaterno;
-        this.telefono = telefono;
-        this.calle = calle;
-        this.numero = numero;
-        this.cp = cp;
-        this.User = User;
-        this.contrasenia = contrasenia;
-        this.rol = rol;
         this.fechaNacimiento = fechaNacimiento;
+        this.email = email;
+        this.telefono = telefono;
     }
 
-    public String getNombres() {
-        return nombres;
+    public int getIdPaciente() {
+        return idPaciente;
     }
 
-    public void setNombres(String nombres) {
-        this.nombres = nombres;
+    public void setIdPaciente(int idPaciente) {
+        this.idPaciente = idPaciente;
+    }
+
+    public DireccionPaciente getDireccion() {
+        return direccion;
+    }
+
+    public void setDireccion(DireccionPaciente direccion) {
+        this.direccion = direccion;
+    }
+
+    public Usuario getUsuario() {
+        return usuario;
+    }
+
+    public void setUsuario(Usuario usuario) {
+        this.usuario = usuario;
+    }
+
+    public String getNombre() {
+        return nombre;
+    }
+
+    public void setNombre(String nombre) {
+        this.nombre = nombre;
     }
 
     public String getApellidoPaterno() {
@@ -67,6 +89,22 @@ public class PacienteNuevoDTO {
         this.apellidoMaterno = apellidoMaterno;
     }
 
+    public LocalDate getFechaNacimiento() {
+        return fechaNacimiento;
+    }
+
+    public void setFechaNacimiento(LocalDate fechaNacimiento) {
+        this.fechaNacimiento = fechaNacimiento;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
     public String getTelefono() {
         return telefono;
     }
@@ -75,61 +113,7 @@ public class PacienteNuevoDTO {
         this.telefono = telefono;
     }
 
-    public String getCalle() {
-        return calle;
-    }
-
-    public void setCalle(String calle) {
-        this.calle = calle;
-    }
-
-    public String getNumero() {
-        return numero;
-    }
-
-    public void setNumero(String numero) {
-        this.numero = numero;
-    }
-
-    public String getCp() {
-        return cp;
-    }
-
-    public void setCp(String cp) {
-        this.cp = cp;
-    }
-
-    public String getUser() {
-        return User;
-    }
-
-    public void setUser(String User) {
-        this.User = User;
-    }
-
-    public String getContrasenia() {
-        return contrasenia;
-    }
-
-    public void setContrasenia(String contrasenia) {
-        this.contrasenia = contrasenia;
-    }
-
-    public String getRol() {
-        return rol;
-    }
-
-    public void setRol(String rol) {
-        this.rol = rol;
-    }
-
-    public LocalDate getFechaNacimiento() {
-        return fechaNacimiento;
-    }
-
-    public void setFechaNacimiento(LocalDate fechaNacimiento) {
-        this.fechaNacimiento = fechaNacimiento;
-    }
+    
 
     
 
