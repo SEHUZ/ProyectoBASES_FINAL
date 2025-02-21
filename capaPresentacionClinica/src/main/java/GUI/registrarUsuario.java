@@ -66,10 +66,11 @@ public class registrarUsuario extends javax.swing.JFrame {
         jLabel11 = new javax.swing.JLabel();
         fieldContraseña = new javax.swing.JTextField();
         jLabel12 = new javax.swing.JLabel();
-        botonRegistrar = new javax.swing.JButton();
+        botonCancelar = new javax.swing.JButton();
         fechaNacimientoChooser = new com.toedter.calendar.JDateChooser();
         fieldUser = new javax.swing.JTextField();
         jLabel13 = new javax.swing.JLabel();
+        botonRegistrar1 = new javax.swing.JButton();
 
         jComboBox2.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
 
@@ -157,10 +158,10 @@ public class registrarUsuario extends javax.swing.JFrame {
 
         jLabel12.setText("Constraseña");
 
-        botonRegistrar.setText("Crear Cuenta");
-        botonRegistrar.addActionListener(new java.awt.event.ActionListener() {
+        botonCancelar.setText("Cancelar");
+        botonCancelar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                botonRegistrarActionPerformed(evt);
+                botonCancelarActionPerformed(evt);
             }
         });
 
@@ -173,19 +174,17 @@ public class registrarUsuario extends javax.swing.JFrame {
 
         jLabel13.setText("Username");
 
+        botonRegistrar1.setText("Crear Cuenta");
+        botonRegistrar1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                botonRegistrar1ActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap(168, Short.MAX_VALUE)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addComponent(jLabel1)
-                        .addGap(135, 135, 135))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addComponent(botonRegistrar, javax.swing.GroupLayout.PREFERRED_SIZE, 140, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(244, 244, 244))))
             .addGroup(layout.createSequentialGroup()
                 .addGap(42, 42, 42)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -219,6 +218,17 @@ public class registrarUsuario extends javax.swing.JFrame {
                             .addComponent(fieldContraseña, javax.swing.GroupLayout.DEFAULT_SIZE, 251, Short.MAX_VALUE)
                             .addComponent(fechaNacimientoChooser, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
                 .addGap(27, 27, 27))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addContainerGap(168, Short.MAX_VALUE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addComponent(jLabel1)
+                        .addGap(135, 135, 135))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                            .addComponent(botonRegistrar1, javax.swing.GroupLayout.DEFAULT_SIZE, 140, Short.MAX_VALUE)
+                            .addComponent(botonCancelar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addGap(231, 231, 231))))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -279,9 +289,11 @@ public class registrarUsuario extends javax.swing.JFrame {
                 .addComponent(jLabel13)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(fieldUser, javax.swing.GroupLayout.PREFERRED_SIZE, 42, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 34, Short.MAX_VALUE)
-                .addComponent(botonRegistrar, javax.swing.GroupLayout.PREFERRED_SIZE, 48, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(76, 76, 76))
+                .addGap(18, 18, 18)
+                .addComponent(botonRegistrar1, javax.swing.GroupLayout.PREFERRED_SIZE, 48, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 42, Short.MAX_VALUE)
+                .addComponent(botonCancelar)
+                .addGap(27, 27, 27))
         );
 
         pack();
@@ -311,14 +323,14 @@ public class registrarUsuario extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_fieldContraseñaActionPerformed
 
-    private void botonRegistrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonRegistrarActionPerformed
+    private void botonCancelarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonCancelarActionPerformed
         try {
             registrarPaciente();
         } catch (NegocioException ex) {
             Logger.getLogger(registrarUsuario.class.getName()).log(Level.SEVERE, null, ex);
         }
         
-    }//GEN-LAST:event_botonRegistrarActionPerformed
+    }//GEN-LAST:event_botonCancelarActionPerformed
 
     private void fieldApellidoPaternoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_fieldApellidoPaternoActionPerformed
         // TODO add your handling code here:
@@ -331,6 +343,10 @@ public class registrarUsuario extends javax.swing.JFrame {
     private void fieldUserActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_fieldUserActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_fieldUserActionPerformed
+
+    private void botonRegistrar1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonRegistrar1ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_botonRegistrar1ActionPerformed
 
     /**
      * @param args the command line arguments
@@ -368,7 +384,8 @@ public class registrarUsuario extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton botonRegistrar;
+    private javax.swing.JButton botonCancelar;
+    private javax.swing.JButton botonRegistrar1;
     private com.toedter.calendar.JDateChooser fechaNacimientoChooser;
     private javax.swing.JTextField fieldApellidoMaterno;
     private javax.swing.JTextField fieldApellidoPaterno;

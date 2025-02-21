@@ -42,19 +42,6 @@
   <Layout>
     <DimensionLayout dim="0">
       <Group type="103" groupAlignment="0" attributes="0">
-          <Group type="102" alignment="1" attributes="0">
-              <EmptySpace pref="168" max="32767" attributes="0"/>
-              <Group type="103" groupAlignment="0" attributes="0">
-                  <Group type="102" alignment="1" attributes="0">
-                      <Component id="jLabel1" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace min="-2" pref="135" max="-2" attributes="0"/>
-                  </Group>
-                  <Group type="102" alignment="1" attributes="0">
-                      <Component id="botonRegistrar" min="-2" pref="140" max="-2" attributes="0"/>
-                      <EmptySpace min="-2" pref="244" max="-2" attributes="0"/>
-                  </Group>
-              </Group>
-          </Group>
           <Group type="102" alignment="0" attributes="0">
               <EmptySpace min="-2" pref="42" max="-2" attributes="0"/>
               <Group type="103" groupAlignment="0" attributes="0">
@@ -94,6 +81,22 @@
                   </Group>
               </Group>
               <EmptySpace min="-2" pref="27" max="-2" attributes="0"/>
+          </Group>
+          <Group type="102" alignment="1" attributes="0">
+              <EmptySpace pref="168" max="32767" attributes="0"/>
+              <Group type="103" groupAlignment="0" attributes="0">
+                  <Group type="102" alignment="1" attributes="0">
+                      <Component id="jLabel1" min="-2" max="-2" attributes="0"/>
+                      <EmptySpace min="-2" pref="135" max="-2" attributes="0"/>
+                  </Group>
+                  <Group type="102" alignment="1" attributes="0">
+                      <Group type="103" groupAlignment="1" max="-2" attributes="0">
+                          <Component id="botonRegistrar1" pref="140" max="32767" attributes="0"/>
+                          <Component id="botonCancelar" max="32767" attributes="0"/>
+                      </Group>
+                      <EmptySpace min="-2" pref="231" max="-2" attributes="0"/>
+                  </Group>
+              </Group>
           </Group>
       </Group>
     </DimensionLayout>
@@ -171,9 +174,11 @@
               <Component id="jLabel13" min="-2" max="-2" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
               <Component id="fieldUser" min="-2" pref="42" max="-2" attributes="0"/>
-              <EmptySpace pref="34" max="32767" attributes="0"/>
-              <Component id="botonRegistrar" min="-2" pref="48" max="-2" attributes="0"/>
-              <EmptySpace min="-2" pref="76" max="-2" attributes="0"/>
+              <EmptySpace type="separate" max="-2" attributes="0"/>
+              <Component id="botonRegistrar1" min="-2" pref="48" max="-2" attributes="0"/>
+              <EmptySpace pref="42" max="32767" attributes="0"/>
+              <Component id="botonCancelar" min="-2" max="-2" attributes="0"/>
+              <EmptySpace min="-2" pref="27" max="-2" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>
@@ -307,12 +312,12 @@
         <Property name="text" type="java.lang.String" value="Constrase&#xf1;a"/>
       </Properties>
     </Component>
-    <Component class="javax.swing.JButton" name="botonRegistrar">
+    <Component class="javax.swing.JButton" name="botonCancelar">
       <Properties>
-        <Property name="text" type="java.lang.String" value="Crear Cuenta"/>
+        <Property name="text" type="java.lang.String" value="Cancelar"/>
       </Properties>
       <Events>
-        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="botonRegistrarActionPerformed"/>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="botonCancelarActionPerformed"/>
       </Events>
     </Component>
     <Component class="com.toedter.calendar.JDateChooser" name="fechaNacimientoChooser">
@@ -329,6 +334,14 @@
       <Properties>
         <Property name="text" type="java.lang.String" value="Username"/>
       </Properties>
+    </Component>
+    <Component class="javax.swing.JButton" name="botonRegistrar1">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Crear Cuenta"/>
+      </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="botonRegistrar1ActionPerformed"/>
+      </Events>
     </Component>
   </SubComponents>
 </Form>
