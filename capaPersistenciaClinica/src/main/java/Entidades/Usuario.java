@@ -11,22 +11,22 @@ package Entidades;
 public class Usuario {
 
     private int idUsuario;
-    private String correoElectronico;
+    private String User;
     private String contrasenia;
     private String rol;
-
-    public Usuario(int idUsuario, String correoElectronico, String contrasenia, String rol) {
-        this.idUsuario = idUsuario;
-        this.correoElectronico = correoElectronico;
-        this.contrasenia = contrasenia;
-        this.rol = rol;
-    }
 
     public Usuario() {
     }
 
-    public Usuario(String correoElectronico, String contrasenia, String rol) {
-        this.correoElectronico = correoElectronico;
+    public Usuario(int idUsuario, String User, String contrasenia, String rol) {
+        this.idUsuario = idUsuario;
+        this.User = User;
+        this.contrasenia = contrasenia;
+        this.rol = rol;
+    }
+
+    public Usuario(String User, String contrasenia, String rol) {
+        this.User = User;
         this.contrasenia = contrasenia;
         this.rol = rol;
     }
@@ -39,12 +39,12 @@ public class Usuario {
         this.idUsuario = idUsuario;
     }
 
-    public String getCorreoElectronico() {
-        return correoElectronico;
+    public String getUser() {
+        return User;
     }
 
-    public void setCorreoElectronico(String correoElectronico) {
-        this.correoElectronico = correoElectronico;
+    public void setUser(String User) {
+        this.User = User;
     }
 
     public String getContrasenia() {
@@ -65,7 +65,10 @@ public class Usuario {
 
     @Override
     public String toString() {
-        return "Usuario{" + "idUsuario=" + idUsuario + ", correoElectronico=" + correoElectronico + ", contrasenia=" + contrasenia + ", rol=" + rol + '}';
+        return "Usuario{" + "idUsuario=" + idUsuario + ", User=" + User + ", contrasenia=" + contrasenia + ", rol=" + rol + '}';
     }
+    
+    
+
 
 }
