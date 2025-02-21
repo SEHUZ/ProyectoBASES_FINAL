@@ -5,6 +5,7 @@
 package Entidades;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 /**
  *
@@ -15,9 +16,9 @@ public class Cita {
     private Paciente paciente;
     private Medico medico;
     private EstadoCita estado;
-    private LocalDate fechaHora;
+    private LocalDateTime fechaHora;
 
-    public Cita(int idCita, Paciente paciente, Medico medico, EstadoCita estado, LocalDate fechaHora) {
+    public Cita(int idCita, Paciente paciente, Medico medico, EstadoCita estado, LocalDateTime fechaHora) {
         this.idCita = idCita;
         this.paciente = paciente;
         this.medico = medico;
@@ -25,7 +26,7 @@ public class Cita {
         this.fechaHora = fechaHora;
     }
 
-    public Cita(Paciente paciente, Medico medico, EstadoCita estado, LocalDate fechaHora) {
+    public Cita(Paciente paciente, Medico medico, EstadoCita estado, LocalDateTime fechaHora) {
         this.paciente = paciente;
         this.medico = medico;
         this.estado = estado;
@@ -64,11 +65,11 @@ public class Cita {
         this.estado = estado;
     }
 
-    public LocalDate getFechaHora() {
+    public LocalDateTime getFechaHora() {
         return fechaHora;
     }
 
-    public void setFechaHora(LocalDate fechaHora) {
+    public void setFechaHora(LocalDateTime fechaHora) {
         this.fechaHora = fechaHora;
     }
 
