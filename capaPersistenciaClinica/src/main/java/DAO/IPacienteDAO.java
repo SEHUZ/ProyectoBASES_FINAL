@@ -20,5 +20,5 @@ public interface IPacienteDAO {
     
     public Paciente actualizarPaciente(Paciente paciente) throws PersistenciaClinicaException;
     
-    
+    public Paciente consultarPacientePorCorreo(String correo) throws PersistenciaClinicaException;
 }
