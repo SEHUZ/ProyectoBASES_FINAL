@@ -15,7 +15,6 @@ import java.time.LocalDate;
 public class PacienteNuevoDTO {
     
     
-    private int idPaciente;
     private DireccionPaciente direccion;
     private Usuario usuario;
     private String nombre;
