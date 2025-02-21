@@ -76,5 +76,16 @@ public class DireccionPaciente {
         this.codigoPostal = codigoPostal;
     }
 
+    @Override
+    public String toString() {
+        return "DireccionPaciente{" +
+               "calle='" + calle + '\'' +
+               ", numero='" + numero + '\'' +
+               ", codigoPostal='" + codigoPostal + '\'' +
+               '}';
+    }
+    
+    
+
     
 }
