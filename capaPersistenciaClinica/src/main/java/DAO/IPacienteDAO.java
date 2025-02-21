@@ -4,9 +4,7 @@
  */
 package DAO;
 
-import Entidades.DireccionPaciente;
 import Entidades.Paciente;
-import Entidades.Usuario;
 import Exception.PersistenciaClinicaException;
 import java.sql.SQLException;
 
@@ -16,7 +14,7 @@ import java.sql.SQLException;
  */
 public interface IPacienteDAO {
 
-    public Paciente registrarPaciente(Paciente paciente, Usuario usuario, DireccionPaciente direccion) throws PersistenciaClinicaException, SQLException;
+    public Paciente registrarPaciente(Paciente paciente) throws PersistenciaClinicaException, SQLException;
 
     public Paciente consultarPacientePorID(int id) throws PersistenciaClinicaException;
     
