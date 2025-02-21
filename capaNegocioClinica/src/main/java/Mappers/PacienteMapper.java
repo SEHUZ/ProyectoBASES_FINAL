@@ -40,7 +40,7 @@ public class PacienteMapper {
         dto.setIdPaciente(paciente.getIdPaciente());
         dto.setDireccion(paciente.getDireccion());
         dto.setUsuario(paciente.getUsuario());
-        dto.setNombre(paciente.getNombre());
+        dto.setNombre(paciente.getNombres());
         dto.setApellidoPaterno(paciente.getApellidoPaterno());
         dto.setApellidoMaterno(paciente.getApellidoMaterno());
         dto.setFechaNacimiento(paciente.getFechaNacimiento());
