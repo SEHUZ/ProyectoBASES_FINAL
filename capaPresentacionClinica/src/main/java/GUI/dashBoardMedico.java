@@ -39,9 +39,7 @@ public class dashBoardMedico extends javax.swing.JFrame {
         jList1 = new javax.swing.JList<>();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-        setMaximumSize(new java.awt.Dimension(632, 757));
         setMinimumSize(new java.awt.Dimension(632, 757));
-        setPreferredSize(new java.awt.Dimension(632, 757));
 
         BotonBajaTemporal.setText("Baja temporal");
         BotonBajaTemporal.addActionListener(new java.awt.event.ActionListener() {

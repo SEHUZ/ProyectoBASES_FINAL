@@ -57,9 +57,7 @@ public class iniciarSesion extends javax.swing.JFrame {
         });
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-        setMaximumSize(new java.awt.Dimension(632, 757));
         setMinimumSize(new java.awt.Dimension(632, 757));
-        setPreferredSize(new java.awt.Dimension(632, 757));
 
         jLabel1.setFont(new java.awt.Font("Segoe UI", 0, 36)); // NOI18N
         jLabel1.setText("CLINCA PRIVADA SAN JOSE");
