@@ -14,6 +14,7 @@ import Exception.PersistenciaClinicaException;
 import Mappers.PacienteMapper;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import de.mkammerer.argon2.*;
 
 /**
  *
@@ -29,34 +30,15 @@ public class PacienteBO {
         this.pacienteDAO = new PacienteDAO(conexion);
     }
 
-    public boolean registrarPaciente(PacienteNuevoDTO pacienteNuevo) throws NegocioException {
-        if (pacienteNuevo == null) {
-            throw new NegocioException("El paciente no puede ser nulo.");
-        }
-
-        if (pacienteNuevo.getNombres().isEmpty() || pacienteNuevo.getApellidoPaterno().isEmpty()
-                || pacienteNuevo.getTelefono().isEmpty() || pacienteNuevo.getIdUsuario().isEmpty()) {
-            throw new NegocioException("No puede haber campos vacios.");
-        }
-
-        if (pacienteNuevo.getTelefono().length() > 10 || pacienteNuevo.getTelefono().length() < 0) {
-            throw new NegocioException("Debe ingresar un numero de telefono valido.");
-        }
-
-        if (pacienteNuevo.getFechaNacimiento() == null) {
-            throw new NegocioException("La fecha de nacimiento no puede estar vacia.");
-        }
+    public boolean registrarUsuario(PacienteNuevoDTO pacientenuevoDTO) throws NegocioException {
         
-        
-
-        Paciente paciente = mapper.toEntity(pacienteNuevo);
-
-        try {
-            Paciente pacienteGuardado = pacienteDAO.registrarPaciente(paciente);
-            return pacienteGuardado != null;
-        } catch (PersistenciaClinicaException ex) {
-            logger.log(Level.SEVERE, "Error al registrar el paciente", ex);
-            throw new NegocioException("Hubo un error al registrar el paciente.", ex);
-        }
     }
+
+    public static String contraseñaHash(String contraseña) {
+        Argon2 argon2 = Argon2Factory.create();
+        String hash = argon2.hash(3, 65536, 1, contraseña);
+        argon2.wipeArray(contraseña.toCharArray());
+        return hash;
+    }
+    
 }
