@@ -24,6 +24,20 @@ public class PacienteViejoDTO {
     private String email;
     private String telefono;
 
+    public PacienteViejoDTO(int idPaciente, DireccionPaciente direccion, Usuario usuario, String nombre, String apellidoPaterno, String apellidoMaterno, LocalDate fechaNacimiento, String email, String telefono) {
+        this.idPaciente = idPaciente;
+        this.direccion = direccion;
+        this.usuario = usuario;
+        this.nombre = nombre;
+        this.apellidoPaterno = apellidoPaterno;
+        this.apellidoMaterno = apellidoMaterno;
+        this.fechaNacimiento = fechaNacimiento;
+        this.email = email;
+        this.telefono = telefono;
+    }
+    
+    
+
     public PacienteViejoDTO() {
     }
 
@@ -36,6 +50,14 @@ public class PacienteViejoDTO {
         this.fechaNacimiento = fechaNacimiento;
         this.email = email;
         this.telefono = telefono;
+    }
+
+    public int getIdPaciente() {
+        return idPaciente;
+    }
+
+    public void setIdPaciente(int idPaciente) {
+        this.idPaciente = idPaciente;
     }
 
     public DireccionPaciente getDireccion() {

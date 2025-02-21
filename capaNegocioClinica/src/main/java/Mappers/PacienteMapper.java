@@ -14,49 +14,56 @@ import Entidades.Paciente;
  */
 public class PacienteMapper {
 
-    // Convertir PacienteNuevoDTO a entidad Paciente
-    public static Paciente toEntity(PacienteNuevoDTO pacienteNuevo) {
-        if (pacienteNuevo == null) {
+    // Convertir de PacienteNuevoDTO a Paciente
+    public static Paciente toEntityNuevo(PacienteNuevoDTO dto) {
+        if (dto == null) {
             return null;
         }
         return new Paciente(
-                Integer.parseInt(pacienteNuevo.getIdUsuario()),
-                pacienteNuevo.getNombres(),
-                pacienteNuevo.getApellidoPaterno(),
-                pacienteNuevo.getApellidoMaterno(),
-                pacienteNuevo.getTelefono(),
-                pacienteNuevo.getFechaNacimiento()
+            dto.getDireccion(),
+            dto.getUsuario(),
+            dto.getNombre(),
+            dto.getApellidoPaterno(),
+            dto.getApellidoMaterno(),
+            dto.getFechaNacimiento(),
+            dto.getEmail(),
+            dto.getTelefono()
         );
     }
 
-    // Convertir entidad Paciente a PacienteNuevoDTO
-    public PacienteNuevoDTO toNuevoDTO(Paciente paciente) {
+    // Convertir de Paciente a PacienteViejoDTO
+    public static PacienteViejoDTO toViejoDTO(Paciente paciente) {
         if (paciente == null) {
             return null;
         }
-        return new PacienteNuevoDTO(
-                String.valueOf(paciente.getIdUsuario()),
-                paciente.getNombres(),
-                paciente.getApellidoPaterno(),
-                paciente.getApellidoMaterno(),
-                paciente.getTelefono(),
-                paciente.getFechaNacimiento()
-        );
+        PacienteViejoDTO dto = new PacienteViejoDTO();
+        dto.setIdPaciente(paciente.getIdPaciente());
+        dto.setDireccion(paciente.getDireccion());
+        dto.setUsuario(paciente.getUsuario());
+        dto.setNombre(paciente.getNombre());
+        dto.setApellidoPaterno(paciente.getApellidoPaterno());
+        dto.setApellidoMaterno(paciente.getApellidoMaterno());
+        dto.setFechaNacimiento(paciente.getFechaNacimiento());
+        dto.setEmail(paciente.getEmail());
+        dto.setTelefono(paciente.getTelefono());
+        return dto;
     }
 
-    // Convertir entidad Paciente a PacienteViejoDTO
-    public PacienteViejoDTO toViejoDTO(Paciente paciente) {
-        if (paciente == null) {
+    // Convertir de PacienteViejoDTO a Paciente
+    public static Paciente toEntityViejo(PacienteViejoDTO dto) {
+        if (dto == null) {
             return null;
         }
-        return new PacienteViejoDTO(
-                String.valueOf(paciente.getIdPaciente()),
-                String.valueOf(paciente.getIdUsuario()),
-                paciente.getNombres(),
-                paciente.getApellidoPaterno(),
-                paciente.getApellidoMaterno(),
-                paciente.getTelefono(),
-                paciente.getFechaNacimiento()
+        return new Paciente(
+            dto.getIdPaciente(),
+            dto.getDireccion(),
+            dto.getUsuario(),
+            dto.getNombre(),
+            dto.getApellidoPaterno(),
+            dto.getApellidoMaterno(),
+            dto.getFechaNacimiento(),
+            dto.getEmail(),
+            dto.getTelefono()
         );
     }
 }
