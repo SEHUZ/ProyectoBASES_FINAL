@@ -15,7 +15,7 @@ import Entidades.Paciente;
 public class PacienteMapper {
 
     // Convertir de PacienteNuevoDTO a Paciente
-    public static Paciente toEntityNuevo(PacienteNuevoDTO dto) {
+    public Paciente toEntityNuevo(PacienteNuevoDTO dto) {
         if (dto == null) {
             return null;
         }
@@ -32,7 +32,7 @@ public class PacienteMapper {
     }
 
     // Convertir de Paciente a PacienteViejoDTO
-    public static PacienteViejoDTO toViejoDTO(Paciente paciente) {
+    public PacienteViejoDTO toViejoDTO(Paciente paciente) {
         if (paciente == null) {
             return null;
         }
@@ -50,7 +50,7 @@ public class PacienteMapper {
     }
 
     // Convertir de PacienteViejoDTO a Paciente
-    public static Paciente toEntityViejo(PacienteViejoDTO dto) {
+    public Paciente toEntityViejo(PacienteViejoDTO dto) {
         if (dto == null) {
             return null;
         }
