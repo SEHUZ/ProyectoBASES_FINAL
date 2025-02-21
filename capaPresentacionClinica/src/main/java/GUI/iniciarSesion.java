@@ -62,9 +62,11 @@ public class iniciarSesion extends javax.swing.JFrame {
         jLabel1.setFont(new java.awt.Font("Segoe UI", 0, 36)); // NOI18N
         jLabel1.setText("CLINCA PRIVADA SAN JOSE");
 
-        fieldContraseña.setText("jTextField1");
-
-        fieldUsuario.setText("jTextField1");
+        fieldUsuario.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                fieldUsuarioActionPerformed(evt);
+            }
+        });
 
         jLabel2.setText("Usuario");
 
@@ -97,8 +99,6 @@ public class iniciarSesion extends javax.swing.JFrame {
         });
 
         jLabel5.setText("Rol");
-
-        fieldRol.setText("jTextField1");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -163,7 +163,10 @@ public class iniciarSesion extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void BotonRegistrarseActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BotonRegistrarseActionPerformed
-        // TODO add your handling code here:
+        registrarUsuario ventanaRegistro = new registrarUsuario();
+        ventanaRegistro.setLocationRelativeTo(null);
+        ventanaRegistro.setVisible(true);
+        this.setVisible(false);
     }//GEN-LAST:event_BotonRegistrarseActionPerformed
 
     private void BotonIniciarSesion1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BotonIniciarSesion1ActionPerformed
@@ -179,8 +182,12 @@ public class iniciarSesion extends javax.swing.JFrame {
     }//GEN-LAST:event_BotonRegistrarse1ActionPerformed
 
     private void BotonSalirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BotonSalirActionPerformed
-        // TODO add your handling code here:
+        System.exit(0);
     }//GEN-LAST:event_BotonSalirActionPerformed
+
+    private void fieldUsuarioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_fieldUsuarioActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_fieldUsuarioActionPerformed
 
     /**
      * @param args the command line arguments

@@ -194,9 +194,6 @@
       </Properties>
     </Component>
     <Component class="javax.swing.JTextField" name="fieldNombre">
-      <Properties>
-        <Property name="text" type="java.lang.String" value="jTextField1"/>
-      </Properties>
       <Events>
         <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="fieldNombreActionPerformed"/>
       </Events>
@@ -207,9 +204,6 @@
       </Properties>
     </Component>
     <Component class="javax.swing.JTextField" name="fieldApellidoPaterno">
-      <Properties>
-        <Property name="text" type="java.lang.String" value="jTextField1"/>
-      </Properties>
       <Events>
         <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="fieldApellidoPaternoActionPerformed"/>
       </Events>
@@ -220,9 +214,6 @@
       </Properties>
     </Component>
     <Component class="javax.swing.JTextField" name="fieldApellidoMaterno">
-      <Properties>
-        <Property name="text" type="java.lang.String" value="jTextField1"/>
-      </Properties>
     </Component>
     <Component class="javax.swing.JLabel" name="jLabel5">
       <Properties>
@@ -240,9 +231,6 @@
       </Properties>
     </Component>
     <Component class="javax.swing.JTextField" name="fieldTelefono">
-      <Properties>
-        <Property name="text" type="java.lang.String" value="jTextField1"/>
-      </Properties>
       <Events>
         <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="fieldTelefonoActionPerformed"/>
       </Events>
@@ -253,9 +241,6 @@
       </Properties>
     </Component>
     <Component class="javax.swing.JTextField" name="fieldCalle">
-      <Properties>
-        <Property name="text" type="java.lang.String" value="jTextField1"/>
-      </Properties>
       <Events>
         <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="fieldCalleActionPerformed"/>
       </Events>
@@ -266,9 +251,6 @@
       </Properties>
     </Component>
     <Component class="javax.swing.JTextField" name="fieldNumero">
-      <Properties>
-        <Property name="text" type="java.lang.String" value="jTextField1"/>
-      </Properties>
       <Events>
         <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="fieldNumeroActionPerformed"/>
       </Events>
@@ -279,17 +261,11 @@
       </Properties>
     </Component>
     <Component class="javax.swing.JTextField" name="fieldCodigoPostal">
-      <Properties>
-        <Property name="text" type="java.lang.String" value="jTextField1"/>
-      </Properties>
       <Events>
         <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="fieldCodigoPostalActionPerformed"/>
       </Events>
     </Component>
     <Component class="javax.swing.JTextField" name="fieldCorreoElectronico">
-      <Properties>
-        <Property name="text" type="java.lang.String" value="jTextField1"/>
-      </Properties>
       <Events>
         <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="fieldCorreoElectronicoActionPerformed"/>
       </Events>
@@ -300,9 +276,6 @@
       </Properties>
     </Component>
     <Component class="javax.swing.JTextField" name="fieldContrase&#xf1;a">
-      <Properties>
-        <Property name="text" type="java.lang.String" value="jTextField1"/>
-      </Properties>
       <Events>
         <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="fieldContrase&#xf1;aActionPerformed"/>
       </Events>
@@ -323,9 +296,6 @@
     <Component class="com.toedter.calendar.JDateChooser" name="fechaNacimientoChooser">
     </Component>
     <Component class="javax.swing.JTextField" name="fieldUser">
-      <Properties>
-        <Property name="text" type="java.lang.String" value="jTextField1"/>
-      </Properties>
       <Events>
         <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="fieldUserActionPerformed"/>
       </Events>

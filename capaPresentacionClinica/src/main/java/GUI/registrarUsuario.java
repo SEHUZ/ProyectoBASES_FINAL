@@ -12,6 +12,7 @@ import Entidades.DireccionPaciente;
 import Entidades.Paciente;
 import Entidades.Usuario;
 import Exception.NegocioException;
+import java.sql.SQLException;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.Date;
@@ -33,7 +34,6 @@ public class registrarUsuario extends javax.swing.JFrame {
     public registrarUsuario() {
         initComponents();
     }
-    
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -80,7 +80,6 @@ public class registrarUsuario extends javax.swing.JFrame {
         jLabel1.setText("REGISTRO PACIENTE");
         jLabel1.setToolTipText("");
 
-        fieldNombre.setText("jTextField1");
         fieldNombre.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 fieldNombreActionPerformed(evt);
@@ -89,7 +88,6 @@ public class registrarUsuario extends javax.swing.JFrame {
 
         jLabel3.setText("Nombres");
 
-        fieldApellidoPaterno.setText("jTextField1");
         fieldApellidoPaterno.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 fieldApellidoPaternoActionPerformed(evt);
@@ -98,15 +96,12 @@ public class registrarUsuario extends javax.swing.JFrame {
 
         jLabel4.setText("Apellido Paterno");
 
-        fieldApellidoMaterno.setText("jTextField1");
-
         jLabel5.setText("Apellido Materno");
 
         jLabel6.setText("Fecha de Nacimiento");
 
         jLabel7.setText("Telefono");
 
-        fieldTelefono.setText("jTextField1");
         fieldTelefono.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 fieldTelefonoActionPerformed(evt);
@@ -115,7 +110,6 @@ public class registrarUsuario extends javax.swing.JFrame {
 
         jLabel8.setText("Calle");
 
-        fieldCalle.setText("jTextField1");
         fieldCalle.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 fieldCalleActionPerformed(evt);
@@ -124,7 +118,6 @@ public class registrarUsuario extends javax.swing.JFrame {
 
         jLabel9.setText("Numero");
 
-        fieldNumero.setText("jTextField1");
         fieldNumero.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 fieldNumeroActionPerformed(evt);
@@ -133,14 +126,12 @@ public class registrarUsuario extends javax.swing.JFrame {
 
         jLabel10.setText("Codigo Postal");
 
-        fieldCodigoPostal.setText("jTextField1");
         fieldCodigoPostal.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 fieldCodigoPostalActionPerformed(evt);
             }
         });
 
-        fieldCorreoElectronico.setText("jTextField1");
         fieldCorreoElectronico.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 fieldCorreoElectronicoActionPerformed(evt);
@@ -149,7 +140,6 @@ public class registrarUsuario extends javax.swing.JFrame {
 
         jLabel11.setText("Correo Electronico");
 
-        fieldContraseña.setText("jTextField1");
         fieldContraseña.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 fieldContraseñaActionPerformed(evt);
@@ -165,7 +155,6 @@ public class registrarUsuario extends javax.swing.JFrame {
             }
         });
 
-        fieldUser.setText("jTextField1");
         fieldUser.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 fieldUserActionPerformed(evt);
@@ -324,12 +313,11 @@ public class registrarUsuario extends javax.swing.JFrame {
     }//GEN-LAST:event_fieldContraseñaActionPerformed
 
     private void botonCancelarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonCancelarActionPerformed
-        try {
-            registrarPaciente();
-        } catch (NegocioException ex) {
-            Logger.getLogger(registrarUsuario.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        
+        limpiarCampos();
+        iniciarSesion ventanaInicio = new iniciarSesion();
+        ventanaInicio.setLocationRelativeTo(null);
+        ventanaInicio.setVisible(true);
+        this.setVisible(false);
     }//GEN-LAST:event_botonCancelarActionPerformed
 
     private void fieldApellidoPaternoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_fieldApellidoPaternoActionPerformed
@@ -345,7 +333,11 @@ public class registrarUsuario extends javax.swing.JFrame {
     }//GEN-LAST:event_fieldUserActionPerformed
 
     private void botonRegistrar1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonRegistrar1ActionPerformed
-        // TODO add your handling code here:
+        try {
+            registrarPaciente();
+        } catch (NegocioException | SQLException ex) {
+            Logger.getLogger(registrarUsuario.class.getName()).log(Level.SEVERE, "Error", ex);
+        }
     }//GEN-LAST:event_botonRegistrar1ActionPerformed
 
     /**
@@ -412,7 +404,7 @@ public class registrarUsuario extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel8;
     private javax.swing.JLabel jLabel9;
     // End of variables declaration//GEN-END:variables
-    public void registrarPaciente() throws NegocioException{
+    public void registrarPaciente() throws NegocioException, SQLException {
         String nombre = fieldNombre.getText();
         String apellidoPaterno = fieldApellidoPaterno.getText();
         String apellidoMaterno = fieldApellidoMaterno.getText();
@@ -422,54 +414,48 @@ public class registrarUsuario extends javax.swing.JFrame {
         String CorreoElectronico = fieldCorreoElectronico.getText();
         String contrasenia = fieldContraseña.getText();
         String cp = fieldCodigoPostal.getText();
-        
+
         // Obtener la fecha del JDateChooser y convertirla a LocalDate
         java.util.Date fechaNacimientoUtil = fechaNacimientoChooser.getDate();
         LocalDate fechaNacimiento = null;
         if (fechaNacimientoUtil != null) {
             fechaNacimiento = fechaNacimientoUtil.toInstant()
-                                            .atZone(ZoneId.systemDefault())
-                                            .toLocalDate();
+                    .atZone(ZoneId.systemDefault())
+                    .toLocalDate();
         }
-        
+
         String User = fieldUser.getText();
-        
+
         Usuario usuario = new Usuario(User, contrasenia, "Paciente");
         DireccionPaciente direccion = new DireccionPaciente(Calle, Numero, cp);
         PacienteNuevoDTO paciente = new PacienteNuevoDTO(direccion, usuario, nombre, apellidoPaterno, apellidoMaterno, fechaNacimiento, CorreoElectronico, telefono);
-        
+
         IConexionBD conexion = new ConexionBD();
         PacienteBO pacienteBO = new PacienteBO(conexion);
         boolean exito = pacienteBO.registrarPaciente(paciente);
-        if (exito){
+        if (exito) {
             JOptionPane.showMessageDialog(this, "El paciente se ha registrado exitosamente");
             limpiarCampos();
-        }else {
+        } else {
             JOptionPane.showMessageDialog(this, "ERROR al registrar al paciente");
         }
     }
-    
+
     public void limpiarCampos() {
-    // Limpiar campos de texto
-    fieldNombre.setText("");
-    fieldApellidoPaterno.setText("");
-    fieldApellidoMaterno.setText("");
-    fieldCalle.setText("");
-    fieldNumero.setText("");
-    fieldTelefono.setText("");
-    fieldCorreoElectronico.setText("");
-    fieldContraseña.setText("");
-    fieldCodigoPostal.setText("");
-    fieldUser.setText("");
-    
-    // Reiniciar fecha
-    fechaNacimientoChooser.setDate(null);
+        // Limpiar campos de texto
+        fieldNombre.setText("");
+        fieldApellidoPaterno.setText("");
+        fieldApellidoMaterno.setText("");
+        fieldCalle.setText("");
+        fieldNumero.setText("");
+        fieldTelefono.setText("");
+        fieldCorreoElectronico.setText("");
+        fieldContraseña.setText("");
+        fieldCodigoPostal.setText("");
+        fieldUser.setText("");
+
+        // Reiniciar fecha
+        fechaNacimientoChooser.setDate(null);
     }
-    
-    
 
 }
-
-
-
-
