@@ -32,8 +32,10 @@ public class PacienteDAO implements IPacienteDAO {
 
     @Override
     public Paciente registrarPaciente(Paciente paciente) throws PersistenciaClinicaException {
-
-        String sentenciaSQL = "INSERT INTO pacientes (idUsuario, nombres, apellidoPaterno, apellidoMaterno, fechaNacimiento, telefono) VALUES (?, ?, ?, ?, ?, ?)";
+        String sentenciaUsuarioSQL = "INSERT INTO usuarios (User, contrasenia, rol) VALUES (?, ?, ?)";
+        String sentenciaPacienteSQL = "INSERT INTO pacientes (idUsuario, nombres, apellidoPaterno, apellidoMaterno, fechaNacimiento, telefono, email) VALUES (?, ?, ?, ?, ?, ?)";
+        String sentenciaDireccionSQL = ""
+                 
         try (Connection con = conexion.crearConexion(); PreparedStatement ps = con.prepareStatement(sentenciaSQL, Statement.RETURN_GENERATED_KEYS)) {
 
             ps.setInt(1, paciente.getIdUsuario());
@@ -96,5 +98,15 @@ public class PacienteDAO implements IPacienteDAO {
         }
         
         return paciente;
+    }
+    
+    @Override
+    public Paciente actualizarPaciente(Paciente paciente) throws PersistenciaClinicaException {
+        
+    }
+    
+    @Override
+    public Paciente consultarPacientePorUser(String User) throws PersistenciaClinicaException {
+        
     }
 }

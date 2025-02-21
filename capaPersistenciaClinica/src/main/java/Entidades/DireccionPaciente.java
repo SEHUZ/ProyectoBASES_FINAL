@@ -14,29 +14,28 @@ public class DireccionPaciente {
     private int idPaciente;
     private String calle;
     private String numero;
-    private String cp;
+    private String codigoPostal;
 
     // Constructor con todos los parámetros
-    public DireccionPaciente(int idDireccion, int idPaciente, String calle, String numero, String cp) {
+    public DireccionPaciente(int idDireccion, int idPaciente, String calle, String numero, String codigoPostal) {
         this.idDireccion = idDireccion;
         this.idPaciente = idPaciente;
         this.calle = calle;
         this.numero = numero;
-        this.cp = cp;
+        this.codigoPostal = codigoPostal;
     }
 
     // Constructor sin idDireccion (para crear una nueva dirección)
-    public DireccionPaciente(int idPaciente, String calle, String numero, String cp) {
+    public DireccionPaciente(int idPaciente, String calle, String numero, String codigoPostal) {
         this.idPaciente = idPaciente;
         this.calle = calle;
         this.numero = numero;
-        this.cp = cp;
+        this.codigoPostal = codigoPostal;
     }
 
     public DireccionPaciente() {
     }
 
-    // Getters y setters
     public int getIdDireccion() {
         return idDireccion;
     }
@@ -69,23 +68,13 @@ public class DireccionPaciente {
         this.numero = numero;
     }
 
-    public String getCp() {
-        return cp;
+    public String getCodigoPostal() {
+        return codigoPostal;
     }
 
-    public void setCp(String cp) {
-        this.cp = cp;
+    public void setCodigoPostal(String codigoPostal) {
+        this.codigoPostal = codigoPostal;
     }
 
-    // Método toString() para representar la dirección como un string
-    @Override
-    public String toString() {
-        return "DireccionPaciente{"
-                + "idDireccion=" + idDireccion
-                + ", idPaciente=" + idPaciente
-                + ", calle='" + calle + '\''
-                + ", numero='" + numero + '\''
-                + ", cp='" + cp + '\''
-                + '}';
-    }
+    
 }

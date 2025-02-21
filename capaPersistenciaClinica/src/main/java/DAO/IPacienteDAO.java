@@ -16,4 +16,10 @@ public interface IPacienteDAO {
     public Paciente registrarPaciente(Paciente paciente) throws PersistenciaClinicaException;
 
     public Paciente consultarPacientePorID(int id) throws PersistenciaClinicaException;
+    
+    public Paciente actualizarPaciente(Paciente paciente) throws PersistenciaClinicaException;
+    
+    public Paciente consultarPacientePorUser(String User) throws PersistenciaClinicaException;
+    
+    
 }
