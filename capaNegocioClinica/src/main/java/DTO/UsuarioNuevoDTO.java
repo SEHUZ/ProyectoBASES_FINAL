@@ -10,36 +10,45 @@ package DTO;
  */
 public class UsuarioNuevoDTO {
 
-    private int idUsuario;
-    private String correoElectronico;
+    private String User;
     private String contrasenia;
     private String rol;
 
-    public UsuarioNuevoDTO(int idUsuario, String correoElectronico, String contrasenia, String rol) {
-        this.idUsuario = idUsuario;
-        this.correoElectronico = correoElectronico;
+    public UsuarioNuevoDTO() {
+    }
+
+    public UsuarioNuevoDTO(String User, String contrasenia, String rol) {
+        this.User = User;
         this.contrasenia = contrasenia;
         this.rol = rol;
     }
 
-    public int getIdUsuario() {
-        return idUsuario;
+    public String getUser() {
+        return User;
     }
 
-    public String getCorreoElectronico() {
-        return correoElectronico;
+    public void setUser(String User) {
+        this.User = User;
     }
 
     public String getContrasenia() {
         return contrasenia;
     }
 
+    public void setContrasenia(String contrasenia) {
+        this.contrasenia = contrasenia;
+    }
+
     public String getRol() {
         return rol;
     }
 
-    @Override
-    public String toString() {
-        return "UsuarioDTO{" + "idUsuario=" + idUsuario + ", correoElectronico=" + correoElectronico + ", contrasenia=" + contrasenia + ", rol=" + rol + '}';
+    public void setRol(String rol) {
+        this.rol = rol;
     }
+    
+    
+    
 }
+
+   

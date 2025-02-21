@@ -46,6 +46,8 @@ public class PacienteBO {
         if (pacienteNuevo.getFechaNacimiento() == null) {
             throw new NegocioException("La fecha de nacimiento no puede estar vacia.");
         }
+        
+        
 
         Paciente paciente = mapper.toEntity(pacienteNuevo);
 

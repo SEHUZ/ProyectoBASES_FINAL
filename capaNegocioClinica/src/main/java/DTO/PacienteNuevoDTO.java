@@ -11,32 +11,36 @@ import java.time.LocalDate;
  * @author Daniel M
  */
 public class PacienteNuevoDTO {
-
-    private String idUsuario;
+    
+    
     private String nombres;
     private String apellidoPaterno;
     private String apellidoMaterno;
     private String telefono;
+    private String calle;
+    private String numero;
+    private String cp;
+    private String User;
+    private String contrasenia;
+    private String rol;
     private LocalDate fechaNacimiento;
+    
 
     public PacienteNuevoDTO() {
     }
 
-    public PacienteNuevoDTO(String idUsuario, String nombres, String apellidoPaterno, String apellidoMaterno, String telefono, LocalDate fechaNacimiento) {
-        this.idUsuario = idUsuario;
+    public PacienteNuevoDTO(String nombres, String apellidoPaterno, String apellidoMaterno, String telefono, String calle, String numero, String cp, String User, String contrasenia, String rol, LocalDate fechaNacimiento) {
         this.nombres = nombres;
         this.apellidoPaterno = apellidoPaterno;
         this.apellidoMaterno = apellidoMaterno;
         this.telefono = telefono;
+        this.calle = calle;
+        this.numero = numero;
+        this.cp = cp;
+        this.User = User;
+        this.contrasenia = contrasenia;
+        this.rol = rol;
         this.fechaNacimiento = fechaNacimiento;
-    }
-
-    public String getIdUsuario() {
-        return idUsuario;
-    }
-
-    public void setIdUsuario(String idUsuario) {
-        this.idUsuario = idUsuario;
     }
 
     public String getNombres() {
@@ -71,6 +75,54 @@ public class PacienteNuevoDTO {
         this.telefono = telefono;
     }
 
+    public String getCalle() {
+        return calle;
+    }
+
+    public void setCalle(String calle) {
+        this.calle = calle;
+    }
+
+    public String getNumero() {
+        return numero;
+    }
+
+    public void setNumero(String numero) {
+        this.numero = numero;
+    }
+
+    public String getCp() {
+        return cp;
+    }
+
+    public void setCp(String cp) {
+        this.cp = cp;
+    }
+
+    public String getUser() {
+        return User;
+    }
+
+    public void setUser(String User) {
+        this.User = User;
+    }
+
+    public String getContrasenia() {
+        return contrasenia;
+    }
+
+    public void setContrasenia(String contrasenia) {
+        this.contrasenia = contrasenia;
+    }
+
+    public String getRol() {
+        return rol;
+    }
+
+    public void setRol(String rol) {
+        this.rol = rol;
+    }
+
     public LocalDate getFechaNacimiento() {
         return fechaNacimiento;
     }
@@ -79,9 +131,6 @@ public class PacienteNuevoDTO {
         this.fechaNacimiento = fechaNacimiento;
     }
 
-    @Override
-    public String toString() {
-        return "PacienteNuevoDTO{" + "idUsuario=" + idUsuario + ", nombres=" + nombres + ", apellidoPaterno=" + apellidoPaterno + ", apellidoMaterno=" + apellidoMaterno + ", telefono=" + telefono + ", fechaNacimiento=" + fechaNacimiento + '}';
-    }
+    
 
 }
