@@ -102,6 +102,11 @@ public class PacienteViejoDTO {
         this.telefono = telefono;
     }
 
+    @Override
+    public String toString() {
+        return "PacienteViejoDTO{" + "idPaciente=" + idPaciente + ", direccion=" + direccion + ", usuario=" + usuario + ", nombre=" + nombre + ", apellidoPaterno=" + apellidoPaterno + ", apellidoMaterno=" + apellidoMaterno + ", fechaNacimiento=" + fechaNacimiento + ", email=" + email + ", telefono=" + telefono + '}';
+    }
+
     
 
     

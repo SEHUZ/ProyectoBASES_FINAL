@@ -28,8 +28,7 @@ public class PacienteNuevoDTO {
     public PacienteNuevoDTO() {
     }
 
-    public PacienteNuevoDTO(int idPaciente, DireccionPaciente direccion, Usuario usuario, String nombre, String apellidoPaterno, String apellidoMaterno, LocalDate fechaNacimiento, String email, String telefono) {
-        this.idPaciente = idPaciente;
+    public PacienteNuevoDTO(DireccionPaciente direccion, Usuario usuario, String nombre, String apellidoPaterno, String apellidoMaterno, LocalDate fechaNacimiento, String email, String telefono) {
         this.direccion = direccion;
         this.usuario = usuario;
         this.nombre = nombre;
@@ -38,14 +37,6 @@ public class PacienteNuevoDTO {
         this.fechaNacimiento = fechaNacimiento;
         this.email = email;
         this.telefono = telefono;
-    }
-
-    public int getIdPaciente() {
-        return idPaciente;
-    }
-
-    public void setIdPaciente(int idPaciente) {
-        this.idPaciente = idPaciente;
     }
 
     public DireccionPaciente getDireccion() {
@@ -112,8 +103,11 @@ public class PacienteNuevoDTO {
         this.telefono = telefono;
     }
 
+    @Override
+    public String toString() {
+        return "PacienteNuevoDTO{" + "direccion=" + direccion + ", usuario=" + usuario + ", nombre=" + nombre + ", apellidoPaterno=" + apellidoPaterno + ", apellidoMaterno=" + apellidoMaterno + ", fechaNacimiento=" + fechaNacimiento + ", email=" + email + ", telefono=" + telefono + '}';
+    }
     
-
     
-
+    
 }
