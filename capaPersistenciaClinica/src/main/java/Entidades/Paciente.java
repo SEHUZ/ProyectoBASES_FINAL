@@ -15,7 +15,7 @@ public class Paciente {
     private int idPaciente;
     private DireccionPaciente direccion;
     private Usuario usuario;
-    private String nombre;
+    private String nombres;
     private String apellidoPaterno;
     private String apellidoMaterno;
     private LocalDate fechaNacimiento;
@@ -32,7 +32,7 @@ public class Paciente {
         this.idPaciente = idPaciente;
         this.direccion = direccion;
         this.usuario = usuario;
-        this.nombre = nombre;
+        this.nombres = nombres;
         this.apellidoPaterno = apellidoPaterno;
         this.apellidoMaterno = apellidoMaterno;
         this.fechaNacimiento = fechaNacimiento;
@@ -40,10 +40,10 @@ public class Paciente {
         this.telefono = telefono;
     }
 
-    public Paciente(DireccionPaciente direccion, Usuario usuario, String nombre, String apellidoPaterno, String apellidoMaterno, LocalDate fechaNacimiento, String email, String telefono) {
+    public Paciente(DireccionPaciente direccion, Usuario usuario, String nombres, String apellidoPaterno, String apellidoMaterno, LocalDate fechaNacimiento, String email, String telefono) {
         this.direccion = direccion;
         this.usuario = usuario;
-        this.nombre = nombre;
+        this.nombres = nombres;
         this.apellidoPaterno = apellidoPaterno;
         this.apellidoMaterno = apellidoMaterno;
         this.fechaNacimiento = fechaNacimiento;
@@ -75,12 +75,12 @@ public class Paciente {
         this.usuario = usuario;
     }
 
-    public String getNombre() {
-        return nombre;
+    public String getNombres() {
+        return nombres;
     }
 
-    public void setNombre(String nombre) {
-        this.nombre = nombre;
+    public void setNombres(String nombres) {
+        this.nombres = nombres;
     }
 
     public String getApellidoPaterno() {
@@ -125,7 +125,7 @@ public class Paciente {
 
     @Override
     public String toString() {
-        return "Paciente{" + "idPaciente=" + idPaciente + ", direccion=" + direccion + ", usuario=" + usuario + ", nombre=" + nombre + ", apellidoPaterno=" + apellidoPaterno + ", apellidoMaterno=" + apellidoMaterno + ", fechaNacimiento=" + fechaNacimiento + ", email=" + email + ", telefono=" + telefono + '}';
+        return "Paciente{" + "idPaciente=" + idPaciente + ", direccion=" + direccion + ", usuario=" + usuario + ", nombres=" + nombres + ", apellidoPaterno=" + apellidoPaterno + ", apellidoMaterno=" + apellidoMaterno + ", fechaNacimiento=" + fechaNacimiento + ", email=" + email + ", telefono=" + telefono + '}';
     }
     
     

@@ -4,8 +4,11 @@
  */
 package DAO;
 
+import Entidades.DireccionPaciente;
 import Entidades.Paciente;
+import Entidades.Usuario;
 import Exception.PersistenciaClinicaException;
+import java.sql.SQLException;
 
 /**
  *
@@ -13,13 +16,11 @@ import Exception.PersistenciaClinicaException;
  */
 public interface IPacienteDAO {
 
-    public Paciente registrarPaciente(Paciente paciente) throws PersistenciaClinicaException;
+    public Paciente registrarPaciente(Paciente paciente, Usuario usuario, DireccionPaciente direccion) throws PersistenciaClinicaException, SQLException;
 
     public Paciente consultarPacientePorID(int id) throws PersistenciaClinicaException;
     
     public Paciente actualizarPaciente(Paciente paciente) throws PersistenciaClinicaException;
-    
-    public Paciente consultarPacientePorUser(String User) throws PersistenciaClinicaException;
     
     
 }
