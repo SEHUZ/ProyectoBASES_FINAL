@@ -35,7 +35,7 @@ public class PacienteDAO implements IPacienteDAO {
     @Override
     public Paciente registrarPaciente(Paciente paciente, Usuario usuario, DireccionPaciente direccion) throws PersistenciaClinicaException, SQLException {
         String sentenciaUsuarioSQL = "INSERT INTO usuarios (User, contrasenia, rol) VALUES (?, ?, ?)";
-        String sentenciaPacienteSQL = "INSERT INTO pacientes (idUsuario, nombres, apellidoPaterno, apellidoMaterno, fechaNacimiento, telefono, email) VALUES (?, ?, ?, ?, ?, ?)";
+        String sentenciaPacienteSQL = "INSERT INTO pacientes (idUsuario, nombres, apellidoPaterno, apellidoMaterno, fechaNacimiento, telefono, email) VALUES (?, ?, ?, ?, ?, ?, ?)";
         String sentenciaDireccionSQL = "INSERT INTO direccionesPacientes (idPaciente, Calle, Numero, codigoPostal) VALUES (?, ?, ?, ?)";
         
         Connection con = null;
@@ -126,33 +126,68 @@ public class PacienteDAO implements IPacienteDAO {
 
     @Override
     public Paciente consultarPacientePorID(int id) throws PersistenciaClinicaException {
-        Paciente paciente = null;
-        String consultaPorIDSQL = "SELECT idPaciente, nombres, apellidoPaterno, apellidoMaterno, fechaNacimiento, telefono FROM pacientes WHERE idPaciente = ?";
+       Paciente paciente = null;
+    String consultaPacienteSQL = "SELECT idPaciente, idUsuario, nombres, apellidoPaterno, apellidoMaterno, fechaNacimiento, telefono, email FROM pacientes WHERE idPaciente = ?";
+    String consultaDireccionSQL = "SELECT calle, numero, codigoPostal FROM direccionespacientes WHERE idPaciente = ?";
+    String consultaUsuarioSQL = "SELECT idUsuario, user, contrasenia, rol FROM usuarios WHERE idUsuario = ?";
 
-        try (Connection con = this.conexion.crearConexion(); PreparedStatement psConsulta = con.prepareStatement(consultaPorIDSQL)) {
-            psConsulta.setInt(1, id);
-
-            try (ResultSet rs = psConsulta.executeQuery()) {
-                if (rs.next()) {
+    try (Connection con = this.conexion.crearConexion()) {
+        // 1. Obtener datos del paciente
+        try (PreparedStatement psPaciente = con.prepareStatement(consultaPacienteSQL)) {
+            psPaciente.setInt(1, id);
+            try (ResultSet rsPaciente = psPaciente.executeQuery()) {
+                if (rsPaciente.next()) {
                     paciente = new Paciente();
-                    paciente.setIdPaciente(rs.getInt("idPaciente"));
-                    paciente.setNombres(rs.getString("nombres"));
-                    paciente.setApellidoPaterno(rs.getString("apellidoPaterno"));
-                    paciente.setApellidoMaterno(rs.getString("apellidoMaterno"));
-                    paciente.setFechaNacimiento(rs.getDate("fechaNacimiento").toLocalDate());
-                    paciente.setTelefono(rs.getString("telefono"));
+                    paciente.setIdPaciente(rsPaciente.getInt("idPaciente"));
+                    int idUsuario = rsPaciente.getInt("idUsuario");
+                    paciente.setNombres(rsPaciente.getString("nombres"));
+                    paciente.setApellidoPaterno(rsPaciente.getString("apellidoPaterno"));
+                    paciente.setApellidoMaterno(rsPaciente.getString("apellidoMaterno"));
+                    paciente.setFechaNacimiento(rsPaciente.getDate("fechaNacimiento").toLocalDate());
+                    paciente.setTelefono(rsPaciente.getString("telefono"));
+                    paciente.setEmail(rsPaciente.getString("email"));
+
+                    // 2. Obtener la dirección asociada
+                    try (PreparedStatement psDireccion = con.prepareStatement(consultaDireccionSQL)) {
+                        psDireccion.setInt(1, id);
+                        try (ResultSet rsDireccion = psDireccion.executeQuery()) {
+                            if (rsDireccion.next()) {
+                                DireccionPaciente direccion = new DireccionPaciente();
+                                direccion.setCalle(rsDireccion.getString("calle"));
+                                direccion.setNumero(rsDireccion.getString("numero"));
+                                direccion.setCodigoPostal(rsDireccion.getString("codigoPostal"));
+                                paciente.setDireccion(direccion);
+                            }
+                        }
+                    }
+
+                    // 3. Obtener la información del usuario asociado
+                    try (PreparedStatement psUsuario = con.prepareStatement(consultaUsuarioSQL)) {
+                        psUsuario.setInt(1, idUsuario);
+                        try (ResultSet rsUsuario = psUsuario.executeQuery()) {
+                            if (rsUsuario.next()) {
+                                Usuario usuario = new Usuario();
+                                usuario.setIdUsuario(rsUsuario.getInt("idUsuario"));
+                                usuario.setUser(rsUsuario.getString("user"));
+                                usuario.setContrasenia(rsUsuario.getString("contrasenia"));
+                                usuario.setRol(rsUsuario.getString("rol"));
+                                paciente.setUsuario(usuario);
+                            }
+                        }
+                    }
 
                     logger.info("Paciente encontrado: " + paciente);
                 } else {
-                    logger.warning("No se encontro el paciente con ID: " + id);
+                    logger.warning("No se encontró el paciente con ID: " + id);
                 }
             }
-        } catch (SQLException ex) {
-            logger.log(Level.SEVERE, "Error al consultar el paciente con ID: " + id, ex);
-            throw new PersistenciaClinicaException("Error al consultar el paciente con ID: " + id, ex);
         }
-        
-        return paciente;
+    } catch (SQLException ex) {
+        logger.log(Level.SEVERE, "Error al consultar el paciente con ID: " + id, ex);
+        throw new PersistenciaClinicaException("Error al consultar el paciente con ID: " + id, ex);
+    }
+    
+    return paciente; 
     }
     
     @Override
@@ -182,29 +217,79 @@ public class PacienteDAO implements IPacienteDAO {
     if (paciente.getEmail() == null || paciente.getEmail().trim().isEmpty()) {
         paciente.setEmail(pacienteActual.getEmail());
     }
+    if (paciente.getUsuario().getContrasenia() == null || paciente.getUsuario().getContrasenia().trim().isEmpty()) {
+        paciente.getUsuario().setContrasenia(pacienteActual.getUsuario().getContrasenia());
+    }
+    if (paciente.getUsuario().getUser() == null || paciente.getUsuario().getUser().trim().isEmpty()) {
+        paciente.getUsuario().setUser(pacienteActual.getUsuario().getUser());
+    }
+    if (paciente.getDireccion().getCalle() == null || paciente.getDireccion().getCalle().trim().isEmpty()) {
+        paciente.getDireccion().setCalle(pacienteActual.getDireccion().getCalle());
+    }
+    if (paciente.getDireccion().getCodigoPostal() == null || paciente.getDireccion().getCodigoPostal().trim().isEmpty()) {
+        paciente.getDireccion().setCodigoPostal(pacienteActual.getDireccion().getCodigoPostal());
+    }
+    if (paciente.getDireccion().getNumero() == null || paciente.getDireccion().getNumero().trim().isEmpty()) {
+        paciente.getDireccion().setNumero(pacienteActual.getDireccion().getNumero());
+    }
     
     // Proceder con la actualización usando los valores ya validados
-    String sentenciaSQL = "UPDATE pacientes SET nombres = ?, apellidoPaterno = ?, apellidoMaterno = ?, fechaNacimiento = ?, telefono = ?, email = ? WHERE idPaciente = ?";
     Connection con = null;
     try {
         con = conexion.crearConexion();
         con.setAutoCommit(false); // Iniciar transacción
-        try (PreparedStatement ps = con.prepareStatement(sentenciaSQL)) {
-            ps.setString(1, paciente.getNombres());
-            ps.setString(2, paciente.getApellidoPaterno());
-            ps.setString(3, paciente.getApellidoMaterno());
-            ps.setObject(4, paciente.getFechaNacimiento());
-            ps.setString(5, paciente.getTelefono());
-            ps.setString(6, paciente.getEmail());
-            ps.setInt(7, paciente.getIdPaciente());
-            
-            int filasAfectadas = ps.executeUpdate();
-            if (filasAfectadas == 0) {
+
+        // 1. Actualizar datos del paciente
+        String updatePacienteSQL = "UPDATE pacientes SET nombres = ?, apellidoPaterno = ?, apellidoMaterno = ?, fechaNacimiento = ?, telefono = ?, email = ? WHERE idPaciente = ?";
+        try (PreparedStatement psPaciente = con.prepareStatement(updatePacienteSQL)) {
+            psPaciente.setString(1, paciente.getNombres());
+            psPaciente.setString(2, paciente.getApellidoPaterno());
+            psPaciente.setString(3, paciente.getApellidoMaterno());
+            psPaciente.setObject(4, paciente.getFechaNacimiento());
+            psPaciente.setString(5, paciente.getTelefono());
+            psPaciente.setString(6, paciente.getEmail());
+            psPaciente.setInt(7, paciente.getIdPaciente());
+
+            int filasPaciente = psPaciente.executeUpdate();
+            if (filasPaciente == 0) {
                 throw new PersistenciaClinicaException("No se actualizó el paciente, verifique el ID: " + paciente.getIdPaciente());
             }
         }
-        con.commit();
-        logger.info("Paciente actualizado exitosamente. ID: " + paciente.getIdPaciente());
+
+        // 2. Actualizar datos de la dirección, si existe
+        if (paciente.getDireccion() != null) {
+            String updateDireccionSQL = "UPDATE direccionespacientes SET calle = ?, numero = ?, codigoPostal = ? WHERE idPaciente = ?";
+            try (PreparedStatement psDireccion = con.prepareStatement(updateDireccionSQL)) {
+                psDireccion.setString(1, paciente.getDireccion().getCalle());
+                psDireccion.setString(2, paciente.getDireccion().getNumero());
+                psDireccion.setString(3, paciente.getDireccion().getCodigoPostal());
+                psDireccion.setInt(4, paciente.getIdPaciente());
+
+                int filasDireccion = psDireccion.executeUpdate();
+                if (filasDireccion == 0) {
+                    logger.warning("No se actualizó la dirección para el paciente con ID: " + paciente.getIdPaciente());
+                }
+            }
+        }
+
+        // 3. Actualizar datos del usuario, si existe
+        if (paciente.getUsuario() != null) {
+            String updateUsuarioSQL = "UPDATE usuarios SET user = ?, contrasenia = ?, rol = ? WHERE idUsuario = ?";
+            try (PreparedStatement psUsuario = con.prepareStatement(updateUsuarioSQL)) {
+                psUsuario.setString(1, paciente.getUsuario().getUser());
+                psUsuario.setString(2, paciente.getUsuario().getContrasenia());
+                psUsuario.setString(3, paciente.getUsuario().getRol());
+                psUsuario.setInt(4, paciente.getUsuario().getIdUsuario());
+
+                int filasUsuario = psUsuario.executeUpdate();
+                if (filasUsuario == 0) {
+                    logger.warning("No se actualizó el usuario para el paciente con ID: " + paciente.getIdPaciente());
+                }
+            }
+        }
+
+        con.commit();  // Confirmar transacción
+        logger.info("Paciente actualizado exitosamente: " + paciente);
         return paciente;
     } catch (SQLException ex) {
         if (con != null) {
@@ -226,6 +311,4 @@ public class PacienteDAO implements IPacienteDAO {
         }
     }
     }
-
-    
 }
