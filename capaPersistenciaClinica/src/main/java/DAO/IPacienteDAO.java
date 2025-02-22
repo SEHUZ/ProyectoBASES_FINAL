@@ -23,4 +23,6 @@ public interface IPacienteDAO {
     public Paciente consultarPacientePorCorreo(String correo) throws PersistenciaClinicaException;
     
     public Paciente consultarPacientePorTelefono(String telefono) throws PersistenciaClinicaException;
+    
+    public Paciente consultarPacientePorUsuario(String User) throws PersistenciaClinicaException;
 }

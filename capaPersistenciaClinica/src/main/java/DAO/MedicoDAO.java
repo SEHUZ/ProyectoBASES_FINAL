@@ -5,24 +5,13 @@
 package DAO;
 
 import Conexion.IConexionBD;
-import Entidades.Cita;
-import Entidades.DireccionPaciente;
-import Entidades.EstadosCita;
 import Entidades.Medico;
-import Entidades.Paciente;
-import Entidades.Usuario;
 import Exception.PersistenciaClinicaException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  *
@@ -30,27 +19,17 @@ import java.util.logging.Logger;
  */
 public class MedicoDAO implements IMedicoDAO {
 
-    private IConexionBD conexion;
-    private Connection connection;  // Agregar esta línea para declarar la conexión
+    IConexionBD conexion;
 
     public MedicoDAO(IConexionBD conexion) {
         this.conexion = conexion;
-        try {
-            this.connection = conexion.crearConexion();  // Inicializar la conexión aquí
-        } catch (PersistenciaClinicaException e) {
-            e.printStackTrace();
-        }
     }
 
     @Override
     public boolean ActualizarEstado(Medico medico) throws PersistenciaClinicaException {
         String updateEstadoSQL = "UPDATE Medicos SET activo = ? WHERE idMedico = ?";
 
-        Connection con = null;
-        con = conexion.crearConexion();
-
-        try (PreparedStatement ps = con.prepareStatement(updateEstadoSQL, Statement.RETURN_GENERATED_KEYS)) {
-            // Invertir el estado actual (true/false)
+        try (Connection con = conexion.crearConexion(); PreparedStatement ps = con.prepareStatement(updateEstadoSQL, Statement.RETURN_GENERATED_KEYS)) {
             boolean nuevoEstado = !medico.isActivo();
 
             ps.setBoolean(1, nuevoEstado);
@@ -59,7 +38,7 @@ public class MedicoDAO implements IMedicoDAO {
             int filasAfectadas = ps.executeUpdate();
 
             if (filasAfectadas > 0) {
-                medico.setActivo(nuevoEstado); // Actualizar el objeto en memoria
+                medico.setActivo(nuevoEstado);
                 return true;
             }
             return false;
@@ -75,13 +54,9 @@ public class MedicoDAO implements IMedicoDAO {
                 + "m.apellidoMaterno, m.cedula, m.especialidad, m.activo "
                 + "FROM Medicos m "
                 + "WHERE m.especialidad = ? AND m.activo = TRUE "
-                + "LIMIT 1"; // Solo obtener el primer resultado
+                + "LIMIT 1";
 
-        Connection con = null;
-        con = conexion.crearConexion();
-
-        try (PreparedStatement ps = con.prepareStatement(consultaMedicoEspecialidadSQL)) {
-            // Validar que la especialidad no sea nula o vacía
+        try (Connection con = conexion.crearConexion(); PreparedStatement ps = con.prepareStatement(consultaMedicoEspecialidadSQL)) {
             if (medico.getEspecialidad() == null || medico.getEspecialidad().isEmpty()) {
                 throw new PersistenciaClinicaException("La especialidad no puede estar vacía");
             }
@@ -119,10 +94,7 @@ public class MedicoDAO implements IMedicoDAO {
                 + "WHERE m.idMedico = ? AND m.activo = TRUE "
                 + "LIMIT 1";
 
-        Connection con = null;
-        con = conexion.crearConexion();
-
-        try (PreparedStatement ps = con.prepareStatement(consultaMedicoIDSQL)) {
+        try (Connection con = conexion.crearConexion(); PreparedStatement ps = con.prepareStatement(consultaMedicoIDSQL)) {
             if (medico.getIdMedico() <= 0) {
                 throw new PersistenciaClinicaException("El ID del médico no es válido");
             }
@@ -147,11 +119,9 @@ public class MedicoDAO implements IMedicoDAO {
                     );
                 }
             }
-
         } catch (SQLException ex) {
             throw new PersistenciaClinicaException("Error al consultar médico por ID: " + ex.getMessage());
         }
     }
 
 }
-

@@ -40,7 +40,7 @@ public class PruebasPersistencia {
         IUsuarioDAO usuarioDAO = new UsuarioDAO(conexion);
         
         try {
-            System.out.println(usuarioDAO.login("si", "hola"));
+            pacienteDAO.consultarPacientePorUsuario("si");
         } catch (PersistenciaClinicaException ex) {
             logger.log(Level.SEVERE, "Error al consultar el paciente: " + ex);
         }
