@@ -6,12 +6,14 @@ package BO;
 
 import Conexion.IConexionBD;
 import DAO.IMedicoDAO;
-import DAO.IPacienteDAO;
 import DAO.MedicoDAO;
-import DAO.PacienteDAO;
 import DTO.MedicoDTO;
+import DTO.PacienteViejoDTO;
+import Entidades.Medico;
 import Exception.NegocioException;
 import Exception.PersistenciaClinicaException;
+import Mappers.MedicoMapper;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
@@ -19,13 +21,29 @@ import java.util.logging.Logger;
  * @author sonic
  */
 public class MedicoBO {
+    
     private static final Logger logger = Logger.getLogger(MedicoBO.class.getName());
     
     private final IMedicoDAO medicoDAO;
+    
+    private final MedicoMapper mapper = new MedicoMapper();
     
     public MedicoBO(IConexionBD conexion) {
         this.medicoDAO = new MedicoDAO(conexion);
     }
 
-    // Declaracion de la DAO para hacer uso de sus metodos.
+    public MedicoDTO buscarPacientePorUsuario(String user) throws NegocioException {
+        try {
+            Medico medico = medicoDAO.consultarMedicoPorUsuario(user);
+            if (medico == null) {
+                return null;
+            }
+            
+            return mapper.toDTO(medico);
+        } catch (PersistenciaClinicaException ex) {
+            logger.log(Level.SEVERE, "Error al recuperar los datos del medico", ex);
+            throw new NegocioException("Error al recuperar los datos del medico: " + ex.getMessage());
+        }
+    }
+    
 }

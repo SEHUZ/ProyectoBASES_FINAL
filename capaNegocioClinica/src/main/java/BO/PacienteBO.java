@@ -9,6 +9,7 @@ import Conexion.IConexionBD;
 import DAO.IPacienteDAO;
 import DAO.PacienteDAO;
 import DTO.PacienteNuevoDTO;
+import DTO.PacienteViejoDTO;
 import Entidades.Paciente;
 import Exception.NegocioException;
 import Exception.PersistenciaClinicaException;
@@ -107,7 +108,7 @@ public class PacienteBO {
         if (pacienteDAO.consultarPacientePorUsuario(pacienteNuevoDTO.getUsuario().getUser()) != null) {
             throw new NegocioException("El nombre de usuario ingresado ya esta registrado.");
         }
-        
+
         // Verificar si el correo tiene un formato valido.
         if (!validarCorreo(pacienteNuevoDTO.getEmail())) {
             throw new NegocioException("El correo ingresado tiene un formato incorrecto.");
@@ -129,7 +130,7 @@ public class PacienteBO {
             throw new NegocioException("Error en el registro del paciente.");
         }
     }
-    
+
     public Paciente actualizarPaciente(PacienteNuevoDTO pacienteNuevoDTO) throws NegocioException, SQLException, PersistenciaClinicaException {
         if (pacienteNuevoDTO == null) {
             throw new NegocioException("El paciente no puede ser nulo.");
@@ -148,7 +149,6 @@ public class PacienteBO {
             throw new NegocioException("El paciente no está registrado");
         }
 
-
         try {
             Paciente pacienteActualizar = new PacienteMapper().toEntityNuevo(pacienteNuevoDTO);
 
@@ -162,9 +162,23 @@ public class PacienteBO {
         }
     }
 
+    public PacienteViejoDTO buscarPacientePorUsuario(String user) throws NegocioException {
+        try {
+            Paciente paciente = pacienteDAO.consultarPacientePorUsuario(user);
+            if (paciente == null) {
+                return null;
+            }
+            
+            return mapper.toViejoDTO(paciente);
+        } catch (PersistenciaClinicaException ex) {
+            logger.log(Level.SEVERE, "Error al recuperar los datos del paciente", ex);
+            throw new NegocioException("Error al recuperar los datos del paciente: " + ex.getMessage());
+        }
+    }
+
     /**
      * Metodo que encripta la contraseña del usuario.
-     * 
+     *
      * @param contraseña Contraseña que se recibe sin encriptar
      * @return La contraseña encriptada.
      */
@@ -177,6 +191,7 @@ public class PacienteBO {
 
     /**
      * Metodo que valida el formato del correo del usuario.
+     *
      * @param correo El correo que se verificara
      * @return True si el formato es valido, False en caso contrario.
      */
