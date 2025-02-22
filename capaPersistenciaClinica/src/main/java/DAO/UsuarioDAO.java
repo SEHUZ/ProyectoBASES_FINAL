@@ -30,12 +30,12 @@ public class UsuarioDAO implements IUsuarioDAO {
     private static final Logger logger = Logger.getLogger(PacienteDAO.class.getName());
 
     @Override
-    public String login(String User, String contrasenia) throws PersistenciaClinicaException {
+    public String login(String user, String contrasenia) throws PersistenciaClinicaException {
         String rol = null;
         String hashAlmacenado = null;
         String sentenciaSQL = "SELECT rol, contrasenia FROM usuarios WHERE User = ?";
         try (Connection con = conexion.crearConexion(); PreparedStatement ps = con.prepareStatement(sentenciaSQL)) {
-            ps.setString(1, User);
+            ps.setString(1, user);
             ResultSet resultSet = ps.executeQuery();
 
             if (resultSet.next()) {
