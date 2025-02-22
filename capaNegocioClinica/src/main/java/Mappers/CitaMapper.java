@@ -26,7 +26,7 @@ public class CitaMapper {
             dto.getMedico(),
             dto.getEstado(),
             dto.getFechaHora(),
-            dto.getTipoCita()
+            dto.getTipoCita() != null ? Cita.TipoCita.valueOf(dto.getTipoCita().toUpperCase()):null
                
         );
     }
@@ -55,7 +55,9 @@ public class CitaMapper {
             dto.getMedico(),
             dto.getEstado(),
             dto.getFechaHora(),
-            dto.getTipoCita()
+            dto.getTipoCita() != null ? Cita.TipoCita.valueOf(dto.getTipoCita().toUpperCase()):null
+                
+
         );
     }
     
