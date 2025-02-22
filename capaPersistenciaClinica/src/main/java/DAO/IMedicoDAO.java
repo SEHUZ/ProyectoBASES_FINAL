@@ -15,11 +15,7 @@ import java.util.List;
  * @author sonic
  */
 public interface IMedicoDAO {
-    public boolean DarBajaTemporal (Medico medico) throws PersistenciaClinicaException;
-    
-    public boolean DarAlta (Medico medico) throws PersistenciaClinicaException;
-    
-    public List<Cita> ConsultarCitas (Medico medico) throws PersistenciaClinicaException;
+    public boolean ActualizarEstado (Medico medico) throws PersistenciaClinicaException;
     
     public boolean ConsultarHistorialPaciente (Paciente paciente) throws PersistenciaClinicaException;
 }

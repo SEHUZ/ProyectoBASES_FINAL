@@ -6,6 +6,8 @@ package pruebasPersistencia;
 
 import Conexion.ConexionBD;
 import Conexion.IConexionBD;
+import DAO.CitaDAO;
+import DAO.ICitaDAO;
 import DAO.IPacienteDAO;
 import DAO.PacienteDAO;
 import Entidades.DireccionPaciente;
@@ -39,6 +41,8 @@ public class PruebasPersistencia {
         } catch (PersistenciaClinicaException ex) {
             logger.log(Level.SEVERE, "Error al consultar el paciente con telefono: " + ex);
         }
+        
     }
+    
     
 }

@@ -18,10 +18,11 @@ import Entidades.Paciente;
 import Entidades.Medico;
 import Entidades.EstadoCita;
 import Exception.PersistenciaClinicaException;
+import java.sql.CallableStatement;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
-public class CitaDAO {
+public class CitaDAO implements ICitaDAO{
 
     private IConexionBD conexion;
     private Connection connection;  // Agregar esta línea para declarar la conexión
@@ -36,7 +37,7 @@ public class CitaDAO {
     }
 
     // Método para insertar una nueva cita
-    public boolean insertarCita(Cita cita) {
+    public boolean insertarCita(Cita cita) throws PersistenciaClinicaException{
         String sql = "INSERT INTO Citas (idPaciente, idMedico, idEstado, fechaHora) VALUES (?, ?, ?, ?)";
         try (PreparedStatement stmt = connection.prepareStatement(sql)) {
             stmt.setInt(1, cita.getPaciente().getIdPaciente());
@@ -102,7 +103,7 @@ public class CitaDAO {
     }
 
     // Método para actualizar el estado de una cita
-    public boolean actualizarEstadoCita(int idCita, int nuevoEstado) {
+    public boolean actualizarEstadoCita(int idCita, int nuevoEstado) throws PersistenciaClinicaException{
         String sql = "UPDATE Citas SET idEstado = ? WHERE idCita = ?";
         try (PreparedStatement stmt = connection.prepareStatement(sql)) {
             stmt.setInt(1, nuevoEstado);
@@ -115,7 +116,7 @@ public class CitaDAO {
     }
 
     // Método para eliminar una cita
-    public boolean eliminarCita(int idCita) {
+    public boolean eliminarCita(int idCita) throws PersistenciaClinicaException{
         String sql = "DELETE FROM Citas WHERE idCita = ?";
         try (PreparedStatement stmt = connection.prepareStatement(sql)) {
             stmt.setInt(1, idCita);
@@ -125,6 +126,61 @@ public class CitaDAO {
         }
         return false;
     }
+
+    @Override
+    public List<Cita> consultarCitasMedico(Medico medico) throws PersistenciaClinicaException{
+        List<Cita> citas = new ArrayList<>();
+        String consultaCitasPorMedicoSQL = "CALL ObtenerCitasPorMedico(?)";
+        
+        try (CallableStatement stmt = connection.prepareCall(consultaCitasPorMedicoSQL)) {
+        
+        // Establecer parámetro del médico
+        stmt.setInt(1, medico.getIdMedico());
+        
+        // Ejecutar consulta
+        ResultSet rs = stmt.executeQuery();
+        
+        // Procesar resultados
+        while (rs.next()) {
+            // Construir Paciente con datos básicos
+            Paciente paciente = new Paciente();
+            paciente.setIdPaciente(rs.getInt("idPaciente"));
+            paciente.setNombres(rs.getString("nombrePaciente"));
+            
+            // Construir Médico con datos del resultado (más completo que el parámetro)
+            Medico medicoResultado = new Medico();
+            medico.setIdMedico(rs.getInt("idMedico"));
+            medico.setNombres(rs.getString("nombreMedico"));
+            
+            // Construir Estado de Cita
+            EstadoCita estado = new EstadoCita(
+                rs.getInt("idEstado"), 
+                rs.getString("descripcion")
+            );
+            
+            // Construir Cita con LocalDateTime
+            Cita cita = new Cita(
+                rs.getInt("idCita"),
+                paciente,
+                medicoResultado,
+                estado,
+                rs.getTimestamp("fechaHora").toLocalDateTime()
+            );
+            
+            citas.add(cita);
+        }
+        
+    } catch (SQLException ex) {
+        throw new PersistenciaClinicaException(
+            "Error al consultar citas para el médico ID: " + medico.getIdMedico(), 
+            ex
+        );
+    }
+    
+    return citas;
+    }
+
+        
 }
 
 
