@@ -4,7 +4,7 @@
  */
 package DTO;
 
-import Entidades.EstadoCita;
+import Entidades.EstadosCita;
 import Entidades.Medico;
 import Entidades.Paciente;
 import java.time.LocalDateTime;
@@ -17,10 +17,10 @@ public class CitaViejaDTO {
     private int idCita;
     private Paciente paciente;
     private Medico medico;
-    private EstadoCita estado;
+    private EstadosCita estado;
     private LocalDateTime fechaHora;
 
-    public CitaViejaDTO(int idCita, Paciente paciente, Medico medico, EstadoCita estado, LocalDateTime fechaHora) {
+    public CitaViejaDTO(int idCita, Paciente paciente, Medico medico, EstadosCita estado, LocalDateTime fechaHora) {
         this.idCita = idCita;
         this.paciente = paciente;
         this.medico = medico;
@@ -28,7 +28,7 @@ public class CitaViejaDTO {
         this.fechaHora = fechaHora;
     }
 
-    public CitaViejaDTO(Paciente paciente, Medico medico, EstadoCita estado, LocalDateTime fechaHora) {
+    public CitaViejaDTO(Paciente paciente, Medico medico, EstadosCita estado, LocalDateTime fechaHora) {
         this.paciente = paciente;
         this.medico = medico;
         this.estado = estado;
@@ -62,11 +62,11 @@ public class CitaViejaDTO {
         this.medico = medico;
     }
 
-    public EstadoCita getEstado() {
+    public EstadosCita getEstado() {
         return estado;
     }
 
-    public void setEstado(EstadoCita estado) {
+    public void setEstado(EstadosCita estado) {
         this.estado = estado;
     }
 
