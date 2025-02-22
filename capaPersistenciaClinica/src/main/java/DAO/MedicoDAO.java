@@ -7,7 +7,7 @@ package DAO;
 import Conexion.IConexionBD;
 import Entidades.Cita;
 import Entidades.DireccionPaciente;
-import Entidades.EstadoCita;
+import Entidades.EstadosCita;
 import Entidades.Medico;
 import Entidades.Paciente;
 import Entidades.Usuario;
