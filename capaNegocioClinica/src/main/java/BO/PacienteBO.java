@@ -129,6 +129,38 @@ public class PacienteBO {
             throw new NegocioException("Error en el registro del paciente.");
         }
     }
+    
+    public Paciente actualizarPaciente(PacienteNuevoDTO pacienteNuevoDTO) throws NegocioException, SQLException, PersistenciaClinicaException {
+        if (pacienteNuevoDTO == null) {
+            throw new NegocioException("El paciente no puede ser nulo.");
+        }
+
+        if (pacienteNuevoDTO.getNombre() == null || pacienteNuevoDTO.getNombre().isEmpty()) {
+            throw new NegocioException("El nombre del paciente no puede estar vacío");
+        }
+
+        if (pacienteNuevoDTO.getTelefono().length() != 10) {
+            throw new NegocioException("El teléfono debe tener 10 dígitos");
+        }
+
+        Paciente pacienteExistente = pacienteDAO.consultarPacientePorCorreo(pacienteNuevoDTO.getEmail());
+        if (pacienteExistente == null) {
+            throw new NegocioException("El paciente no está registrado");
+        }
+
+
+        try {
+            Paciente pacienteActualizar = new PacienteMapper().toEntityNuevo(pacienteNuevoDTO);
+
+            Paciente pacienteActualizado = pacienteDAO.actualizarPaciente(pacienteActualizar);
+
+            return pacienteActualizado;
+
+        } catch (PersistenciaClinicaException ex) {
+            logger.log(Level.SEVERE, "Error al actualizar paciente", ex);
+            throw new NegocioException("Error al actualizar paciente: " + ex.getMessage());
+        }
+    }
 
     /**
      * Metodo que encripta la contraseña del usuario.
