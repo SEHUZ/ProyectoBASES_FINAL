@@ -16,6 +16,7 @@ public class Medico {
     private String apellidoMaterno;
     private String cedula;
     private String especialidad;
+    private boolean activo;
 
     public Medico(int idMedico, Usuario usuario, String nombres, String apellidoPaterno, String apellidoMaterno, String cedula, String especialidad) {
         this.idMedico = idMedico;
@@ -35,6 +36,15 @@ public class Medico {
         this.cedula = cedula;
         this.especialidad = especialidad;
     }
+
+    public boolean isActivo() {
+        return activo;
+    }
+
+    public void setActivo(boolean activo) {
+        this.activo = activo;
+    }
+    
 
     public Medico() {
     }
