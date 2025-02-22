@@ -141,72 +141,6 @@ public class PacienteDAO implements IPacienteDAO {
     }
 
     @Override
-    public Paciente consultarPacientePorID(int id) throws PersistenciaClinicaException {
-        Paciente paciente = null;
-        String consultaPacienteSQL = "SELECT idPaciente, idUsuario, nombres, apellidoPaterno, apellidoMaterno, fechaNacimiento, telefono, email FROM pacientes WHERE idPaciente = ?";
-        String consultaDireccionSQL = "SELECT calle, numero, codigoPostal FROM direccionespacientes WHERE idPaciente = ?";
-        String consultaUsuarioSQL = "SELECT idUsuario, user, contrasenia, rol FROM usuarios WHERE idUsuario = ?";
-
-        try (Connection con = this.conexion.crearConexion()) {
-            // 1. Obtener datos del paciente
-            try (PreparedStatement psPaciente = con.prepareStatement(consultaPacienteSQL)) {
-                psPaciente.setInt(1, id);
-                try (ResultSet rsPaciente = psPaciente.executeQuery()) {
-                    if (rsPaciente.next()) {
-                        paciente = new Paciente();
-                        paciente.setIdPaciente(rsPaciente.getInt("idPaciente"));
-                        int idUsuario = rsPaciente.getInt("idUsuario");
-                        paciente.setNombres(rsPaciente.getString("nombres"));
-                        paciente.setApellidoPaterno(rsPaciente.getString("apellidoPaterno"));
-                        paciente.setApellidoMaterno(rsPaciente.getString("apellidoMaterno"));
-                        paciente.setFechaNacimiento(rsPaciente.getDate("fechaNacimiento").toLocalDate());
-                        paciente.setTelefono(rsPaciente.getString("telefono"));
-                        paciente.setEmail(rsPaciente.getString("email"));
-
-                        // 2. Obtener la dirección asociada
-                        try (PreparedStatement psDireccion = con.prepareStatement(consultaDireccionSQL)) {
-                            psDireccion.setInt(1, id);
-                            try (ResultSet rsDireccion = psDireccion.executeQuery()) {
-                                if (rsDireccion.next()) {
-                                    DireccionPaciente direccion = new DireccionPaciente();
-                                    direccion.setCalle(rsDireccion.getString("calle"));
-                                    direccion.setNumero(rsDireccion.getString("numero"));
-                                    direccion.setCodigoPostal(rsDireccion.getString("codigoPostal"));
-                                    paciente.setDireccion(direccion);
-                                }
-                            }
-                        }
-
-                        // 3. Obtener la información del usuario asociado
-                        try (PreparedStatement psUsuario = con.prepareStatement(consultaUsuarioSQL)) {
-                            psUsuario.setInt(1, idUsuario);
-                            try (ResultSet rsUsuario = psUsuario.executeQuery()) {
-                                if (rsUsuario.next()) {
-                                    Usuario usuario = new Usuario();
-                                    usuario.setIdUsuario(rsUsuario.getInt("idUsuario"));
-                                    usuario.setUser(rsUsuario.getString("user"));
-                                    usuario.setContrasenia(rsUsuario.getString("contrasenia"));
-                                    usuario.setRol(rsUsuario.getString("rol"));
-                                    paciente.setUsuario(usuario);
-                                }
-                            }
-                        }
-
-                        logger.info("Paciente encontrado: " + paciente);
-                    } else {
-                        logger.warning("No se encontró el paciente con ID: " + id);
-                    }
-                }
-            }
-        } catch (SQLException ex) {
-            logger.log(Level.SEVERE, "Error al consultar el paciente con ID: " + id, ex);
-            throw new PersistenciaClinicaException("Error al consultar el paciente con ID: " + id, ex);
-        }
-
-        return paciente;
-    }
-
-    @Override
     public Paciente actualizarPaciente(Paciente paciente) throws PersistenciaClinicaException {
         // Primero, consulta el paciente actual
         Paciente pacienteActual = consultarPacientePorID(paciente.getIdPaciente());
@@ -329,6 +263,72 @@ public class PacienteDAO implements IPacienteDAO {
     }
 
     @Override
+    public Paciente consultarPacientePorID(int id) throws PersistenciaClinicaException {
+        Paciente paciente = null;
+        String consultaPacienteSQL = "SELECT idPaciente, idUsuario, nombres, apellidoPaterno, apellidoMaterno, fechaNacimiento, telefono, email FROM pacientes WHERE idPaciente = ?";
+        String consultaDireccionSQL = "SELECT calle, numero, codigoPostal FROM direccionespacientes WHERE idPaciente = ?";
+        String consultaUsuarioSQL = "SELECT idUsuario, user, contrasenia, rol FROM usuarios WHERE idUsuario = ?";
+
+        try (Connection con = this.conexion.crearConexion()) {
+            // 1. Obtener datos del paciente
+            try (PreparedStatement psPaciente = con.prepareStatement(consultaPacienteSQL)) {
+                psPaciente.setInt(1, id);
+                try (ResultSet rsPaciente = psPaciente.executeQuery()) {
+                    if (rsPaciente.next()) {
+                        paciente = new Paciente();
+                        paciente.setIdPaciente(rsPaciente.getInt("idPaciente"));
+                        int idUsuario = rsPaciente.getInt("idUsuario");
+                        paciente.setNombres(rsPaciente.getString("nombres"));
+                        paciente.setApellidoPaterno(rsPaciente.getString("apellidoPaterno"));
+                        paciente.setApellidoMaterno(rsPaciente.getString("apellidoMaterno"));
+                        paciente.setFechaNacimiento(rsPaciente.getDate("fechaNacimiento").toLocalDate());
+                        paciente.setTelefono(rsPaciente.getString("telefono"));
+                        paciente.setEmail(rsPaciente.getString("email"));
+
+                        // 2. Obtener la dirección asociada
+                        try (PreparedStatement psDireccion = con.prepareStatement(consultaDireccionSQL)) {
+                            psDireccion.setInt(1, id);
+                            try (ResultSet rsDireccion = psDireccion.executeQuery()) {
+                                if (rsDireccion.next()) {
+                                    DireccionPaciente direccion = new DireccionPaciente();
+                                    direccion.setCalle(rsDireccion.getString("calle"));
+                                    direccion.setNumero(rsDireccion.getString("numero"));
+                                    direccion.setCodigoPostal(rsDireccion.getString("codigoPostal"));
+                                    paciente.setDireccion(direccion);
+                                }
+                            }
+                        }
+
+                        // 3. Obtener la información del usuario asociado
+                        try (PreparedStatement psUsuario = con.prepareStatement(consultaUsuarioSQL)) {
+                            psUsuario.setInt(1, idUsuario);
+                            try (ResultSet rsUsuario = psUsuario.executeQuery()) {
+                                if (rsUsuario.next()) {
+                                    Usuario usuario = new Usuario();
+                                    usuario.setIdUsuario(rsUsuario.getInt("idUsuario"));
+                                    usuario.setUser(rsUsuario.getString("user"));
+                                    usuario.setContrasenia(rsUsuario.getString("contrasenia"));
+                                    usuario.setRol(rsUsuario.getString("rol"));
+                                    paciente.setUsuario(usuario);
+                                }
+                            }
+                        }
+
+                        logger.info("Paciente encontrado: " + paciente);
+                    } else {
+                        logger.warning("No se encontró el paciente con ID: " + id);
+                    }
+                }
+            }
+        } catch (SQLException ex) {
+            logger.log(Level.SEVERE, "Error al consultar el paciente con ID: " + id, ex);
+            throw new PersistenciaClinicaException("Error al consultar el paciente con ID: " + id, ex);
+        }
+
+        return paciente;
+    }
+
+    @Override
     public Paciente consultarPacientePorCorreo(String correo) throws PersistenciaClinicaException {
         Paciente paciente = null;
         String consultaPacienteSQL = "SELECT idPaciente, idUsuario, email, nombres, apellidoPaterno, apellidoMaterno, fechaNacimiento, telefono FROM pacientes WHERE email = ?";
@@ -336,7 +336,7 @@ public class PacienteDAO implements IPacienteDAO {
         String consultaUsuarioSQL = "SELECT idUsuario, user, contrasenia, rol FROM usuarios WHERE idUsuario = ?";
 
         try (Connection con = this.conexion.crearConexion()) {
-            
+
             // 1. Obtener datos del paciente
             try (PreparedStatement psPaciente = con.prepareStatement(consultaPacienteSQL)) {
                 psPaciente.setString(1, correo);
@@ -351,7 +351,7 @@ public class PacienteDAO implements IPacienteDAO {
                         paciente.setApellidoMaterno(rsPaciente.getString("apellidoMaterno"));
                         paciente.setFechaNacimiento(rsPaciente.getDate("fechaNacimiento").toLocalDate());
                         paciente.setTelefono(rsPaciente.getString("telefono"));
-                        
+
                         // 2. Obtener la dirección asociada
                         try (PreparedStatement psDireccion = con.prepareStatement(consultaDireccionSQL)) {
                             psDireccion.setInt(1, paciente.getIdPaciente());
@@ -391,6 +391,74 @@ public class PacienteDAO implements IPacienteDAO {
         } catch (SQLException ex) {
             logger.log(Level.SEVERE, "Error al consultar el paciente con correo: " + correo, ex);
             throw new PersistenciaClinicaException("Error al consultar el paciente con correo: " + correo, ex);
+        }
+
+        return paciente;
+    }
+
+    @Override
+    public Paciente consultarPacientePorTelefono(String telefono) throws PersistenciaClinicaException {
+        Paciente paciente = null;
+        String consultaPacienteSQL = "SELECT idPaciente, idUsuario, email, nombres, apellidoPaterno, apellidoMaterno, fechaNacimiento, telefono FROM pacientes WHERE telefono = ?";
+        String consultaDireccionSQL = "SELECT idPaciente, calle, numero, codigoPostal FROM direccionespacientes WHERE idPaciente = ?";
+        String consultaUsuarioSQL = "SELECT idUsuario, user, contrasenia, rol FROM usuarios WHERE idUsuario = ?";
+
+        try (Connection con = this.conexion.crearConexion()) {
+
+            // 1. Obtener datos del paciente
+            try (PreparedStatement psPaciente = con.prepareStatement(consultaPacienteSQL)) {
+                psPaciente.setString(1, telefono);
+                try (ResultSet rsPaciente = psPaciente.executeQuery()) {
+                    if (rsPaciente.next()) {
+                        paciente = new Paciente();
+                        paciente.setIdPaciente(rsPaciente.getInt("idPaciente"));
+                        int idUsuario = rsPaciente.getInt("idUsuario");
+                        paciente.setEmail(rsPaciente.getString("email"));
+                        paciente.setNombres(rsPaciente.getString("nombres"));
+                        paciente.setApellidoPaterno(rsPaciente.getString("apellidoPaterno"));
+                        paciente.setApellidoMaterno(rsPaciente.getString("apellidoMaterno"));
+                        paciente.setFechaNacimiento(rsPaciente.getDate("fechaNacimiento").toLocalDate());
+                        paciente.setTelefono(rsPaciente.getString("telefono"));
+
+                        // 2. Obtener la dirección asociada
+                        try (PreparedStatement psDireccion = con.prepareStatement(consultaDireccionSQL)) {
+                            psDireccion.setInt(1, paciente.getIdPaciente());
+                            try (ResultSet rsDireccion = psDireccion.executeQuery()) {
+                                if (rsDireccion.next()) {
+                                    DireccionPaciente direccion = new DireccionPaciente();
+                                    direccion.setIdPaciente(rsDireccion.getInt("idPaciente"));
+                                    direccion.setCalle(rsDireccion.getString("calle"));
+                                    direccion.setNumero(rsDireccion.getString("numero"));
+                                    direccion.setCodigoPostal(rsDireccion.getString("codigoPostal"));
+                                    paciente.setDireccion(direccion);
+                                }
+                            }
+                        }
+
+                        // 3. Obtener la información del usuario asociado
+                        try (PreparedStatement psUsuario = con.prepareStatement(consultaUsuarioSQL)) {
+                            psUsuario.setInt(1, idUsuario);
+                            try (ResultSet rsUsuario = psUsuario.executeQuery()) {
+                                if (rsUsuario.next()) {
+                                    Usuario usuario = new Usuario();
+                                    usuario.setIdUsuario(rsUsuario.getInt("idUsuario"));
+                                    usuario.setUser(rsUsuario.getString("user"));
+                                    usuario.setContrasenia(rsUsuario.getString("contrasenia"));
+                                    usuario.setRol(rsUsuario.getString("rol"));
+                                    paciente.setUsuario(usuario);
+                                }
+                            }
+                        }
+
+                        logger.info("Paciente encontrado: " + paciente);
+                    } else {
+                        logger.warning("No se encontró el paciente con telefono: " + telefono);
+                    }
+                }
+            }
+        } catch (SQLException ex) {
+            logger.log(Level.SEVERE, "Error al consultar el paciente con telefono: " + telefono, ex);
+            throw new PersistenciaClinicaException("Error al consultar el paciente con telefono: " + telefono, ex);
         }
 
         return paciente;

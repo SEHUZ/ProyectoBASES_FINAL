@@ -35,9 +35,9 @@ public class PruebasPersistencia {
         IPacienteDAO pacienteDAO = new PacienteDAO(conexion);             
         
         try {
-            pacienteDAO.consultarPacientePorCorreo("maria@hotmail.com");
+            pacienteDAO.consultarPacientePorTelefono("6442475630");
         } catch (PersistenciaClinicaException ex) {
-            logger.log(Level.SEVERE, "Error al consultar el paciente con correo: " + ex);
+            logger.log(Level.SEVERE, "Error al consultar el paciente con telefono: " + ex);
         }
     }
     
