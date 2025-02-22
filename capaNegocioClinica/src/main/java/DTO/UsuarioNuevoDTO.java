@@ -52,9 +52,5 @@ public class UsuarioNuevoDTO {
         return "UsuarioNuevoDTO{" + "User=" + User + ", contrasenia=" + contrasenia + ", rol=" + rol + '}';
     }
     
-    
-    
-    
 }
 
-   
