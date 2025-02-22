@@ -53,9 +53,8 @@ public class UsuarioDAO implements IUsuarioDAO {
             logger.log(Level.SEVERE, "Error al crear activista", ex);
             throw new PersistenciaClinicaException("Error al crear al activista", ex);
         }
-        
+
         return rol;
     }
-    
-    
+
 }

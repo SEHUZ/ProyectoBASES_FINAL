@@ -12,6 +12,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.logging.Logger;
 
 /**
  *
@@ -25,6 +26,8 @@ public class MedicoDAO implements IMedicoDAO {
         this.conexion = conexion;
     }
 
+    private static final Logger logger = Logger.getLogger(PacienteDAO.class.getName());
+    
     @Override
     public boolean ActualizarEstado(Medico medico) throws PersistenciaClinicaException {
         String updateEstadoSQL = "UPDATE Medicos SET activo = ? WHERE idMedico = ?";
@@ -122,6 +125,44 @@ public class MedicoDAO implements IMedicoDAO {
         } catch (SQLException ex) {
             throw new PersistenciaClinicaException("Error al consultar médico por ID: " + ex.getMessage());
         }
+    }
+
+    @Override
+    public Medico consultarMedicoPorUsuario(String user) throws PersistenciaClinicaException {
+        Medico medico = null;
+
+        String consultaMedicoSQL = "SELECT m.idMedico, m.idUsuario, m.nombres, m.apellidoPaterno, "
+                + "m.apellidoMaterno, m.cedula, m.especialidad, m.activo "
+                + "FROM Medicos m "
+                + "JOIN Usuarios u ON m.idUsuario = u.idUsuario "
+                + "WHERE u.user = ? AND m.activo = TRUE LIMIT 1";
+
+        try (Connection con = conexion.crearConexion(); PreparedStatement ps = con.prepareStatement(consultaMedicoSQL)) {
+
+            ps.setString(1, user);
+
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    medico = new Medico();
+                    medico.setIdMedico(rs.getInt("idMedico"));
+                    medico.setNombres(rs.getString("nombres"));
+                    medico.setApellidoPaterno(rs.getString("apellidoPaterno"));
+                    medico.setApellidoMaterno(rs.getString("apellidoMaterno"));
+                    medico.setCedula(rs.getString("cedula"));
+                    medico.setEspecialidad(rs.getString("especialidad"));
+                    medico.setActivo(rs.getBoolean("activo"));
+                   
+                    logger.info("Medico encontrado: " + medico);
+                } else {
+                    logger.warning("No se encontró el paciente con usuario: " + user);
+                    throw new PersistenciaClinicaException("No se encontró un médico activo con el usuario: " + user);
+                }
+            }
+        } catch (SQLException ex) {
+            throw new PersistenciaClinicaException("Error al consultar médico por usuario: " + ex.getMessage());
+        }
+        
+        return medico;
     }
 
 }

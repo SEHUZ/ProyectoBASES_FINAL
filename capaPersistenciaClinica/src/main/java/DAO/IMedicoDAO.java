@@ -20,4 +20,6 @@ public interface IMedicoDAO {
     public Medico consultarMedicoPorEspecialidad (Medico medico) throws PersistenciaClinicaException;
 
     public Medico consultarMedicoPorID (Medico medico) throws PersistenciaClinicaException;
+    
+    public Medico consultarMedicoPorUsuario(String user) throws PersistenciaClinicaException;
 }
