@@ -61,59 +61,59 @@ public class CitaBO {
             if (citaNuevaDTO.getTipoCita() == null || (!citaNuevaDTO.getTipoCita().equalsIgnoreCase("EMERGENCIA") && !citaNuevaDTO.getTipoCita().equalsIgnoreCase("PROGRAMADA"))) {
                 throw new NegocioException("Tipo de cita inválido");
             }
-            
+
             Cita cita = mapper.toEntityNuevo(citaNuevaDTO);
-            
-            if(!medicoDAO.verificarDisponibilidad(cita.getMedico().getIdMedico(), cita.getFechaHora())) {
+
+            if (!medicoDAO.verificarDisponibilidad(cita.getMedico().getIdMedico(), cita.getFechaHora())) {
                 throw new NegocioException("El médico no está disponible en ese horario");
             }
             if (pacienteDAO.consultarPacientePorID(cita.getPaciente().getIdPaciente()) == null) {
                 throw new NegocioException("Paciente no registrado");
             }
-            
-             Cita citaNueva = citaDAO.insertarCita(cita);
-             
-             return mapper.toViejoDTO(citaNueva);
-            
-        }catch (PersistenciaClinicaException | IllegalArgumentException e) {
+
+            Cita citaNueva = citaDAO.insertarCita(cita);
+
+            return mapper.toViejoDTO(citaNueva);
+
+        } catch (PersistenciaClinicaException | IllegalArgumentException e) {
             throw new NegocioException("Error al agendar cita: " + e.getMessage());
         }
     }
-    
+
     public void cancelarCita(int idCita) throws NegocioException {
         try {
             Cita cita = citaDAO.consultarCitaPorID(idCita);
-            
+
             // Validar que no esté ya cancelada
             if (cita.getEstado().getDescripcion().equalsIgnoreCase("Cancelada")) {
                 throw new NegocioException("La cita ya está cancelada");
             }
-            
+
             // Validar tiempo mínimo de cancelación (24 horas antes)
             if (LocalDateTime.now().isAfter(cita.getFechaHora().minusHours(24))) {
                 throw new NegocioException("No se puede cancelar con menos de 24 horas de anticipación");
             }
-            
+
             // Ejecutar cancelación
             if (!citaDAO.cancelarCita(idCita)) {
                 throw new NegocioException("Error al procesar la cancelación");
             }
-            
+
         } catch (PersistenciaClinicaException ex) {
             throw new NegocioException("Error técnico al cancelar: " + ex.getMessage());
         }
     }
-    
+
     private void validarDisponibilidadMedico(Cita cita) throws NegocioException {
         try {
             if (!medicoDAO.verificarDisponibilidad(
-                cita.getMedico().getIdMedico(), 
-                cita.getFechaHora())) {
+                    cita.getMedico().getIdMedico(),
+                    cita.getFechaHora())) {
                 throw new NegocioException("El médico no está disponible en ese horario");
             }
         } catch (PersistenciaClinicaException e) {
             throw new NegocioException("Error al validar disponibilidad médica");
         }
     }
-    
+
 }
