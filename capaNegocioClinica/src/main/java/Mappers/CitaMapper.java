@@ -25,7 +25,8 @@ public class CitaMapper {
             dto.getPaciente(),
             dto.getMedico(),
             dto.getEstado(),
-            dto.getFechaHora()
+            dto.getFechaHora(),
+            dto.getTipoCita()
                
         );
     }
@@ -53,7 +54,8 @@ public class CitaMapper {
             dto.getPaciente(),
             dto.getMedico(),
             dto.getEstado(),
-            dto.getFechaHora()
+            dto.getFechaHora(),
+            dto.getTipoCita()
         );
     }
     

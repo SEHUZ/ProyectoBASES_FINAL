@@ -18,16 +18,27 @@ public class CitaNuevaDTO {
     private Medico medico;
     private EstadosCita estado;
     private LocalDateTime fechaHora;
+    private String tipoCita;
 
     public CitaNuevaDTO() {
     }
 
-    public CitaNuevaDTO(Paciente paciente, Medico medico, EstadosCita estado, LocalDateTime fechaHora) {
+    public CitaNuevaDTO(Paciente paciente, Medico medico, EstadosCita estado, LocalDateTime fechaHora, String tipoCita) {
         this.paciente = paciente;
         this.medico = medico;
         this.estado = estado;
         this.fechaHora = fechaHora;
+        this.tipoCita = tipoCita;
     }
+
+    public String getTipoCita() {
+        return tipoCita;
+    }
+
+    public void setTipoCita(String tipoCita) {
+        this.tipoCita = tipoCita;
+    }
+    
 
     public Paciente getPaciente() {
         return paciente;
