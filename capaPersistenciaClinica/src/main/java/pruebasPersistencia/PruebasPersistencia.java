@@ -9,7 +9,9 @@ import Conexion.IConexionBD;
 import DAO.CitaDAO;
 import DAO.ICitaDAO;
 import DAO.IPacienteDAO;
+import DAO.IUsuarioDAO;
 import DAO.PacienteDAO;
+import DAO.UsuarioDAO;
 import Entidades.DireccionPaciente;
 import Entidades.Paciente;
 import Entidades.Usuario;
@@ -32,14 +34,15 @@ public class PruebasPersistencia {
     public static void main(String[] args) throws PersistenciaClinicaException {
         // Suponiendo que existe una implementación de IConexionBD, por ejemplo, ConexionBDImpl
         IConexionBD conexion = new ConexionBD();
-
+        
         // Instanciar el DAO con la conexión
-        IPacienteDAO pacienteDAO = new PacienteDAO(conexion);             
+        IPacienteDAO pacienteDAO = new PacienteDAO(conexion);  
+        IUsuarioDAO usuarioDAO = new UsuarioDAO(conexion);
         
         try {
-            pacienteDAO.consultarPacientePorTelefono("6442475630");
+            System.out.println(usuarioDAO.login("si", "hola"));
         } catch (PersistenciaClinicaException ex) {
-            logger.log(Level.SEVERE, "Error al consultar el paciente con telefono: " + ex);
+            logger.log(Level.SEVERE, "Error al consultar el paciente: " + ex);
         }
         
     }
