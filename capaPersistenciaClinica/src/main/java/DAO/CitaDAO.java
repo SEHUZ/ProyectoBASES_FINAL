@@ -100,6 +100,8 @@ public class CitaDAO implements ICitaDAO {
     // Método para obtener todas las citas
     @Override
     public List<Cita> obtenerTodasLasCitas() throws PersistenciaClinicaException {
+        
+        return null;
     }
 
     // Método para actualizar el estado de una cita
