@@ -20,6 +20,7 @@ import Entidades.EstadosCita;
 import Entidades.EstadosCita;
 import Exception.PersistenciaClinicaException;
 import java.sql.CallableStatement;
+import java.sql.Statement;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
@@ -37,21 +38,73 @@ public class CitaDAO implements ICitaDAO{
         }
     }
 
-    // Método para insertar una nueva cita
-    public boolean insertarCita(Cita cita) throws PersistenciaClinicaException{
-        String sql = "INSERT INTO Citas (idPaciente, idMedico, idEstado, fechaHora) VALUES (?, ?, ?, ?)";
-        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
-            stmt.setInt(1, cita.getPaciente().getIdPaciente());
-            stmt.setInt(2, cita.getMedico().getIdMedico());
-            stmt.setInt(3, cita.getEstado().getIdEstado());
-            stmt.setObject(4, cita.getFechaHora());
+    // Método para insertar una cita general en la tabla Citas
 
-            return stmt.executeUpdate() > 0;
-        } catch (SQLException e) {
-            e.printStackTrace();
+   public Cita insertarCita(Cita cita) throws PersistenciaClinicaException {
+    String sql = "INSERT INTO Citas (idPaciente, idMedico, idEstado, fechaHora) VALUES (?, ?, ?, ?)";
+
+    try (PreparedStatement stmt = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
+        stmt.setInt(1, cita.getPaciente().getIdPaciente());
+        stmt.setInt(2, cita.getMedico().getIdMedico());
+        stmt.setInt(3, cita.getEstado().getIdEstado());
+        stmt.setObject(4, cita.getFechaHora());
+
+        int affectedRows = stmt.executeUpdate();
+        if (affectedRows > 0) {
+            try (ResultSet generatedKeys = stmt.getGeneratedKeys()) {
+                if (generatedKeys.next()) {
+                    int idCita = generatedKeys.getInt(1);
+                    cita.setIdCita(idCita); // Asignamos el ID generado a la cita
+                    return cita;
+                }
+            }
         }
-        return false;
+    } catch (SQLException e) {
+        throw new PersistenciaClinicaException("Error al insertar la cita: " + e.getMessage(), e);
     }
+
+    return null;  // Retorna null en caso de fallo
+}
+
+
+
+    // Método para agendar una cita normal
+    public Cita agendarCitaNormal(Cita cita) throws PersistenciaClinicaException {
+    Cita nuevaCita = insertarCita(cita);  // Inserta la cita en la tabla principal
+    if (nuevaCita != null) {
+        String sql = "INSERT INTO CitasNormales (idCita) VALUES (?)";
+        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+            stmt.setInt(1, nuevaCita.getIdCita());
+            if (stmt.executeUpdate() > 0) {
+                return nuevaCita; // Retorna la cita ya creada con su ID
+            }
+        } catch (SQLException e) {
+            throw new PersistenciaClinicaException("Error al agendar cita normal: " + e.getMessage(), e);
+        }
+    }
+    return null;  // Retorna null si falla la inserción
+}
+
+
+    // Método para agendar una cita de emergencia
+    public Cita agendarCitaEmergencia(Cita cita, String folio, LocalDate fechaExpiracion) throws PersistenciaClinicaException {
+    Cita nuevaCita = insertarCita(cita);  // Inserta la cita en la tabla principal
+    if (nuevaCita != null) {
+        String sql = "INSERT INTO CitasEmergencias (idCita, folio, fechaExpiracion) VALUES (?, ?, ?)";
+        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+            stmt.setInt(1, nuevaCita.getIdCita());
+            stmt.setString(2, folio);
+            stmt.setObject(3, fechaExpiracion);
+            if (stmt.executeUpdate() > 0) {
+                return nuevaCita; // Retorna la cita ya creada con su ID
+            }
+        } catch (SQLException e) {
+            throw new PersistenciaClinicaException("Error al agendar cita de emergencia: " + e.getMessage(), e);
+        }
+    }
+    return null;  // Retorna null si falla la inserción
+}
+
 
     // Método para obtener todas las citas
     public List<Cita> obtenerTodasLasCitas() throws PersistenciaClinicaException {
@@ -143,6 +196,8 @@ public class CitaDAO implements ICitaDAO{
         
         // Procesar resultados
         while (rs.next()) {
+            
+            
             // Construir Paciente con datos básicos
             Paciente paciente = new Paciente();
             paciente.setIdPaciente(rs.getInt("idPaciente"));
@@ -180,8 +235,21 @@ public class CitaDAO implements ICitaDAO{
     
     return citas;
     }
+    
+    
+    
+    
+    
+ 
+    
+    
+    
+    
+    
+    
+ 
+    
 
-        
 }
 
 

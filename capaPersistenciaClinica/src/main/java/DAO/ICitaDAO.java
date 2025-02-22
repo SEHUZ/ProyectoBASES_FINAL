@@ -11,16 +11,25 @@ package DAO;
 import Entidades.Cita;
 import Entidades.Medico;
 import Exception.PersistenciaClinicaException;
+import java.time.LocalDate;
 import java.util.List;
 
 public interface ICitaDAO {
 
+
     // Método para insertar una nueva cita
-    boolean insertarCita(Cita cita) throws PersistenciaClinicaException;
+    Cita insertarCita(Cita cita) throws PersistenciaClinicaException;
+
+    // Método para agendar una cita normal
+    Cita agendarCitaNormal(Cita cita) throws PersistenciaClinicaException;
+
+    // Método para agendar una cita de emergencia
+    Cita agendarCitaEmergencia(Cita cita, String folio, LocalDate fechaExpiracion) throws PersistenciaClinicaException;
 
     // Método para obtener todas las citas
     List<Cita> obtenerTodasLasCitas() throws PersistenciaClinicaException;
-    
+
+    // Método para consultar las citas de un médico en específico
     List<Cita> consultarCitasMedico(Medico medico) throws PersistenciaClinicaException;
 
     // Método para actualizar el estado de una cita
@@ -28,6 +37,7 @@ public interface ICitaDAO {
 
     // Método para eliminar una cita
     boolean eliminarCita(int idCita) throws PersistenciaClinicaException;
-    
-    
 }
+
+    
+
