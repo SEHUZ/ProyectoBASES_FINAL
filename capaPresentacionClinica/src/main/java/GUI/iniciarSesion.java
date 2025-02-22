@@ -273,7 +273,8 @@ public class iniciarSesion extends javax.swing.JFrame {
                         if (ventanaPaciente == null) {
                             ventanaPaciente = new dashboardPaciente(paciente);
                         }
-
+                        
+                        ventanaPaciente = new dashboardPaciente(paciente);
                         ventanaPaciente.setVentanaInicio(this);
                         ventanaPaciente.setLocationRelativeTo(null);
                         ventanaPaciente.setVisible(true);
@@ -282,7 +283,8 @@ public class iniciarSesion extends javax.swing.JFrame {
 
                         break;
                     case "medico":
-
+                        
+                        
                         break;
                     default:
                         JOptionPane.showMessageDialog(this, "Rol no reconocido.");
