@@ -103,6 +103,11 @@ public class PacienteBO {
             throw new NegocioException("El telefono ingresado ya esta registrado.");
         }
 
+        // Verificar si el nombre de usuario ya ha sido registrado.
+        if (pacienteDAO.consultarPacientePorUsuario(pacienteNuevoDTO.getUsuario().getUser()) != null) {
+            throw new NegocioException("El nombre de usuario ingresado ya esta registrado.");
+        }
+        
         // Verificar si el correo tiene un formato valido.
         if (!validarCorreo(pacienteNuevoDTO.getEmail())) {
             throw new NegocioException("El correo ingresado tiene un formato incorrecto.");
