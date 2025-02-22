@@ -12,6 +12,7 @@ import Entidades.DireccionPaciente;
 import Entidades.Paciente;
 import Entidades.Usuario;
 import Exception.NegocioException;
+import java.awt.HeadlessException;
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.time.ZoneId;
@@ -27,6 +28,8 @@ import javax.swing.JPanel;
  * @author sonic
  */
 public class registrarUsuario extends javax.swing.JFrame {
+
+    private iniciarSesion ventanaInicio;
 
     /**
      * Creates new form registrarUsuario
@@ -288,6 +291,10 @@ public class registrarUsuario extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    public void setInicio(iniciarSesion ventanaInicio) {
+        this.ventanaInicio = ventanaInicio;
+    }
+
     private void fieldTelefonoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_fieldTelefonoActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_fieldTelefonoActionPerformed
@@ -314,7 +321,7 @@ public class registrarUsuario extends javax.swing.JFrame {
 
     private void botonCancelarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonCancelarActionPerformed
         limpiarCampos();
-        iniciarSesion ventanaInicio = new iniciarSesion();
+        ventanaInicio.setRegistro(this);
         ventanaInicio.setLocationRelativeTo(null);
         ventanaInicio.setVisible(true);
         this.setVisible(false);
@@ -333,11 +340,7 @@ public class registrarUsuario extends javax.swing.JFrame {
     }//GEN-LAST:event_fieldUserActionPerformed
 
     private void botonRegistrar1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonRegistrar1ActionPerformed
-        try {
-            registrarPaciente();
-        } catch (NegocioException | SQLException ex) {
-            Logger.getLogger(registrarUsuario.class.getName()).log(Level.SEVERE, "Error", ex);
-        }
+        registrarPaciente();
     }//GEN-LAST:event_botonRegistrar1ActionPerformed
 
     /**
@@ -404,40 +407,44 @@ public class registrarUsuario extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel8;
     private javax.swing.JLabel jLabel9;
     // End of variables declaration//GEN-END:variables
-    public void registrarPaciente() throws NegocioException, SQLException {
-        String nombre = fieldNombre.getText();
-        String apellidoPaterno = fieldApellidoPaterno.getText();
-        String apellidoMaterno = fieldApellidoMaterno.getText();
-        String Calle = fieldCalle.getText();
-        String Numero = fieldNumero.getText();
-        String telefono = fieldTelefono.getText();
-        String CorreoElectronico = fieldCorreoElectronico.getText();
-        String contrasenia = fieldContraseña.getText();
-        String cp = fieldCodigoPostal.getText();
+    public void registrarPaciente() {
+        try {
+            String nombre = fieldNombre.getText();
+            String apellidoPaterno = fieldApellidoPaterno.getText();
+            String apellidoMaterno = fieldApellidoMaterno.getText();
+            String Calle = fieldCalle.getText();
+            String Numero = fieldNumero.getText();
+            String telefono = fieldTelefono.getText();
+            String CorreoElectronico = fieldCorreoElectronico.getText();
+            String contrasenia = fieldContraseña.getText();
+            String cp = fieldCodigoPostal.getText();
 
-        // Obtener la fecha del JDateChooser y convertirla a LocalDate
-        java.util.Date fechaNacimientoUtil = fechaNacimientoChooser.getDate();
-        LocalDate fechaNacimiento = null;
-        if (fechaNacimientoUtil != null) {
-            fechaNacimiento = fechaNacimientoUtil.toInstant()
-                    .atZone(ZoneId.systemDefault())
-                    .toLocalDate();
-        }
+            // Obtener la fecha del JDateChooser y convertirla a LocalDate
+            java.util.Date fechaNacimientoUtil = fechaNacimientoChooser.getDate();
+            LocalDate fechaNacimiento = null;
+            if (fechaNacimientoUtil != null) {
+                fechaNacimiento = fechaNacimientoUtil.toInstant()
+                        .atZone(ZoneId.systemDefault())
+                        .toLocalDate();
+            }
 
-        String User = fieldUser.getText();
+            String User = fieldUser.getText();
 
-        Usuario usuario = new Usuario(User, contrasenia, "Paciente");
-        DireccionPaciente direccion = new DireccionPaciente(Calle, Numero, cp);
-        PacienteNuevoDTO paciente = new PacienteNuevoDTO(direccion, usuario, nombre, apellidoPaterno, apellidoMaterno, fechaNacimiento, CorreoElectronico, telefono);
+            Usuario usuario = new Usuario(User, contrasenia, "Paciente");
+            DireccionPaciente direccion = new DireccionPaciente(Calle, Numero, cp);
+            PacienteNuevoDTO paciente = new PacienteNuevoDTO(direccion, usuario, nombre, apellidoPaterno, apellidoMaterno, fechaNacimiento, CorreoElectronico, telefono);
 
-        IConexionBD conexion = new ConexionBD();
-        PacienteBO pacienteBO = new PacienteBO(conexion);
-        boolean exito = pacienteBO.registrarPaciente(paciente);
-        if (exito) {
-            JOptionPane.showMessageDialog(this, "El paciente se ha registrado exitosamente");
-            limpiarCampos();
-        } else {
-            JOptionPane.showMessageDialog(this, "ERROR al registrar al paciente");
+            IConexionBD conexion = new ConexionBD();
+            PacienteBO pacienteBO = new PacienteBO(conexion);
+            boolean exito = pacienteBO.registrarPaciente(paciente);
+            if (exito) {
+                JOptionPane.showMessageDialog(this, "El paciente se ha registrado exitosamente");
+                limpiarCampos();
+            } else {
+                JOptionPane.showMessageDialog(this, "ERROR al registrar al paciente");
+            }
+        } catch (NegocioException | SQLException ex) {
+            JOptionPane.showMessageDialog(this, "Error: " + ex.getMessage(), "Advertencia", JOptionPane.WARNING_MESSAGE);
         }
     }
 

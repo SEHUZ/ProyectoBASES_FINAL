@@ -62,9 +62,9 @@
                           <Component id="fieldContraseña" min="-2" pref="255" max="-2" attributes="0"/>
                           <Component id="fieldUsuario" min="-2" pref="255" max="-2" attributes="0"/>
                           <Component id="jLabel3" alignment="0" min="-2" max="-2" attributes="0"/>
-                          <Component id="jLabel2" alignment="0" min="-2" max="-2" attributes="0"/>
                           <Component id="fieldRol" alignment="0" min="-2" pref="255" max="-2" attributes="0"/>
                           <Component id="jLabel5" alignment="0" min="-2" max="-2" attributes="0"/>
+                          <Component id="jLabel2" alignment="0" min="-2" max="-2" attributes="0"/>
                       </Group>
                       <EmptySpace min="-2" pref="179" max="-2" attributes="0"/>
                   </Group>

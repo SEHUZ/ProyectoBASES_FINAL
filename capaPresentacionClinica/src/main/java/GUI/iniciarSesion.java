@@ -10,6 +10,8 @@ package GUI;
  */
 public class iniciarSesion extends javax.swing.JFrame {
 
+    private registrarUsuario ventanaRegistro;
+
     /**
      * Creates new form iniciarSesion
      */
@@ -115,9 +117,9 @@ public class iniciarSesion extends javax.swing.JFrame {
                             .addComponent(fieldContraseña, javax.swing.GroupLayout.PREFERRED_SIZE, 255, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(fieldUsuario, javax.swing.GroupLayout.PREFERRED_SIZE, 255, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(jLabel3)
-                            .addComponent(jLabel2)
                             .addComponent(fieldRol, javax.swing.GroupLayout.PREFERRED_SIZE, 255, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel5))
+                            .addComponent(jLabel5)
+                            .addComponent(jLabel2))
                         .addGap(179, 179, 179))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addComponent(BotonIniciarSesion2, javax.swing.GroupLayout.PREFERRED_SIZE, 141, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -161,9 +163,17 @@ public class iniciarSesion extends javax.swing.JFrame {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+    
+    public void setRegistro(registrarUsuario ventanaRegistro) {
+        this.ventanaRegistro = ventanaRegistro;
+    }
 
     private void BotonRegistrarseActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BotonRegistrarseActionPerformed
-        registrarUsuario ventanaRegistro = new registrarUsuario();
+        if(ventanaRegistro == null) {
+            ventanaRegistro = new registrarUsuario();
+        }
+        
+        ventanaRegistro.setInicio(this);
         ventanaRegistro.setLocationRelativeTo(null);
         ventanaRegistro.setVisible(true);
         this.setVisible(false);
