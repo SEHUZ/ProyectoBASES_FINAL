@@ -33,5 +33,6 @@ public class CitaBO {
     }
     
     public boolean insertarCita(CitaNuevaDTO citaNuevaDTO) throws PersistenciaClinicaException, NegocioException {
+        return false;
     }
 }
