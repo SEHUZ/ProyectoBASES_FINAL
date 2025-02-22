@@ -32,7 +32,6 @@ import javax.swing.JPanel;
 public class registrarUsuario extends javax.swing.JFrame {
 
     private PacienteBO pacienteBO = DependencyInjector.crearPacienteBO();
-
     private iniciarSesion ventanaInicio;
 
     /**
@@ -295,7 +294,7 @@ public class registrarUsuario extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    public void setInicio(iniciarSesion ventanaInicio) {
+    public void setVentanaInicio(iniciarSesion ventanaInicio) {
         this.ventanaInicio = ventanaInicio;
     }
 
@@ -324,11 +323,7 @@ public class registrarUsuario extends javax.swing.JFrame {
     }//GEN-LAST:event_fieldContraseñaActionPerformed
 
     private void botonCancelarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonCancelarActionPerformed
-        limpiarCampos();
-        ventanaInicio.setRegistro(this);
-        ventanaInicio.setLocationRelativeTo(null);
-        ventanaInicio.setVisible(true);
-        this.setVisible(false);
+        cancelarRegistro();
     }//GEN-LAST:event_botonCancelarActionPerformed
 
     private void fieldApellidoPaternoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_fieldApellidoPaternoActionPerformed
@@ -452,6 +447,14 @@ public class registrarUsuario extends javax.swing.JFrame {
         } catch (NegocioException | SQLException ex) {
             JOptionPane.showMessageDialog(this, "Error: " + ex.getMessage(), "Advertencia", JOptionPane.WARNING_MESSAGE);
         }
+    }
+
+    public void cancelarRegistro() {
+        limpiarCampos();
+        ventanaInicio.setVentanaRegistro(this);
+        ventanaInicio.setLocationRelativeTo(null);
+        ventanaInicio.setVisible(true);
+        this.setVisible(false);
     }
 
     public void limpiarCampos() {

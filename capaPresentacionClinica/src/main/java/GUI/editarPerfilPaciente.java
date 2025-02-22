@@ -332,40 +332,40 @@ public class editarPerfilPaciente extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel8;
     private javax.swing.JLabel jLabel9;
     // End of variables declaration//GEN-END:variables
-    public void actualizarPaciente() throws PersistenciaClinicaException {
-        try {
-            String nombre = fieldNombre.getText();
-            String apellidoPaterno = fieldApellidoPaterno.getText();
-            String apellidoMaterno = fieldApellidoMaterno.getText();
-            String Calle = fieldCalle.getText();
-            String Numero = fieldNumero.getText();
-            String telefono = fieldTelefono.getText();
-            String cp = fieldCodigoPostal.getText();
-
-            // Obtener la fecha del JDateChooser y convertirla a LocalDate
-            java.util.Date fechaNacimientoUtil = fechaNacimientoChooser.getDate();
-            LocalDate fechaNacimiento = null;
-            if (fechaNacimientoUtil != null) {
-                fechaNacimiento = fechaNacimientoUtil.toInstant()
-                        .atZone(ZoneId.systemDefault())
-                        .toLocalDate();
-            }
-
-            DireccionPaciente direccion = new DireccionPaciente(Calle, Numero, cp);
-            PacienteNuevoDTO pacienteActualizado = new PacienteNuevoDTO(direccion, nombre, apellidoPaterno, apellidoMaterno, fechaNacimiento, telefono);
-            
-            
-            Paciente exito = pacienteBO.actualizarPaciente(pacienteActualizado);
-            if (exito != null) {
-                JOptionPane.showMessageDialog(this, "El paciente se ha actualizado exitosamente");
-                limpiarCampos();
-            } else {
-                JOptionPane.showMessageDialog(this, "ERROR al actualizar al paciente");
-            }
-        } catch (NegocioException | SQLException ex) {
-            JOptionPane.showMessageDialog(this, "Error: " + ex.getMessage(), "Advertencia", JOptionPane.WARNING_MESSAGE);
-        }
-    }
+//    public void actualizarPaciente() throws PersistenciaClinicaException {
+//        try {
+//            String nombre = fieldNombre.getText();
+//            String apellidoPaterno = fieldApellidoPaterno.getText();
+//            String apellidoMaterno = fieldApellidoMaterno.getText();
+//            String Calle = fieldCalle.getText();
+//            String Numero = fieldNumero.getText();
+//            String telefono = fieldTelefono.getText();
+//            String cp = fieldCodigoPostal.getText();
+//
+//            // Obtener la fecha del JDateChooser y convertirla a LocalDate
+//            java.util.Date fechaNacimientoUtil = fechaNacimientoChooser.getDate();
+//            LocalDate fechaNacimiento = null;
+//            if (fechaNacimientoUtil != null) {
+//                fechaNacimiento = fechaNacimientoUtil.toInstant()
+//                        .atZone(ZoneId.systemDefault())
+//                        .toLocalDate();
+//            }
+//
+//            DireccionPaciente direccion = new DireccionPaciente(Calle, Numero, cp);
+//            PacienteNuevoDTO pacienteActualizado = new PacienteNuevoDTO(direccion, nombre, apellidoPaterno, apellidoMaterno, fechaNacimiento, telefono);
+//            
+//            
+//            Paciente exito = pacienteBO.actualizarPaciente(pacienteActualizado);
+//            if (exito != null) {
+//                JOptionPane.showMessageDialog(this, "El paciente se ha actualizado exitosamente");
+//                limpiarCampos();
+//            } else {
+//                JOptionPane.showMessageDialog(this, "ERROR al actualizar al paciente");
+//            }
+//        } catch (NegocioException | SQLException ex) {
+//            JOptionPane.showMessageDialog(this, "Error: " + ex.getMessage(), "Advertencia", JOptionPane.WARNING_MESSAGE);
+//        }
+//    }
 
     public void limpiarCampos() {
         // Limpiar campos de texto

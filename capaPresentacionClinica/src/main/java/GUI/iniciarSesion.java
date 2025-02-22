@@ -4,6 +4,15 @@
  */
 package GUI;
 
+import BO.MedicoBO;
+import BO.PacienteBO;
+import BO.UsuarioBO;
+import DTO.PacienteViejoDTO;
+import Exception.NegocioException;
+import configuracion.DependencyInjector;
+import java.text.Normalizer;
+import javax.swing.JOptionPane;
+
 /**
  *
  * @author sonic
@@ -11,6 +20,12 @@ package GUI;
 public class iniciarSesion extends javax.swing.JFrame {
 
     private registrarUsuario ventanaRegistro;
+    private dashBoardMedico ventanaMedico;
+    private dashboardPaciente ventanaPaciente;
+
+    private PacienteBO pacienteBO = DependencyInjector.crearPacienteBO();
+    private MedicoBO medicoBO = DependencyInjector.crearMedicoBO();
+    private UsuarioBO usuarioBO = DependencyInjector.crearUsuarioBO();
 
     /**
      * Creates new form iniciarSesion
@@ -36,7 +51,7 @@ public class iniciarSesion extends javax.swing.JFrame {
         jLabel2 = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
         BotonRegistrarse = new javax.swing.JButton();
-        BotonIniciarSesion2 = new javax.swing.JButton();
+        BotonIniciarSesion = new javax.swing.JButton();
         jLabel4 = new javax.swing.JLabel();
         BotonSalir = new javax.swing.JButton();
 
@@ -80,11 +95,11 @@ public class iniciarSesion extends javax.swing.JFrame {
             }
         });
 
-        BotonIniciarSesion2.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
-        BotonIniciarSesion2.setText("Iniciar Sesion");
-        BotonIniciarSesion2.addActionListener(new java.awt.event.ActionListener() {
+        BotonIniciarSesion.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
+        BotonIniciarSesion.setText("Iniciar Sesion");
+        BotonIniciarSesion.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                BotonIniciarSesion2ActionPerformed(evt);
+                BotonIniciarSesionActionPerformed(evt);
             }
         });
 
@@ -118,7 +133,7 @@ public class iniciarSesion extends javax.swing.JFrame {
                                     .addComponent(jLabel2))
                                 .addGap(11, 11, 11))
                             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                                .addComponent(BotonIniciarSesion2, javax.swing.GroupLayout.PREFERRED_SIZE, 141, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(BotonIniciarSesion, javax.swing.GroupLayout.PREFERRED_SIZE, 141, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addGap(65, 65, 65))
                             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                 .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 194, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -142,7 +157,7 @@ public class iniciarSesion extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(fieldContraseña, javax.swing.GroupLayout.PREFERRED_SIZE, 51, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(81, 81, 81)
-                .addComponent(BotonIniciarSesion2)
+                .addComponent(BotonIniciarSesion)
                 .addGap(18, 18, 18)
                 .addComponent(jLabel4)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -154,29 +169,30 @@ public class iniciarSesion extends javax.swing.JFrame {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
-    
-    public void setRegistro(registrarUsuario ventanaRegistro) {
+
+    public void setVentanaRegistro(registrarUsuario ventanaRegistro) {
         this.ventanaRegistro = ventanaRegistro;
     }
 
+    public void setVentanaMedico(dashBoardMedico ventanaMedico) {
+        this.ventanaMedico = ventanaMedico;
+    }
+
+    public void setVentanaPaciente(dashboardPaciente ventanaPaciente) {
+        this.ventanaPaciente = ventanaPaciente;
+    }
+    
     private void BotonRegistrarseActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BotonRegistrarseActionPerformed
-        if(ventanaRegistro == null) {
-            ventanaRegistro = new registrarUsuario();
-        }
-        
-        ventanaRegistro.setInicio(this);
-        ventanaRegistro.setLocationRelativeTo(null);
-        ventanaRegistro.setVisible(true);
-        this.setVisible(false);
+        abrirPantallaRegistro();
     }//GEN-LAST:event_BotonRegistrarseActionPerformed
 
     private void BotonIniciarSesion1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BotonIniciarSesion1ActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_BotonIniciarSesion1ActionPerformed
 
-    private void BotonIniciarSesion2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BotonIniciarSesion2ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_BotonIniciarSesion2ActionPerformed
+    private void BotonIniciarSesionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BotonIniciarSesionActionPerformed
+        iniciarSesionUsuario();
+    }//GEN-LAST:event_BotonIniciarSesionActionPerformed
 
     private void BotonRegistrarse1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BotonRegistrarse1ActionPerformed
         // TODO add your handling code here:
@@ -226,8 +242,8 @@ public class iniciarSesion extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton BotonIniciarSesion;
     private javax.swing.JButton BotonIniciarSesion1;
-    private javax.swing.JButton BotonIniciarSesion2;
     private javax.swing.JButton BotonRegistrarse;
     private javax.swing.JButton BotonRegistrarse1;
     private javax.swing.JButton BotonSalir;
@@ -238,4 +254,64 @@ public class iniciarSesion extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     // End of variables declaration//GEN-END:variables
+
+    public void iniciarSesionUsuario() {
+        String user = fieldUsuario.getText();
+        String contrasenia = fieldContraseña.getText();
+
+        try {
+            String rolRaw = usuarioBO.login(user, contrasenia);
+
+            if (rolRaw != null) {
+                String rol = Normalizer.normalize(rolRaw, Normalizer.Form.NFD)
+                        .replaceAll("\\p{M}", "")
+                        .toLowerCase();
+
+                switch (rol) {
+                    case "paciente":
+                        PacienteViejoDTO paciente = pacienteBO.buscarPacientePorUsuario(user);
+                        if (ventanaPaciente == null) {
+                            ventanaPaciente = new dashboardPaciente(paciente);
+                        }
+
+                        ventanaPaciente.setVentanaInicio(this);
+                        ventanaPaciente.setLocationRelativeTo(null);
+                        ventanaPaciente.setVisible(true);
+                        this.setVisible(false);
+                        limpiarCampos();
+
+                        break;
+                    case "medico":
+
+                        break;
+                    default:
+                        JOptionPane.showMessageDialog(this, "Rol no reconocido.");
+                        break;
+
+                }
+            } else {
+                JOptionPane.showMessageDialog(this, "Correo o contraseña incorrectos.");
+            }
+        } catch (NegocioException ex) {
+            JOptionPane.showMessageDialog(this, "Correo o contraseña incorrectos.");
+        }
+    }
+
+    public void abrirPantallaRegistro() {
+        if (ventanaRegistro == null) {
+            ventanaRegistro = new registrarUsuario();
+        }
+
+        ventanaRegistro.setVentanaInicio(this);
+        ventanaRegistro.setLocationRelativeTo(null);
+        ventanaRegistro.setVisible(true);
+        this.setVisible(false);
+    }
+
+    public void limpiarCampos() {
+        // Limpiar campos de texto
+        fieldUsuario.setText("");
+        fieldContraseña.setText("");
+
+    }
 }

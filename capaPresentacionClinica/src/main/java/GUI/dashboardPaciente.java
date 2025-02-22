@@ -4,7 +4,9 @@
  */
 package GUI;
 
+import DTO.PacienteViejoDTO;
 import Entidades.Paciente;
+import javax.swing.JOptionPane;
 
 /**
  *
@@ -12,11 +14,27 @@ import Entidades.Paciente;
  */
 public class dashboardPaciente extends javax.swing.JFrame {
 
+     private PacienteViejoDTO paciente;
+
+    private iniciarSesion ventanaInicio;
+
     /**
      * Creates new form dashboardPaciente
+     *
+     * @param paciente
      */
+    public dashboardPaciente(PacienteViejoDTO paciente) {
+        this.paciente = paciente;
+        initComponents();
+        cargarDatosPaciente(paciente);
+    }
+
     public dashboardPaciente() {
         initComponents();
+    }
+
+    public void setVentanaInicio(iniciarSesion ventanaInicio) {
+        this.ventanaInicio = ventanaInicio;
     }
 
     /**
@@ -54,10 +72,25 @@ public class dashboardPaciente extends javax.swing.JFrame {
         });
 
         botonCerrarSesion.setText("Cerrar sesion");
+        botonCerrarSesion.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                botonCerrarSesionActionPerformed(evt);
+            }
+        });
 
         BotonConsultaEmergencia.setText("Consulta de emergencia");
+        BotonConsultaEmergencia.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                BotonConsultaEmergenciaActionPerformed(evt);
+            }
+        });
 
         botonAgendarCita.setText("Agendar una cita");
+        botonAgendarCita.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                botonAgendarCitaActionPerformed(evt);
+            }
+        });
 
         botonCitasProximas.setText("Ver citas proximas");
         botonCitasProximas.addActionListener(new java.awt.event.ActionListener() {
@@ -67,6 +100,11 @@ public class dashboardPaciente extends javax.swing.JFrame {
         });
 
         botonHistorialConsultas.setText("Ver historial de consultas");
+        botonHistorialConsultas.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                botonHistorialConsultasActionPerformed(evt);
+            }
+        });
 
         lblNombre.setText("nombre");
 
@@ -90,32 +128,30 @@ public class dashboardPaciente extends javax.swing.JFrame {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addGap(42, 42, 42)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(BotonEditarPerfil, javax.swing.GroupLayout.PREFERRED_SIZE, 149, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addComponent(botonCerrarSesion, javax.swing.GroupLayout.PREFERRED_SIZE, 122, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(15, 15, 15)))
-                .addGap(28, 28, 28)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(lblTelefono)
-                    .addComponent(lblRol)
-                    .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(lblNombre)
-                            .addComponent(lblCalle))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(lblNumero)
-                                .addGap(18, 18, 18)
-                                .addComponent(lblCodigoPostal))
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(lblApellidoPaterno)
-                                .addGap(18, 18, 18)
-                                .addComponent(lblApellidoMaterno)))))
-                .addContainerGap(193, Short.MAX_VALUE))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addComponent(BotonEditarPerfil, javax.swing.GroupLayout.PREFERRED_SIZE, 149, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                            .addComponent(botonCerrarSesion, javax.swing.GroupLayout.PREFERRED_SIZE, 122, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGap(15, 15, 15)))
+                    .addComponent(lblTelefono, javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
+                        .addComponent(lblRol)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(lblNombre)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(lblApellidoPaterno)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(lblApellidoMaterno))
+                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
+                        .addComponent(lblCalle)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(lblNumero)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(lblCodigoPostal)))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addGap(0, 0, Short.MAX_VALUE)
+                .addGap(0, 227, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -131,26 +167,25 @@ public class dashboardPaciente extends javax.swing.JFrame {
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(33, 33, 33)
+                .addGap(48, 48, 48)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(lblNombre)
                     .addComponent(lblApellidoPaterno)
-                    .addComponent(lblApellidoMaterno))
+                    .addComponent(lblApellidoMaterno)
+                    .addComponent(lblRol))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(lblTelefono)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(lblCalle)
+                    .addComponent(lblNumero)
+                    .addComponent(lblCodigoPostal))
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(32, 32, 32)
-                        .addComponent(lblRol)
-                        .addGap(18, 18, 18)
-                        .addComponent(lblTelefono)
-                        .addGap(32, 32, 32)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(BotonEditarPerfil, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                .addComponent(lblCalle)
-                                .addComponent(lblNumero)
-                                .addComponent(lblCodigoPostal))))
+                        .addGap(55, 55, 55)
+                        .addComponent(BotonEditarPerfil, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(175, 175, 175)
+                        .addGap(116, 116, 116)
                         .addComponent(botonCerrarSesion, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 142, Short.MAX_VALUE)
                 .addComponent(BotonConsultaEmergencia, javax.swing.GroupLayout.PREFERRED_SIZE, 47, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -173,6 +208,22 @@ public class dashboardPaciente extends javax.swing.JFrame {
     private void botonCitasProximasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonCitasProximasActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_botonCitasProximasActionPerformed
+
+    private void botonCerrarSesionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonCerrarSesionActionPerformed
+        cerrarSesion();
+    }//GEN-LAST:event_botonCerrarSesionActionPerformed
+
+    private void BotonConsultaEmergenciaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BotonConsultaEmergenciaActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_BotonConsultaEmergenciaActionPerformed
+
+    private void botonAgendarCitaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonAgendarCitaActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_botonAgendarCitaActionPerformed
+
+    private void botonHistorialConsultasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonHistorialConsultasActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_botonHistorialConsultasActionPerformed
 
     /**
      * @param args the command line arguments
@@ -236,5 +287,34 @@ public class dashboardPaciente extends javax.swing.JFrame {
         lblCodigoPostal.setText("CP: " + paciente.getDireccion().getCodigoPostal());
     }
 
+    private void cargarDatosPaciente(PacienteViejoDTO paciente) {
+        lblRol.setText("Paciente:");
+        lblNombre.setText(paciente.getNombres());
+        lblApellidoPaterno.setText(paciente.getApellidoPaterno());
+        lblApellidoMaterno.setText(paciente.getApellidoMaterno());
+        lblTelefono.setText("Telefono: " + paciente.getTelefono());
+        lblCalle.setText("Dirección: " + paciente.getDireccion().getCalle());
+        lblNumero.setText(paciente.getDireccion().getNumero());
+        lblCodigoPostal.setText(paciente.getDireccion().getCodigoPostal());
+    }
+
+    public void cerrarSesion() {
+        int respuesta = JOptionPane.showConfirmDialog(
+                this,
+                "¿Cerrar sesión?",
+                "Cierre de sesión",
+                JOptionPane.YES_NO_OPTION
+        );
+
+        if (respuesta == JOptionPane.YES_OPTION) {
+            ventanaInicio.setVentanaPaciente(this);
+            ventanaInicio.setLocationRelativeTo(null);
+            ventanaInicio.setVisible(true);
+            this.dispose();
+
+        } else {
+            System.out.println("El usuario canceló.");
+        }
+    }
 
 }

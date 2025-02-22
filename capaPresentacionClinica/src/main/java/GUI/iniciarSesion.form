@@ -69,7 +69,7 @@
                               <EmptySpace min="-2" pref="11" max="-2" attributes="0"/>
                           </Group>
                           <Group type="102" alignment="1" attributes="0">
-                              <Component id="BotonIniciarSesion2" min="-2" pref="141" max="-2" attributes="0"/>
+                              <Component id="BotonIniciarSesion" min="-2" pref="141" max="-2" attributes="0"/>
                               <EmptySpace min="-2" pref="65" max="-2" attributes="0"/>
                           </Group>
                           <Group type="103" alignment="1" groupAlignment="0" attributes="0">
@@ -101,7 +101,7 @@
               <EmptySpace max="-2" attributes="0"/>
               <Component id="fieldContraseña" min="-2" pref="51" max="-2" attributes="0"/>
               <EmptySpace min="-2" pref="81" max="-2" attributes="0"/>
-              <Component id="BotonIniciarSesion2" min="-2" max="-2" attributes="0"/>
+              <Component id="BotonIniciarSesion" min="-2" max="-2" attributes="0"/>
               <EmptySpace type="separate" max="-2" attributes="0"/>
               <Component id="jLabel4" min="-2" max="-2" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
@@ -150,7 +150,7 @@
         <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="BotonRegistrarseActionPerformed"/>
       </Events>
     </Component>
-    <Component class="javax.swing.JButton" name="BotonIniciarSesion2">
+    <Component class="javax.swing.JButton" name="BotonIniciarSesion">
       <Properties>
         <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
           <Font name="Segoe UI" size="18" style="0"/>
@@ -158,7 +158,7 @@
         <Property name="text" type="java.lang.String" value="Iniciar Sesion"/>
       </Properties>
       <Events>
-        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="BotonIniciarSesion2ActionPerformed"/>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="BotonIniciarSesionActionPerformed"/>
       </Events>
     </Component>
     <Component class="javax.swing.JLabel" name="jLabel4">
