@@ -16,7 +16,8 @@ import Conexion.IConexionBD;
 import Entidades.Cita;
 import Entidades.Paciente;
 import Entidades.Medico;
-import Entidades.EstadoCita;
+import Entidades.EstadosCita;
+import Entidades.EstadosCita;
 import Exception.PersistenciaClinicaException;
 import java.sql.CallableStatement;
 import java.time.LocalDate;
@@ -78,7 +79,7 @@ public class CitaDAO implements ICitaDAO{
             medico.setIdMedico(rs.getInt("idMedico"));
             medico.setNombres(rs.getString("nombreMedico"));
             
-            EstadoCita estado = new EstadoCita(
+            EstadosCita estado = new EstadosCita(
                 rs.getInt("idEstado"),
                 rs.getString("descripcion")
             );
@@ -153,7 +154,7 @@ public class CitaDAO implements ICitaDAO{
             medico.setNombres(rs.getString("nombreMedico"));
             
             // Construir Estado de Cita
-            EstadoCita estado = new EstadoCita(
+            EstadosCita estado = new EstadosCita(
                 rs.getInt("idEstado"), 
                 rs.getString("descripcion")
             );

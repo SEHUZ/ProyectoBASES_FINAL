@@ -15,10 +15,10 @@ public class Cita {
     private int idCita;
     private Paciente paciente;
     private Medico medico;
-    private EstadoCita estado;
+    private EstadosCita estado;
     private LocalDateTime fechaHora;
 
-    public Cita(int idCita, Paciente paciente, Medico medico, EstadoCita estado, LocalDateTime fechaHora) {
+    public Cita(int idCita, Paciente paciente, Medico medico, EstadosCita estado, LocalDateTime fechaHora) {
         this.idCita = idCita;
         this.paciente = paciente;
         this.medico = medico;
@@ -26,7 +26,7 @@ public class Cita {
         this.fechaHora = fechaHora;
     }
 
-    public Cita(Paciente paciente, Medico medico, EstadoCita estado, LocalDateTime fechaHora) {
+    public Cita(Paciente paciente, Medico medico, EstadosCita estado, LocalDateTime fechaHora) {
         this.paciente = paciente;
         this.medico = medico;
         this.estado = estado;
@@ -57,11 +57,11 @@ public class Cita {
         this.medico = medico;
     }
 
-    public EstadoCita getEstado() {
+    public EstadosCita getEstado() {
         return estado;
     }
 
-    public void setEstado(EstadoCita estado) {
+    public void setEstado(EstadosCita estado) {
         this.estado = estado;
     }
 

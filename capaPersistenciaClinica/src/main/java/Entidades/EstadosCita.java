@@ -8,19 +8,19 @@ package Entidades;
  *
  * @author sonic
  */
-public class EstadoCita {
+public class EstadosCita {
     private int idEstado;
     private String descripcion;
 
-    public EstadoCita(int idEstado, String descripcion) {
+    public EstadosCita(int idEstado, String descripcion) {
         this.idEstado = idEstado;
         this.descripcion = descripcion;
     }
 
-    public EstadoCita() {
+    public EstadosCita() {
     }
 
-    public EstadoCita(String descripcion) {
+    public EstadosCita(String descripcion) {
         this.descripcion = descripcion;
     }
 
