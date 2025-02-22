@@ -12,6 +12,8 @@ import Entidades.DireccionPaciente;
 import Entidades.Paciente;
 import Entidades.Usuario;
 import Exception.NegocioException;
+import Exception.PersistenciaClinicaException;
+import configuracion.DependencyInjector;
 import java.awt.HeadlessException;
 import java.sql.SQLException;
 import java.time.LocalDate;
@@ -28,6 +30,8 @@ import javax.swing.JPanel;
  * @author sonic
  */
 public class registrarUsuario extends javax.swing.JFrame {
+
+    private PacienteBO pacienteBO = DependencyInjector.crearPacienteBO();
 
     private iniciarSesion ventanaInicio;
 
@@ -340,7 +344,11 @@ public class registrarUsuario extends javax.swing.JFrame {
     }//GEN-LAST:event_fieldUserActionPerformed
 
     private void botonRegistrar1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonRegistrar1ActionPerformed
-        registrarPaciente();
+        try {
+            registrarPaciente();
+        } catch (PersistenciaClinicaException ex) {
+            Logger.getLogger(registrarUsuario.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }//GEN-LAST:event_botonRegistrar1ActionPerformed
 
     /**
@@ -407,7 +415,7 @@ public class registrarUsuario extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel8;
     private javax.swing.JLabel jLabel9;
     // End of variables declaration//GEN-END:variables
-    public void registrarPaciente() {
+    public void registrarPaciente() throws PersistenciaClinicaException {
         try {
             String nombre = fieldNombre.getText();
             String apellidoPaterno = fieldApellidoPaterno.getText();
@@ -434,8 +442,6 @@ public class registrarUsuario extends javax.swing.JFrame {
             DireccionPaciente direccion = new DireccionPaciente(Calle, Numero, cp);
             PacienteNuevoDTO paciente = new PacienteNuevoDTO(direccion, usuario, nombre, apellidoPaterno, apellidoMaterno, fechaNacimiento, CorreoElectronico, telefono);
 
-            IConexionBD conexion = new ConexionBD();
-            PacienteBO pacienteBO = new PacienteBO(conexion);
             boolean exito = pacienteBO.registrarPaciente(paciente);
             if (exito) {
                 JOptionPane.showMessageDialog(this, "El paciente se ha registrado exitosamente");
