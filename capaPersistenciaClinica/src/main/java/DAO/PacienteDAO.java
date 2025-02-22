@@ -189,15 +189,14 @@ public class PacienteDAO implements IPacienteDAO {
             con.setAutoCommit(false); // Iniciar transacción
 
             // 1. Actualizar datos del paciente
-            String updatePacienteSQL = "UPDATE pacientes SET nombres = ?, apellidoPaterno = ?, apellidoMaterno = ?, fechaNacimiento = ?, telefono = ?, email = ? WHERE idPaciente = ?";
+            String updatePacienteSQL = "UPDATE pacientes SET nombres = ?, apellidoPaterno = ?, apellidoMaterno = ?, fechaNacimiento = ?, telefono = ? WHERE idPaciente = ?";
             try (PreparedStatement psPaciente = con.prepareStatement(updatePacienteSQL)) {
                 psPaciente.setString(1, paciente.getNombres());
                 psPaciente.setString(2, paciente.getApellidoPaterno());
                 psPaciente.setString(3, paciente.getApellidoMaterno());
                 psPaciente.setObject(4, paciente.getFechaNacimiento());
                 psPaciente.setString(5, paciente.getTelefono());
-                psPaciente.setString(6, paciente.getEmail());
-                psPaciente.setInt(7, paciente.getIdPaciente());
+                psPaciente.setInt(6, paciente.getIdPaciente());
 
                 int filasPaciente = psPaciente.executeUpdate();
                 if (filasPaciente == 0) {
