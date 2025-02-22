@@ -5,15 +5,21 @@
 package DAO;
 
 import Conexion.IConexionBD;
+import Entidades.Cita;
 import Entidades.DireccionPaciente;
+import Entidades.EstadosCita;
+import Entidades.Medico;
 import Entidades.Paciente;
 import Entidades.Usuario;
 import Exception.PersistenciaClinicaException;
+import java.sql.CallableStatement;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -528,5 +534,48 @@ public class PacienteDAO implements IPacienteDAO {
         }
 
         return paciente;
+    }
+    
+    @Override
+    public List<Cita> obtenerCitasProximasPorPaciente(int idPaciente) throws PersistenciaClinicaException {
+        List<Cita> citasProximas = new ArrayList<>();
+    String procedimiento = "{CALL ObtenerCitasProximasPorPaciente(?)}";
+
+    try (Connection con = conexion.crearConexion();
+         CallableStatement cs = con.prepareCall(procedimiento)) {
+
+        cs.setInt(1, idPaciente);
+
+        try (ResultSet rs = cs.executeQuery()) {
+            while (rs.next()) {
+                Cita cita = new Cita();
+                
+                cita.setIdCita(rs.getInt("idCita"));
+                cita.setFechaHora(rs.getTimestamp("fechaHoraCita").toLocalDateTime());
+                
+                // Crear objeto Medico
+                Medico medico = new Medico();
+                medico.setNombres(rs.getString("nombreMedico"));
+                medico.setApellidoPaterno(rs.getString("apellidoMedico"));
+                medico.setEspecialidad(rs.getString("especialidad"));
+                cita.setMedico(medico);
+                
+                // Crear objeto EstadosCita
+                EstadosCita estado = new EstadosCita();
+                estado.setDescripcion(rs.getString("estadoCita"));
+                cita.setEstado(estado);
+                
+                cita.setTipoCita(rs.getString("tipoCita"));
+
+                citasProximas.add(cita);
+            }
+        }
+        
+    } catch (SQLException ex) {
+        logger.log(Level.SEVERE, "Error al obtener citas próximas", ex);
+        throw new PersistenciaClinicaException("Error al obtener citas próximas: " + ex.getMessage());
+    }
+
+    return citasProximas;
     }
 }

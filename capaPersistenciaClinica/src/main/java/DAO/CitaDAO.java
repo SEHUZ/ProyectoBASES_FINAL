@@ -20,6 +20,7 @@ import java.sql.CallableStatement;
 import java.sql.Statement;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.logging.Level;
 
 public class CitaDAO implements ICitaDAO {
 
@@ -99,52 +100,6 @@ public class CitaDAO implements ICitaDAO {
     // Método para obtener todas las citas
     @Override
     public List<Cita> obtenerTodasLasCitas() throws PersistenciaClinicaException {
-        List<Cita> listaCitas = new ArrayList<>();
-        String consultaSQL = "SELECT c.idCita, c.fechaHora, "
-                + "p.idPaciente, p.nombres AS nombrePaciente, "
-                + "m.idMedico, m.nombres AS nombreMedico, "
-                + "e.idEstado, e.descripcion "
-                + "FROM Citas c "
-                + "JOIN Pacientes p ON c.idPaciente = p.idPaciente "
-                + "JOIN Medicos m ON c.idMedico = m.idMedico "
-                + "JOIN EstadoCita e ON c.idEstado = e.idEstado";
-
-        try (Connection con = conexion.crearConexion(); PreparedStatement stmt = con.prepareStatement(consultaSQL); // Cambiado a 'conexion'
-                 ResultSet rs = stmt.executeQuery()) {
-
-            while (rs.next()) {
-                // Construcción completa de Paciente
-                Paciente paciente = new Paciente();
-                paciente.setIdPaciente(rs.getInt("idPaciente"));
-                paciente.setNombres(rs.getString("nombrePaciente"));
-
-                // Construcción completa de Médico
-                Medico medico = new Medico();
-                medico.setIdMedico(rs.getInt("idMedico"));
-                medico.setNombres(rs.getString("nombreMedico"));
-
-                EstadosCita estado = new EstadosCita(
-                        rs.getInt("idEstado"),
-                        rs.getString("descripcion")
-                );
-
-                // Usar LocalDateTime correctamente
-                LocalDateTime fechaHora = rs.getTimestamp("fechaHora").toLocalDateTime();
-
-                Cita cita = new Cita(
-                        rs.getInt("idCita"),
-                        paciente,
-                        medico,
-                        estado,
-                        fechaHora
-                );
-
-                listaCitas.add(cita);
-            }
-        } catch (SQLException e) {
-            throw new PersistenciaClinicaException("Error al obtener citas: " + e.getMessage(), e);
-        }
-        return listaCitas;
     }
 
     // Método para actualizar el estado de una cita
@@ -177,55 +132,77 @@ public class CitaDAO implements ICitaDAO {
     @Override
     public List<Cita> consultarCitasMedico(Medico medico) throws PersistenciaClinicaException {
         List<Cita> citas = new ArrayList<>();
-        String consultaCitasPorMedicoSQL = "CALL ObtenerCitasPorMedico(?)";
+    String procedimiento = "{CALL ObtenerCitasPorMedico(?)}";
 
-        try (Connection con = conexion.crearConexion(); CallableStatement stmt = con.prepareCall(consultaCitasPorMedicoSQL)) {
+    try (Connection con = conexion.crearConexion();
+         CallableStatement cs = con.prepareCall(procedimiento)) {
 
-            // Establecer parámetro del médico
-            stmt.setInt(1, medico.getIdMedico());
+        cs.setInt(1, medico.getIdMedico());
 
-            // Ejecutar consulta
-            ResultSet rs = stmt.executeQuery();
-
-            // Procesar resultados
+        try (ResultSet rs = cs.executeQuery()) {
             while (rs.next()) {
+                // Datos cita
+                Cita cita = new Cita();
+                cita.setIdCita(rs.getInt("idCita"));
+                cita.setFechaHora(rs.getTimestamp("fechaHora").toLocalDateTime());
 
-                // Construir Paciente con datos básicos
+                // Datos paciente
                 Paciente paciente = new Paciente();
                 paciente.setIdPaciente(rs.getInt("idPaciente"));
                 paciente.setNombres(rs.getString("nombrePaciente"));
+                paciente.setApellidoPaterno(rs.getString("apellidoPaternoPaciente"));
+                paciente.setApellidoMaterno(rs.getString("apellidoMaternoPaciente"));
+                cita.setPaciente(paciente);
 
-                // Construir Médico con datos del resultado (más completo que el parámetro)
-                Medico medicoResultado = new Medico();
-                medico.setIdMedico(rs.getInt("idMedico"));
-                medico.setNombres(rs.getString("nombreMedico"));
+                // Datos medico
+                Medico medicoCita = new Medico();
+                medicoCita.setIdMedico(rs.getInt("idMedico"));
+                medicoCita.setNombres(rs.getString("nombreMedico"));
+                medicoCita.setApellidoPaterno(rs.getString("apellidoPaternoMedico"));
+                medicoCita.setApellidoMaterno(rs.getString("apellidoMaternoMedico"));
+                cita.setMedico(medicoCita);
 
-                // Construir Estado de Cita
-                EstadosCita estado = new EstadosCita(
-                        rs.getInt("idEstado"),
-                        rs.getString("descripcion")
-                );
-
-                // Construir Cita con LocalDateTime
-                Cita cita = new Cita(
-                        rs.getInt("idCita"),
-                        paciente,
-                        medicoResultado,
-                        estado,
-                        rs.getTimestamp("fechaHora").toLocalDateTime()
-                );
+                // Datos estadoCita
+                EstadosCita estado = new EstadosCita();
+                estado.setIdEstado(rs.getInt("idEstado"));
+                estado.setDescripcion(rs.getString("estadoCita"));
+                cita.setEstado(estado);
 
                 citas.add(cita);
             }
-
-        } catch (SQLException ex) {
-            throw new PersistenciaClinicaException(
-                    "Error al consultar citas para el médico ID: " + medico.getIdMedico(),
-                    ex
-            );
         }
 
-        return citas;
+    } catch (SQLException ex) {
+        throw new PersistenciaClinicaException("Error al obtener citas del médico: " + ex.getMessage());
     }
+
+    return citas;
+    }
+    
+    @Override
+    public EstadosCita consultarEstadoCita(int idCita) throws PersistenciaClinicaException {
+        String consultarEstadoSQL = "SELECT * FROM estadosCita WHERE idCita = ?";
+    
+    try (Connection con = conexion.crearConexion();
+         PreparedStatement ps = con.prepareStatement(consultarEstadoSQL)) {
+        
+        ps.setInt(1, idCita);
+        
+        try (ResultSet rs = ps.executeQuery()) {
+            if (rs.next()) {
+                int idEstado = rs.getInt("idEstado");
+                String descripcion = rs.getString("descripcion");
+                return new EstadosCita(idEstado, descripcion);
+            } else {
+                throw new PersistenciaClinicaException("No se encontró la cita con ID: " + idCita);
+            }
+        }
+        
+    } catch (SQLException ex) {
+        throw new PersistenciaClinicaException("Error al consultar estado de la cita: " + ex.getMessage());
+    }
+    }
+    
+    
 
 }

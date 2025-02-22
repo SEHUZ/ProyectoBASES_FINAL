@@ -9,6 +9,7 @@ package DAO;
  * @author Jose
  */
 import Entidades.Cita;
+import Entidades.EstadosCita;
 import Entidades.Medico;
 import Exception.PersistenciaClinicaException;
 import java.time.LocalDate;
@@ -37,6 +38,10 @@ public interface ICitaDAO {
 
     // Método para eliminar una cita
     boolean eliminarCita(int idCita) throws PersistenciaClinicaException;
+    
+    public EstadosCita consultarEstadoCita(int idCita) throws PersistenciaClinicaException;
+    
+    
 }
 
     

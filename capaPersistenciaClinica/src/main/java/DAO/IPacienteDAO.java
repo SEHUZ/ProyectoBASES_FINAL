@@ -4,9 +4,11 @@
  */
 package DAO;
 
+import Entidades.Cita;
 import Entidades.Paciente;
 import Exception.PersistenciaClinicaException;
 import java.sql.SQLException;
+import java.util.List;
 
 /**
  *
@@ -25,4 +27,6 @@ public interface IPacienteDAO {
     public Paciente consultarPacientePorTelefono(String telefono) throws PersistenciaClinicaException;
     
     public Paciente consultarPacientePorUsuario(String User) throws PersistenciaClinicaException;
+    
+    public List<Cita> obtenerCitasProximasPorPaciente(int idPaciente) throws PersistenciaClinicaException;
 }

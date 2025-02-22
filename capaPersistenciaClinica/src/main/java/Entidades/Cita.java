@@ -17,21 +17,33 @@ public class Cita {
     private Medico medico;
     private EstadosCita estado;
     private LocalDateTime fechaHora;
+    private String tipoCita;
 
-    public Cita(int idCita, Paciente paciente, Medico medico, EstadosCita estado, LocalDateTime fechaHora) {
+    public Cita(int idCita, Paciente paciente, Medico medico, EstadosCita estado, LocalDateTime fechaHora, String tipoCita) {
         this.idCita = idCita;
         this.paciente = paciente;
         this.medico = medico;
         this.estado = estado;
         this.fechaHora = fechaHora;
+        this.tipoCita = tipoCita;
     }
 
-    public Cita(Paciente paciente, Medico medico, EstadosCita estado, LocalDateTime fechaHora) {
+    public Cita(Paciente paciente, Medico medico, EstadosCita estado, LocalDateTime fechaHora, String tipoCita) {
         this.paciente = paciente;
         this.medico = medico;
         this.estado = estado;
         this.fechaHora = fechaHora;
+        this.tipoCita = tipoCita;
     }
+
+    public String getTipoCita() {
+        return tipoCita;
+    }
+
+    public void setTipoCita(String tipoCita) {
+        this.tipoCita = tipoCita;
+    }
+    
 
     public int getIdCita() {
         return idCita;
