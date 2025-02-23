@@ -17,6 +17,7 @@ import Exception.NegocioException;
 import Exception.PersistenciaClinicaException;
 import Mappers.CitaMapper;
 import Mappers.PacienteMapper;
+import java.sql.SQLException;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.logging.Level;
@@ -48,7 +49,7 @@ public class CitaBO {
         this.medicoDAO = null;
     }
 
-    public CitaViejaDTO agendarCita(CitaNuevaDTO citaNuevaDTO) throws NegocioException {
+    public CitaViejaDTO agendarCita(CitaNuevaDTO citaNuevaDTO) throws NegocioException, SQLException {
         try {
             if (citaNuevaDTO.getFechaHora() == null || citaNuevaDTO.getFechaHora().isBefore(LocalDateTime.now())) {
                 throw new NegocioException("Fecha y hora inválidas");
@@ -71,7 +72,7 @@ public class CitaBO {
                 throw new NegocioException("Paciente no registrado");
             }
 
-            Cita citaNueva = citaDAO.insertarCita(cita);
+            Cita citaNueva = citaDAO.agendarCita(cita);
 
             return mapper.toViejoDTO(citaNueva);
 
