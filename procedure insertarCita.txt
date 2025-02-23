@@ -1,0 +1,15 @@
+DELIMITER //
+CREATE PROCEDURE AgendarCita(
+    IN p_idPaciente INT,
+    IN p_idMedico INT,
+    IN p_fechaHora TIMESTAMP,
+    IN p_tipoCita VARCHAR(50)
+)
+BEGIN
+    INSERT INTO Citas (idPaciente, idMedico, fechaHora, tipoCita)
+    VALUES (p_idPaciente, p_idMedico, p_fechaHora, p_tipoCita);
+    
+    -- Devolver el ID generado
+    SELECT LAST_INSERT_ID() AS idCita;
+END //
+DELIMITER ;
