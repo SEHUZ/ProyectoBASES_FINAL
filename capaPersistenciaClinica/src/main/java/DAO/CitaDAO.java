@@ -12,7 +12,6 @@ import java.util.ArrayList;
 import java.util.List;
 import Conexion.IConexionBD;
 import Entidades.Cita;
-import static Entidades.Cita.TipoCita.EMERGENCIA;
 import Entidades.CitaEmergencia;
 import Entidades.Paciente;
 import Entidades.Medico;
@@ -20,7 +19,7 @@ import Entidades.EstadosCita;
 import Exception.PersistenciaClinicaException;
 import java.sql.CallableStatement;
 import java.sql.Timestamp;
-import java.sql.Types;
+
 
 public class CitaDAO implements ICitaDAO {
 
@@ -37,7 +36,6 @@ public class CitaDAO implements ICitaDAO {
         String sql = "{call AgendarCita(?, ?, ?, ?)}";
 
         try (Connection conn = conexion.crearConexion(); CallableStatement cstmt = conn.prepareCall(sql)) {
-            conn.setAutoCommit(false);
 
             // Mapear parámetros desde la entidad
             cstmt.setInt(1, cita.getPaciente().getIdPaciente());
@@ -45,16 +43,8 @@ public class CitaDAO implements ICitaDAO {
             cstmt.setTimestamp(3, Timestamp.valueOf(cita.getFechaHora()));
             cstmt.setString(4, cita.getTipoCita().name());
 
-            cstmt.registerOutParameter(5, Types.INTEGER);
-            cstmt.registerOutParameter(6, Types.VARCHAR);
-
             // Ejecutar el procedimiento
             cstmt.execute();
-
-            cita.setIdCita(cstmt.getInt(5));
-            if (cita.getTipoCita() == EMERGENCIA) {
-                cita.getEmergencia().setFolio(cstmt.getString(6));
-            }
 
             // Obtener el ID generado
             try (ResultSet generatedKeys = cstmt.getGeneratedKeys()) {
@@ -78,11 +68,11 @@ public class CitaDAO implements ICitaDAO {
                     }
                 }
             }
-            
-            conn.commit();
+
             return cita;
         }
     }
+
 
     @Override
     public List<Cita> consultarCitasMedico(Medico medico) throws PersistenciaClinicaException {
@@ -159,50 +149,50 @@ public class CitaDAO implements ICitaDAO {
     @Override
     public boolean actualizarEstadoCita(int idCita, String nuevoEstado) throws PersistenciaClinicaException {
         String actualizarEstadoSQL = "UPDATE Citas SET idEstado = "
-                + "(SELECT idEstado FROM EstadosCita WHERE descripcion = ?) "
-                + "WHERE idCita = ?";
-
-        try (Connection conn = conexion.crearConexion(); PreparedStatement ps = conn.prepareStatement(actualizarEstadoSQL)) {
-
+                   + "(SELECT idEstado FROM EstadosCita WHERE descripcion = ?) "
+                   + "WHERE idCita = ?";
+        
+        try (Connection conn = conexion.crearConexion();
+             PreparedStatement ps = conn.prepareStatement(actualizarEstadoSQL)) {
+            
             ps.setString(1, nuevoEstado);
             ps.setInt(2, idCita);
-
+            
             int affectedRows = ps.executeUpdate();
-
+            
             if (affectedRows == 0) {
                 throw new PersistenciaClinicaException("No se encontró la cita o el estado es inválido");
             }
-
+            
             return true;
-
+            
         } catch (SQLException ex) {
             throw new PersistenciaClinicaException("Error al actualizar estado: " + ex.getMessage());
         }
     }
-<<<<<<< HEAD
-=======
     
     
     
->>>>>>> origin/main
 
     @Override
     public boolean cancelarCita(int idCita) throws PersistenciaClinicaException {
         String sql = "UPDATE Citas SET idEstado = "
-                + "(SELECT idEstado FROM EstadosCita WHERE descripcion = 'Cancelada') "
-                + "WHERE idCita = ?";
-
-        try (Connection conn = conexion.crearConexion(); PreparedStatement ps = conn.prepareStatement(sql)) {
-
+                   + "(SELECT idEstado FROM EstadosCita WHERE descripcion = 'Cancelada') "
+                   + "WHERE idCita = ?";
+        
+        try (Connection conn = conexion.crearConexion();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            
             ps.setInt(1, idCita);
             int affectedRows = ps.executeUpdate();
-
+            
             if (affectedRows == 0) {
                 throw new PersistenciaClinicaException("No se encontró la cita con ID: " + idCita);
             }
-
+            
+            
             return true;
-
+            
         } catch (SQLException ex) {
             throw new PersistenciaClinicaException("Error al cancelar cita: " + ex.getMessage());
         }
@@ -229,7 +219,7 @@ public class CitaDAO implements ICitaDAO {
                     Cita cita = new Cita();
                     cita.setIdCita(rs.getInt("idCita"));
                     cita.setFechaHora(rs.getTimestamp("fechaHora").toLocalDateTime());
-
+                    
                     String tipoStr = rs.getString("tipoCita");
                     cita.setTipoCita(Cita.TipoCita.valueOf(tipoStr.toUpperCase()));
 
@@ -256,9 +246,9 @@ public class CitaDAO implements ICitaDAO {
                         emergencia.setFolio(folio);
                         cita.setEmergencia(emergencia);
                     }
-
+                    
                     return cita;
-
+                    
                 } else {
                     throw new PersistenciaClinicaException("Cita no encontrada con ID: " + idCita);
                 }

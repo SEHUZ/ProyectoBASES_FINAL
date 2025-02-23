@@ -12,7 +12,6 @@ import DAO.IUsuarioDAO;
 import DAO.MedicoDAO;
 import DAO.PacienteDAO;
 import DAO.UsuarioDAO;
-import Entidades.Medico;
 import Exception.PersistenciaClinicaException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -42,9 +41,6 @@ public class PruebasPersistencia {
         } catch (PersistenciaClinicaException ex) {
             logger.log(Level.SEVERE, "Error al consultar el paciente: " + ex);
         }
-        
-        Medico medico = medicoDAO.consultarMedicoPorID(1);
-        System.out.println(medicoDAO.obtenerHorariosMedico(medico));
 
     }
 

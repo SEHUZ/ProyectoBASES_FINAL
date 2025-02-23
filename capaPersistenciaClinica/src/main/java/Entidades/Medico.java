@@ -18,7 +18,7 @@ public class Medico {
     private String especialidad;
     private boolean activo;
 
-    public Medico(int idMedico, Usuario usuario, String nombres, String apellidoPaterno, String apellidoMaterno, String cedula, String especialidad) {
+    public Medico(int idMedico, Usuario usuario, String nombres, String apellidoPaterno, String apellidoMaterno, String cedula, String especialidad, boolean activo) {
         this.idMedico = idMedico;
         this.usuario = usuario;
         this.nombres = nombres;
@@ -26,15 +26,17 @@ public class Medico {
         this.apellidoMaterno = apellidoMaterno;
         this.cedula = cedula;
         this.especialidad = especialidad;
+        this.activo = activo;
     }
 
-    public Medico(Usuario usuario, String nombres, String apellidoPaterno, String apellidoMaterno, String cedula, String especialidad) {
+    public Medico(Usuario usuario, String nombres, String apellidoPaterno, String apellidoMaterno, String cedula, String especialidad, boolean activo) {
         this.usuario = usuario;
         this.nombres = nombres;
         this.apellidoPaterno = apellidoPaterno;
         this.apellidoMaterno = apellidoMaterno;
         this.cedula = cedula;
         this.especialidad = especialidad;
+        this.activo = activo;
     }
 
     public boolean isActivo() {

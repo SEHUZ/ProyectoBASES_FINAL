@@ -50,8 +50,8 @@ public class UsuarioDAO implements IUsuarioDAO {
                 throw new PersistenciaClinicaException("Usuario no encontrado.");
             }
         } catch (SQLException ex) {
-            logger.log(Level.SEVERE, "Error al crear activista", ex);
-            throw new PersistenciaClinicaException("Error al crear al activista", ex);
+            logger.log(Level.SEVERE, "Error al recuperar el rol", ex);
+            throw new PersistenciaClinicaException("Error al recuperar el rol", ex);
         }
 
         return rol;
