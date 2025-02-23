@@ -4,17 +4,39 @@
  */
 package GUI;
 
+import BO.CitaBO;
+import BO.MedicoBO;
+import DTO.CitaNuevaDTO;
+import DTO.CitaViejaDTO;
+import DTO.PacienteViejoDTO;
+import Entidades.Cita;
+import Exception.NegocioException;
+import Mappers.MedicoMapper;
+import Mappers.PacienteMapper;
+import configuracion.DependencyInjector;
+import javax.swing.JOptionPane;
+
 /**
  *
  * @author sonic
  */
 public class agendarCitaEmergencia extends javax.swing.JFrame {
+    
+    private PacienteViejoDTO paciente;
+    private MedicoBO medicoBO = DependencyInjector.crearMedicoBO();
+    private CitaBO citaBO = DependencyInjector.crearCitaBO();
+    private final PacienteMapper pacienteMAPPER = new PacienteMapper();
+    private final MedicoMapper mapper = new MedicoMapper();
 
     /**
      * Creates new form agendarCitaEmergencia
      */
     public agendarCitaEmergencia() {
         initComponents();
+    }
+    
+    public void setPaciente(PacienteViejoDTO paciente) {
+        this.paciente = paciente;
     }
 
     /**
@@ -109,7 +131,10 @@ public class agendarCitaEmergencia extends javax.swing.JFrame {
     }//GEN-LAST:event_fieldEspecialidadActionPerformed
 
     private void botonAgendarCitaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonAgendarCitaActionPerformed
-        // TODO add your handling code here:
+       agendarCitaEmergencia();
+        
+
+    // TODO add your handling code here:
     }//GEN-LAST:event_botonAgendarCitaActionPerformed
 
     private void botonVolverActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonVolverActionPerformed
@@ -158,4 +183,24 @@ public class agendarCitaEmergencia extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel3;
     // End of variables declaration//GEN-END:variables
+    private void agendarCitaEmergencia() {
+        try {
+            String especialidad = fieldEspecialidad.getText().trim();
+
+            CitaNuevaDTO citaDTO = new CitaNuevaDTO();
+            citaDTO.setPaciente(pacienteMAPPER.toEntityViejo(paciente));
+            citaDTO.setTipoCita(Cita.TipoCita.EMERGENCIA);
+
+            CitaViejaDTO citaAgendada = citaBO.agendarCitaEmergencia(citaDTO);
+
+            JOptionPane.showMessageDialog(this, "Emergencia agendada\nFolio: " + citaAgendada.getEmergencia().getFolio()+ "\nMédico: " + citaAgendada.getMedico().getNombres());
+
+            this.dispose();
+        } catch (NegocioException ex) {
+            JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+        }
+
+    }
+    
+
 }
