@@ -26,6 +26,7 @@ public class agendaDeCitas extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        filler1 = new javax.swing.Box.Filler(new java.awt.Dimension(0, 0), new java.awt.Dimension(0, 0), new java.awt.Dimension(0, 32767));
         jLabel1 = new javax.swing.JLabel();
         list1 = new java.awt.List();
         botonVolver = new javax.swing.JButton();
@@ -75,13 +76,13 @@ public class agendaDeCitas extends javax.swing.JFrame {
                         .addGap(245, 245, 245)
                         .addComponent(jLabel1))
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(19, 19, 19)
-                        .addComponent(botonVolver))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(247, 247, 247)
+                        .addGap(228, 228, 228)
                         .addComponent(botonIniciarConsulta, javax.swing.GroupLayout.PREFERRED_SIZE, 126, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(40, 40, 40)
-                        .addComponent(botonHistorialPaciente)))
+                        .addComponent(botonHistorialPaciente))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(31, 31, 31)
+                        .addComponent(botonVolver)))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
@@ -95,9 +96,9 @@ public class agendaDeCitas extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(botonHistorialPaciente, javax.swing.GroupLayout.PREFERRED_SIZE, 57, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(botonIniciarConsulta, javax.swing.GroupLayout.PREFERRED_SIZE, 57, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(56, 56, 56)
+                .addGap(53, 53, 53)
                 .addComponent(botonVolver, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(20, 20, 20))
+                .addGap(23, 23, 23))
         );
 
         pack();
@@ -154,6 +155,7 @@ public class agendaDeCitas extends javax.swing.JFrame {
     private javax.swing.JButton botonHistorialPaciente;
     private javax.swing.JButton botonIniciarConsulta;
     private javax.swing.JButton botonVolver;
+    private javax.swing.Box.Filler filler1;
     private javax.swing.JLabel jLabel1;
     private java.awt.List list1;
     // End of variables declaration//GEN-END:variables
