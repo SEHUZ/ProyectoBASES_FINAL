@@ -39,15 +39,15 @@ public class PacienteNuevoDTO {
         this.telefono = telefono;
     }
 
-    public PacienteNuevoDTO(DireccionPaciente direccion, String nombre, String apellidoPaterno, String apellidoMaterno, LocalDate fechaNacimiento, String telefono) {
+    public PacienteNuevoDTO(DireccionPaciente direccion, String nombre, String apellidoPaterno, String apellidoMaterno, LocalDate fechaNacimiento, String email, String telefono) {
         this.direccion = direccion;
         this.nombre = nombre;
         this.apellidoPaterno = apellidoPaterno;
         this.apellidoMaterno = apellidoMaterno;
         this.fechaNacimiento = fechaNacimiento;
+        this.email = email;
         this.telefono = telefono;
     }
-
 
     public DireccionPaciente getDireccion() {
         return direccion;

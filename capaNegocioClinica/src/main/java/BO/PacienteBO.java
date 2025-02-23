@@ -131,31 +131,42 @@ public class PacienteBO {
         }
     }
 
-    public Paciente actualizarPaciente(PacienteNuevoDTO pacienteNuevoDTO) throws NegocioException, SQLException, PersistenciaClinicaException {
-        if (pacienteNuevoDTO == null) {
-            throw new NegocioException("El paciente no puede ser nulo.");
+    public Paciente actualizarPaciente(PacienteViejoDTO pacienteViejoDTO) throws NegocioException, SQLException, PersistenciaClinicaException {
+        // Verificar que el paciente no sea nulo.
+        if (pacienteViejoDTO == null) {
+            throw new NegocioException("El paciente debe tener todos sus datos.");
+        }
+        
+        // Verificar que el numero de telefono sea estrictamente de 10 digitos.
+        if (pacienteViejoDTO.getTelefono().length() != 10) {
+            throw new NegocioException("El numero de telefono debe ser estrictamente de 10 digitos.");
         }
 
-        if (pacienteNuevoDTO.getNombre() == null || pacienteNuevoDTO.getNombre().isEmpty()) {
-            throw new NegocioException("El nombre del paciente no puede estar vacío");
+        // Verificar que la fecha de nacimiento no sea despues del momento en el que se esta ingresando.
+        if (pacienteViejoDTO.getFechaNacimiento().isAfter(LocalDate.now())) {
+            throw new NegocioException("La fecha de nacimiento debe ser valida.");
         }
 
-        if (pacienteNuevoDTO.getTelefono().length() != 10) {
-            throw new NegocioException("El teléfono debe tener 10 dígitos");
+        // Verificar si el correo ya ha sido registrado.
+        if (pacienteDAO.consultarPacientePorCorreo(pacienteViejoDTO.getEmail()) != null) {
+            throw new NegocioException("El correo ingresado ya esta registrado.");
         }
 
-        Paciente pacienteExistente = pacienteDAO.consultarPacientePorCorreo(pacienteNuevoDTO.getEmail());
-        if (pacienteExistente == null) {
-            throw new NegocioException("El paciente no está registrado");
+        // Verificar si el telefono ya ha sido registrado.
+        if (pacienteDAO.consultarPacientePorTelefono(pacienteViejoDTO.getTelefono()) != null) {
+            throw new NegocioException("El telefono ingresado ya esta registrado.");
+        }
+
+        // Verificar si el correo tiene un formato valido.
+        if (!validarCorreo(pacienteViejoDTO.getEmail())) {
+            throw new NegocioException("El correo ingresado tiene un formato incorrecto.");
         }
 
         try {
-            Paciente pacienteActualizar = new PacienteMapper().toEntityNuevo(pacienteNuevoDTO);
-
+            Paciente pacienteActualizar = new PacienteMapper().toEntityViejo(pacienteViejoDTO);
             Paciente pacienteActualizado = pacienteDAO.actualizarPaciente(pacienteActualizar);
 
             return pacienteActualizado;
-
         } catch (PersistenciaClinicaException ex) {
             logger.log(Level.SEVERE, "Error al actualizar paciente", ex);
             throw new NegocioException("Error al actualizar paciente: " + ex.getMessage());
@@ -168,7 +179,7 @@ public class PacienteBO {
             if (paciente == null) {
                 return null;
             }
-            
+
             return mapper.toViejoDTO(paciente);
         } catch (PersistenciaClinicaException ex) {
             logger.log(Level.SEVERE, "Error al recuperar los datos del paciente", ex);
