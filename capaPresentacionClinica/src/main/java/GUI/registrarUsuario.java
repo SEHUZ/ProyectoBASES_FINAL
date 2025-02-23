@@ -70,7 +70,6 @@ public class registrarUsuario extends javax.swing.JFrame {
         fieldCodigoPostal = new javax.swing.JTextField();
         fieldCorreoElectronico = new javax.swing.JTextField();
         jLabel11 = new javax.swing.JLabel();
-        fieldContraseña = new javax.swing.JTextField();
         jLabel12 = new javax.swing.JLabel();
         botonCancelar = new javax.swing.JButton();
         fechaNacimientoChooser = new com.toedter.calendar.JDateChooser();
@@ -78,6 +77,7 @@ public class registrarUsuario extends javax.swing.JFrame {
         jLabel13 = new javax.swing.JLabel();
         botonRegistrar1 = new javax.swing.JButton();
         jLabel14 = new javax.swing.JLabel();
+        jContraseniaField = new javax.swing.JPasswordField();
 
         jComboBox2.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
 
@@ -147,12 +147,6 @@ public class registrarUsuario extends javax.swing.JFrame {
 
         jLabel11.setText("Correo Electronico*");
 
-        fieldContraseña.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                fieldContraseñaActionPerformed(evt);
-            }
-        });
-
         jLabel12.setText("Constraseña*");
 
         botonCancelar.setText("Volver");
@@ -179,6 +173,12 @@ public class registrarUsuario extends javax.swing.JFrame {
 
         jLabel14.setText("Los campos marcados con asterisco (*) son obligatorios.");
 
+        jContraseniaField.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jContraseniaFieldActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -186,36 +186,31 @@ public class registrarUsuario extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addGap(34, 34, 34)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel13)
-                            .addComponent(fieldUser, javax.swing.GroupLayout.PREFERRED_SIZE, 251, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(0, 0, Short.MAX_VALUE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel3)
-                            .addComponent(fieldNombre, javax.swing.GroupLayout.PREFERRED_SIZE, 251, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel5)
-                            .addComponent(fieldApellidoMaterno, javax.swing.GroupLayout.PREFERRED_SIZE, 251, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel7)
-                            .addComponent(fieldTelefono, javax.swing.GroupLayout.PREFERRED_SIZE, 251, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel9)
-                            .addComponent(fieldNumero, javax.swing.GroupLayout.PREFERRED_SIZE, 251, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel11)
-                            .addComponent(fieldCorreoElectronico, javax.swing.GroupLayout.PREFERRED_SIZE, 251, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 63, Short.MAX_VALUE)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(jLabel4)
-                            .addComponent(fieldApellidoPaterno)
-                            .addComponent(jLabel6)
-                            .addComponent(jLabel8)
-                            .addComponent(fieldCalle)
-                            .addComponent(jLabel10)
-                            .addComponent(fieldCodigoPostal)
-                            .addComponent(jLabel12)
-                            .addComponent(fieldContraseña)
-                            .addComponent(fechaNacimientoChooser, javax.swing.GroupLayout.PREFERRED_SIZE, 251, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(33, 33, 33))))
+                    .addComponent(jLabel3)
+                    .addComponent(fieldNombre, javax.swing.GroupLayout.PREFERRED_SIZE, 251, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel5)
+                    .addComponent(fieldApellidoMaterno, javax.swing.GroupLayout.PREFERRED_SIZE, 251, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel7)
+                    .addComponent(fieldTelefono, javax.swing.GroupLayout.PREFERRED_SIZE, 251, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel9)
+                    .addComponent(fieldNumero, javax.swing.GroupLayout.PREFERRED_SIZE, 251, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel11)
+                    .addComponent(fieldCorreoElectronico, javax.swing.GroupLayout.PREFERRED_SIZE, 251, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel13)
+                    .addComponent(fieldUser, javax.swing.GroupLayout.PREFERRED_SIZE, 251, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(jLabel4)
+                    .addComponent(fieldApellidoPaterno)
+                    .addComponent(jLabel6)
+                    .addComponent(jLabel8)
+                    .addComponent(fieldCalle)
+                    .addComponent(jLabel10)
+                    .addComponent(fieldCodigoPostal)
+                    .addComponent(jLabel12)
+                    .addComponent(fechaNacimientoChooser, javax.swing.GroupLayout.DEFAULT_SIZE, 251, Short.MAX_VALUE)
+                    .addComponent(jContraseniaField))
+                .addGap(33, 33, 33))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap(261, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
@@ -287,12 +282,12 @@ public class registrarUsuario extends javax.swing.JFrame {
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(jLabel12)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(fieldContraseña, javax.swing.GroupLayout.PREFERRED_SIZE, 42, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(jContraseniaField, javax.swing.GroupLayout.PREFERRED_SIZE, 42, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addGap(18, 18, 18)
                 .addComponent(jLabel13)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGap(12, 12, 12)
                 .addComponent(fieldUser, javax.swing.GroupLayout.PREFERRED_SIZE, 42, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 44, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 38, Short.MAX_VALUE)
                 .addComponent(botonRegistrar1, javax.swing.GroupLayout.PREFERRED_SIZE, 48, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(27, 27, 27)
                 .addComponent(botonCancelar)
@@ -326,10 +321,6 @@ public class registrarUsuario extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_fieldCorreoElectronicoActionPerformed
 
-    private void fieldContraseñaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_fieldContraseñaActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_fieldContraseñaActionPerformed
-
     private void botonCancelarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonCancelarActionPerformed
         cancelarRegistro();
     }//GEN-LAST:event_botonCancelarActionPerformed
@@ -353,6 +344,10 @@ public class registrarUsuario extends javax.swing.JFrame {
             Logger.getLogger(registrarUsuario.class.getName()).log(Level.SEVERE, null, ex);
         }
     }//GEN-LAST:event_botonRegistrar1ActionPerformed
+
+    private void jContraseniaFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jContraseniaFieldActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jContraseniaFieldActionPerformed
 
     /**
      * @param args the command line arguments
@@ -397,13 +392,13 @@ public class registrarUsuario extends javax.swing.JFrame {
     private javax.swing.JTextField fieldApellidoPaterno;
     private javax.swing.JTextField fieldCalle;
     private javax.swing.JTextField fieldCodigoPostal;
-    private javax.swing.JTextField fieldContraseña;
     private javax.swing.JTextField fieldCorreoElectronico;
     private javax.swing.JTextField fieldNombre;
     private javax.swing.JTextField fieldNumero;
     private javax.swing.JTextField fieldTelefono;
     private javax.swing.JTextField fieldUser;
     private javax.swing.JComboBox<String> jComboBox2;
+    private javax.swing.JPasswordField jContraseniaField;
     private com.toedter.calendar.JDateChooser jDateChooser1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
@@ -428,7 +423,7 @@ public class registrarUsuario extends javax.swing.JFrame {
             String Numero = fieldNumero.getText();
             String telefono = fieldTelefono.getText();
             String CorreoElectronico = fieldCorreoElectronico.getText();
-            String contrasenia = fieldContraseña.getText();
+            String contrasenia = jContraseniaField.getText();
             String cp = fieldCodigoPostal.getText();
 
             // Obtener la fecha del JDateChooser y convertirla a LocalDate
@@ -475,7 +470,7 @@ public class registrarUsuario extends javax.swing.JFrame {
         fieldNumero.setText("");
         fieldTelefono.setText("");
         fieldCorreoElectronico.setText("");
-        fieldContraseña.setText("");
+        jContraseniaField.setText("");
         fieldCodigoPostal.setText("");
         fieldUser.setText("");
 
