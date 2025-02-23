@@ -16,13 +16,11 @@ import Exception.NegocioException;
 import Exception.PersistenciaClinicaException;
 import Mappers.HorarioMapper;
 import Mappers.MedicoMapper;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import de.mkammerer.argon2.Argon2;
 import de.mkammerer.argon2.Argon2Factory;
 import java.sql.SQLException;
-import java.time.LocalTime;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
