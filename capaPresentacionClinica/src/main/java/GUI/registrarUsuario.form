@@ -83,29 +83,33 @@
               </Group>
           </Group>
           <Group type="102" alignment="1" attributes="0">
-              <EmptySpace max="32767" attributes="0"/>
-              <Group type="103" groupAlignment="0" attributes="0">
-                  <Group type="102" alignment="1" attributes="0">
-                      <Group type="103" groupAlignment="1" max="-2" attributes="0">
-                          <Component id="botonRegistrar1" pref="140" max="32767" attributes="0"/>
-                          <Component id="botonCancelar" max="32767" attributes="0"/>
-                      </Group>
-                      <EmptySpace min="-2" pref="231" max="-2" attributes="0"/>
-                  </Group>
-                  <Group type="102" alignment="1" attributes="0">
-                      <Component id="jLabel1" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace min="-2" pref="147" max="-2" attributes="0"/>
-                  </Group>
+              <EmptySpace pref="261" max="32767" attributes="0"/>
+              <Group type="103" groupAlignment="1" max="-2" attributes="0">
+                  <Component id="botonRegistrar1" pref="140" max="32767" attributes="0"/>
+                  <Component id="botonCancelar" max="32767" attributes="0"/>
               </Group>
+              <EmptySpace min="-2" pref="231" max="-2" attributes="0"/>
+          </Group>
+          <Group type="102" alignment="0" attributes="0">
+              <EmptySpace min="-2" pref="147" max="-2" attributes="0"/>
+              <Component id="jLabel1" min="-2" max="-2" attributes="0"/>
+              <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
+          </Group>
+          <Group type="102" alignment="0" attributes="0">
+              <EmptySpace min="-2" pref="162" max="-2" attributes="0"/>
+              <Component id="jLabel14" min="-2" max="-2" attributes="0"/>
+              <EmptySpace max="32767" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>
     <DimensionLayout dim="1">
       <Group type="103" groupAlignment="0" attributes="0">
           <Group type="102" alignment="0" attributes="0">
-              <EmptySpace min="-2" pref="34" max="-2" attributes="0"/>
+              <EmptySpace min="-2" pref="29" max="-2" attributes="0"/>
               <Component id="jLabel1" min="-2" pref="33" max="-2" attributes="0"/>
-              <EmptySpace min="-2" pref="47" max="-2" attributes="0"/>
+              <EmptySpace type="separate" max="-2" attributes="0"/>
+              <Component id="jLabel14" min="-2" max="-2" attributes="0"/>
+              <EmptySpace type="separate" max="-2" attributes="0"/>
               <Group type="103" groupAlignment="1" attributes="0">
                   <Group type="102" alignment="1" attributes="0">
                       <Component id="jLabel4" min="-2" max="-2" attributes="0"/>
@@ -200,7 +204,7 @@
     </Component>
     <Component class="javax.swing.JLabel" name="jLabel3">
       <Properties>
-        <Property name="text" type="java.lang.String" value="Nombres"/>
+        <Property name="text" type="java.lang.String" value="Nombres*"/>
       </Properties>
     </Component>
     <Component class="javax.swing.JTextField" name="fieldApellidoPaterno">
@@ -210,7 +214,7 @@
     </Component>
     <Component class="javax.swing.JLabel" name="jLabel4">
       <Properties>
-        <Property name="text" type="java.lang.String" value="Apellido Paterno"/>
+        <Property name="text" type="java.lang.String" value="Apellido Paterno*"/>
       </Properties>
     </Component>
     <Component class="javax.swing.JTextField" name="fieldApellidoMaterno">
@@ -222,12 +226,12 @@
     </Component>
     <Component class="javax.swing.JLabel" name="jLabel6">
       <Properties>
-        <Property name="text" type="java.lang.String" value="Fecha de Nacimiento"/>
+        <Property name="text" type="java.lang.String" value="Fecha de Nacimiento*"/>
       </Properties>
     </Component>
     <Component class="javax.swing.JLabel" name="jLabel7">
       <Properties>
-        <Property name="text" type="java.lang.String" value="Telefono"/>
+        <Property name="text" type="java.lang.String" value="Telefono*"/>
       </Properties>
     </Component>
     <Component class="javax.swing.JTextField" name="fieldTelefono">
@@ -237,7 +241,7 @@
     </Component>
     <Component class="javax.swing.JLabel" name="jLabel8">
       <Properties>
-        <Property name="text" type="java.lang.String" value="Calle"/>
+        <Property name="text" type="java.lang.String" value="Calle*"/>
       </Properties>
     </Component>
     <Component class="javax.swing.JTextField" name="fieldCalle">
@@ -247,7 +251,7 @@
     </Component>
     <Component class="javax.swing.JLabel" name="jLabel9">
       <Properties>
-        <Property name="text" type="java.lang.String" value="Numero"/>
+        <Property name="text" type="java.lang.String" value="Numero exterior*"/>
       </Properties>
     </Component>
     <Component class="javax.swing.JTextField" name="fieldNumero">
@@ -257,7 +261,7 @@
     </Component>
     <Component class="javax.swing.JLabel" name="jLabel10">
       <Properties>
-        <Property name="text" type="java.lang.String" value="Codigo Postal"/>
+        <Property name="text" type="java.lang.String" value="Codigo Postal*"/>
       </Properties>
     </Component>
     <Component class="javax.swing.JTextField" name="fieldCodigoPostal">
@@ -272,7 +276,7 @@
     </Component>
     <Component class="javax.swing.JLabel" name="jLabel11">
       <Properties>
-        <Property name="text" type="java.lang.String" value="Correo Electronico"/>
+        <Property name="text" type="java.lang.String" value="Correo Electronico*"/>
       </Properties>
     </Component>
     <Component class="javax.swing.JTextField" name="fieldContrase&#xf1;a">
@@ -282,12 +286,12 @@
     </Component>
     <Component class="javax.swing.JLabel" name="jLabel12">
       <Properties>
-        <Property name="text" type="java.lang.String" value="Constrase&#xf1;a"/>
+        <Property name="text" type="java.lang.String" value="Constrase&#xf1;a*"/>
       </Properties>
     </Component>
     <Component class="javax.swing.JButton" name="botonCancelar">
       <Properties>
-        <Property name="text" type="java.lang.String" value="Cancelar"/>
+        <Property name="text" type="java.lang.String" value="Volver"/>
       </Properties>
       <Events>
         <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="botonCancelarActionPerformed"/>
@@ -302,7 +306,7 @@
     </Component>
     <Component class="javax.swing.JLabel" name="jLabel13">
       <Properties>
-        <Property name="text" type="java.lang.String" value="Username"/>
+        <Property name="text" type="java.lang.String" value="Username*"/>
       </Properties>
     </Component>
     <Component class="javax.swing.JButton" name="botonRegistrar1">
@@ -312,6 +316,11 @@
       <Events>
         <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="botonRegistrar1ActionPerformed"/>
       </Events>
+    </Component>
+    <Component class="javax.swing.JLabel" name="jLabel14">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Los campos marcados con asterisco (*) son obligatorios."/>
+      </Properties>
     </Component>
   </SubComponents>
 </Form>

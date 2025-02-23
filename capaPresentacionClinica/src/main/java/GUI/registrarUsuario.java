@@ -77,6 +77,7 @@ public class registrarUsuario extends javax.swing.JFrame {
         fieldUser = new javax.swing.JTextField();
         jLabel13 = new javax.swing.JLabel();
         botonRegistrar1 = new javax.swing.JButton();
+        jLabel14 = new javax.swing.JLabel();
 
         jComboBox2.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
 
@@ -92,7 +93,7 @@ public class registrarUsuario extends javax.swing.JFrame {
             }
         });
 
-        jLabel3.setText("Nombres");
+        jLabel3.setText("Nombres*");
 
         fieldApellidoPaterno.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -100,13 +101,13 @@ public class registrarUsuario extends javax.swing.JFrame {
             }
         });
 
-        jLabel4.setText("Apellido Paterno");
+        jLabel4.setText("Apellido Paterno*");
 
         jLabel5.setText("Apellido Materno");
 
-        jLabel6.setText("Fecha de Nacimiento");
+        jLabel6.setText("Fecha de Nacimiento*");
 
-        jLabel7.setText("Telefono");
+        jLabel7.setText("Telefono*");
 
         fieldTelefono.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -114,7 +115,7 @@ public class registrarUsuario extends javax.swing.JFrame {
             }
         });
 
-        jLabel8.setText("Calle");
+        jLabel8.setText("Calle*");
 
         fieldCalle.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -122,7 +123,7 @@ public class registrarUsuario extends javax.swing.JFrame {
             }
         });
 
-        jLabel9.setText("Numero");
+        jLabel9.setText("Numero exterior*");
 
         fieldNumero.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -130,7 +131,7 @@ public class registrarUsuario extends javax.swing.JFrame {
             }
         });
 
-        jLabel10.setText("Codigo Postal");
+        jLabel10.setText("Codigo Postal*");
 
         fieldCodigoPostal.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -144,7 +145,7 @@ public class registrarUsuario extends javax.swing.JFrame {
             }
         });
 
-        jLabel11.setText("Correo Electronico");
+        jLabel11.setText("Correo Electronico*");
 
         fieldContraseña.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -152,9 +153,9 @@ public class registrarUsuario extends javax.swing.JFrame {
             }
         });
 
-        jLabel12.setText("Constraseña");
+        jLabel12.setText("Constraseña*");
 
-        botonCancelar.setText("Cancelar");
+        botonCancelar.setText("Volver");
         botonCancelar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 botonCancelarActionPerformed(evt);
@@ -167,7 +168,7 @@ public class registrarUsuario extends javax.swing.JFrame {
             }
         });
 
-        jLabel13.setText("Username");
+        jLabel13.setText("Username*");
 
         botonRegistrar1.setText("Crear Cuenta");
         botonRegistrar1.addActionListener(new java.awt.event.ActionListener() {
@@ -175,6 +176,8 @@ public class registrarUsuario extends javax.swing.JFrame {
                 botonRegistrar1ActionPerformed(evt);
             }
         });
+
+        jLabel14.setText("Los campos marcados con asterisco (*) son obligatorios.");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -214,23 +217,28 @@ public class registrarUsuario extends javax.swing.JFrame {
                             .addComponent(fechaNacimientoChooser, javax.swing.GroupLayout.PREFERRED_SIZE, 251, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGap(33, 33, 33))))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                            .addComponent(botonRegistrar1, javax.swing.GroupLayout.DEFAULT_SIZE, 140, Short.MAX_VALUE)
-                            .addComponent(botonCancelar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                        .addGap(231, 231, 231))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addComponent(jLabel1)
-                        .addGap(147, 147, 147))))
+                .addContainerGap(261, Short.MAX_VALUE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                    .addComponent(botonRegistrar1, javax.swing.GroupLayout.DEFAULT_SIZE, 140, Short.MAX_VALUE)
+                    .addComponent(botonCancelar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGap(231, 231, 231))
+            .addGroup(layout.createSequentialGroup()
+                .addGap(147, 147, 147)
+                .addComponent(jLabel1)
+                .addGap(0, 0, Short.MAX_VALUE))
+            .addGroup(layout.createSequentialGroup()
+                .addGap(162, 162, 162)
+                .addComponent(jLabel14)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(34, 34, 34)
+                .addGap(29, 29, 29)
                 .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(47, 47, 47)
+                .addGap(18, 18, 18)
+                .addComponent(jLabel14)
+                .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(jLabel4)
@@ -402,6 +410,7 @@ public class registrarUsuario extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel11;
     private javax.swing.JLabel jLabel12;
     private javax.swing.JLabel jLabel13;
+    private javax.swing.JLabel jLabel14;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
