@@ -14,9 +14,10 @@ import javax.swing.JOptionPane;
  */
 public class dashboardPaciente extends javax.swing.JFrame {
 
-     private PacienteViejoDTO paciente;
+    private PacienteViejoDTO paciente;
 
     private iniciarSesion ventanaInicio;
+    private editarPerfilPaciente ventanaEditarPerfil;
 
     /**
      * Creates new form dashboardPaciente
@@ -35,6 +36,10 @@ public class dashboardPaciente extends javax.swing.JFrame {
 
     public void setVentanaInicio(iniciarSesion ventanaInicio) {
         this.ventanaInicio = ventanaInicio;
+    }
+
+    public void setVentanaEditarPerfil(editarPerfilPaciente ventanaEditarPerfil) {
+        this.ventanaEditarPerfil = ventanaEditarPerfil;
     }
 
     /**
@@ -202,7 +207,7 @@ public class dashboardPaciente extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void BotonEditarPerfilActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BotonEditarPerfilActionPerformed
-        // TODO add your handling code here:
+        abrirVentanaEditarPerfil(paciente);
     }//GEN-LAST:event_BotonEditarPerfilActionPerformed
 
     private void botonCitasProximasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonCitasProximasActionPerformed
@@ -276,6 +281,7 @@ public class dashboardPaciente extends javax.swing.JFrame {
     private javax.swing.JLabel lblRol;
     private javax.swing.JLabel lblTelefono;
     // End of variables declaration//GEN-END:variables
+
     public void actualizarDatos(Paciente paciente) {
         lblNombre.setText("Nombres: " + paciente.getNombres());
         lblApellidoPaterno.setText("Apellido Materno:" + paciente.getApellidoPaterno());
@@ -296,6 +302,18 @@ public class dashboardPaciente extends javax.swing.JFrame {
         lblCalle.setText("Dirección: " + paciente.getDireccion().getCalle());
         lblNumero.setText(paciente.getDireccion().getNumero());
         lblCodigoPostal.setText(paciente.getDireccion().getCodigoPostal());
+    }
+
+    public void abrirVentanaEditarPerfil(PacienteViejoDTO paciente) {
+        if (ventanaEditarPerfil == null) {
+            ventanaEditarPerfil = new editarPerfilPaciente(paciente);
+        }
+        
+        ventanaEditarPerfil = new editarPerfilPaciente(paciente);
+        ventanaEditarPerfil.setVentanaPaciente(this);
+        ventanaEditarPerfil.setLocationRelativeTo(null);
+        ventanaEditarPerfil.setVisible(true);
+        this.setVisible(false);
     }
 
     public void cerrarSesion() {

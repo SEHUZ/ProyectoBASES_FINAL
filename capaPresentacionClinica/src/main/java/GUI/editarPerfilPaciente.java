@@ -6,15 +6,18 @@ package GUI;
 
 import BO.PacienteBO;
 import DTO.PacienteNuevoDTO;
+import DTO.PacienteViejoDTO;
 import Entidades.DireccionPaciente;
 import Entidades.Paciente;
-import Entidades.Usuario;
 import Exception.NegocioException;
 import Exception.PersistenciaClinicaException;
 import configuracion.DependencyInjector;
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.time.ZoneId;
+import java.util.Date;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 
 /**
@@ -22,8 +25,17 @@ import javax.swing.JOptionPane;
  * @author sonic
  */
 public class editarPerfilPaciente extends javax.swing.JFrame {
-    
+
+    private PacienteViejoDTO paciente;
+
     private PacienteBO pacienteBO = DependencyInjector.crearPacienteBO();
+    private dashboardPaciente ventanaPaciente;
+
+    public editarPerfilPaciente(PacienteViejoDTO paciente) {
+        this.paciente = paciente;
+        initComponents();
+        cargarDatosEditar(paciente);
+    }
 
     /**
      * Creates new form editarPerfilPaciente
@@ -58,10 +70,12 @@ public class editarPerfilPaciente extends javax.swing.JFrame {
         fieldCodigoPostal = new javax.swing.JTextField();
         jLabel10 = new javax.swing.JLabel();
         jLabel11 = new javax.swing.JLabel();
-        fieldNumero = new javax.swing.JTextField();
+        fieldNumeroExterior = new javax.swing.JTextField();
         botonGuardarCambios = new javax.swing.JButton();
-        botonCancelar = new javax.swing.JButton();
+        botonVolver = new javax.swing.JButton();
         jLabel1 = new javax.swing.JLabel();
+        fieldEmail = new javax.swing.JTextField();
+        jLabel2 = new javax.swing.JLabel();
 
         fieldNombre2.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -124,11 +138,11 @@ public class editarPerfilPaciente extends javax.swing.JFrame {
 
         jLabel10.setText("Codigo Postal");
 
-        jLabel11.setText("Numero");
+        jLabel11.setText("Numero exterior");
 
-        fieldNumero.addActionListener(new java.awt.event.ActionListener() {
+        fieldNumeroExterior.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                fieldNumeroActionPerformed(evt);
+                fieldNumeroExteriorActionPerformed(evt);
             }
         });
 
@@ -139,49 +153,63 @@ public class editarPerfilPaciente extends javax.swing.JFrame {
             }
         });
 
-        botonCancelar.setText("Cancelar");
+        botonVolver.setText("Volver");
+        botonVolver.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                botonVolverActionPerformed(evt);
+            }
+        });
 
         jLabel1.setFont(new java.awt.Font("Segoe UI", 0, 36)); // NOI18N
         jLabel1.setText("Editar Perfil");
+
+        jLabel2.setText("Correo Electronico");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addGap(66, 66, 66)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel3)
-                    .addComponent(fieldNombre, javax.swing.GroupLayout.PREFERRED_SIZE, 251, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel6)
-                    .addComponent(fieldApellidoMaterno, javax.swing.GroupLayout.PREFERRED_SIZE, 251, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel8)
-                    .addComponent(fieldTelefono, javax.swing.GroupLayout.PREFERRED_SIZE, 251, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel10)
-                    .addComponent(fieldCodigoPostal, javax.swing.GroupLayout.PREFERRED_SIZE, 251, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 31, Short.MAX_VALUE)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                        .addComponent(jLabel4)
-                        .addComponent(fieldApellidoPaterno, javax.swing.GroupLayout.DEFAULT_SIZE, 251, Short.MAX_VALUE)
-                        .addComponent(jLabel7)
-                        .addComponent(fechaNacimientoChooser, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                    .addComponent(jLabel9)
-                    .addComponent(fieldCalle, javax.swing.GroupLayout.PREFERRED_SIZE, 251, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel11)
-                    .addComponent(fieldNumero, javax.swing.GroupLayout.PREFERRED_SIZE, 251, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(33, 33, 33))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(botonCancelar, javax.swing.GroupLayout.PREFERRED_SIZE, 211, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(botonGuardarCambios, javax.swing.GroupLayout.PREFERRED_SIZE, 211, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(201, 201, 201))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addComponent(jLabel1)
-                        .addGap(207, 207, 207))))
+                        .addGap(207, 207, 207))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(botonVolver, javax.swing.GroupLayout.PREFERRED_SIZE, 211, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(botonGuardarCambios, javax.swing.GroupLayout.PREFERRED_SIZE, 211, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(200, 200, 200))))
+            .addGroup(layout.createSequentialGroup()
+                .addGap(66, 66, 66)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel11)
+                            .addComponent(fieldNumeroExterior, javax.swing.GroupLayout.PREFERRED_SIZE, 251, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel3)
+                            .addComponent(fieldNombre, javax.swing.GroupLayout.PREFERRED_SIZE, 251, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel6)
+                            .addComponent(fieldApellidoMaterno, javax.swing.GroupLayout.PREFERRED_SIZE, 251, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel8)
+                            .addComponent(fieldTelefono, javax.swing.GroupLayout.PREFERRED_SIZE, 251, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel9)
+                            .addComponent(fieldCalle, javax.swing.GroupLayout.PREFERRED_SIZE, 251, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 31, Short.MAX_VALUE)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                .addComponent(jLabel4)
+                                .addComponent(fieldApellidoPaterno, javax.swing.GroupLayout.DEFAULT_SIZE, 251, Short.MAX_VALUE)
+                                .addComponent(jLabel7)
+                                .addComponent(fechaNacimientoChooser, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(jLabel10)
+                                .addComponent(fieldCodigoPostal, javax.swing.GroupLayout.DEFAULT_SIZE, 251, Short.MAX_VALUE)
+                                .addComponent(fieldEmail))
+                            .addComponent(jLabel2))
+                        .addGap(33, 33, 33))))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -198,7 +226,7 @@ public class editarPerfilPaciente extends javax.swing.JFrame {
                         .addComponent(jLabel3)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(fieldNombre, javax.swing.GroupLayout.PREFERRED_SIZE, 42, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addGap(31, 31, 31)
+                .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(jLabel6)
@@ -209,34 +237,40 @@ public class editarPerfilPaciente extends javax.swing.JFrame {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(fechaNacimientoChooser, javax.swing.GroupLayout.PREFERRED_SIZE, 42, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addGap(18, 18, 18)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel8)
+                    .addComponent(jLabel2))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(fieldEmail)
+                    .addComponent(fieldTelefono, javax.swing.GroupLayout.PREFERRED_SIZE, 42, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(24, 24, 24)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(jLabel8)
+                        .addComponent(jLabel10)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(fieldTelefono, javax.swing.GroupLayout.PREFERRED_SIZE, 42, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(fieldCodigoPostal, javax.swing.GroupLayout.PREFERRED_SIZE, 42, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(jLabel9)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(fieldCalle, javax.swing.GroupLayout.PREFERRED_SIZE, 42, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addGap(18, 18, 18)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(jLabel10)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(fieldCodigoPostal, javax.swing.GroupLayout.PREFERRED_SIZE, 42, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(jLabel11)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(fieldNumero, javax.swing.GroupLayout.PREFERRED_SIZE, 42, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addGap(98, 98, 98)
+                .addComponent(jLabel11)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(fieldNumeroExterior, javax.swing.GroupLayout.PREFERRED_SIZE, 42, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 71, Short.MAX_VALUE)
                 .addComponent(botonGuardarCambios, javax.swing.GroupLayout.PREFERRED_SIZE, 47, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
-                .addComponent(botonCancelar, javax.swing.GroupLayout.PREFERRED_SIZE, 47, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(96, Short.MAX_VALUE))
+                .addComponent(botonVolver, javax.swing.GroupLayout.PREFERRED_SIZE, 47, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(54, 54, 54))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    public void setVentanaPaciente(dashboardPaciente ventanaPaciente) {
+        this.ventanaPaciente = ventanaPaciente;
+    }
 
     private void fieldNombreActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_fieldNombreActionPerformed
         // TODO add your handling code here:
@@ -266,13 +300,21 @@ public class editarPerfilPaciente extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_fieldCodigoPostalActionPerformed
 
-    private void fieldNumeroActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_fieldNumeroActionPerformed
+    private void fieldNumeroExteriorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_fieldNumeroExteriorActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_fieldNumeroActionPerformed
+    }//GEN-LAST:event_fieldNumeroExteriorActionPerformed
 
     private void botonGuardarCambiosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonGuardarCambiosActionPerformed
-        // TODO add your handling code here:
+        try {
+            actualizarPaciente(paciente);
+        } catch (PersistenciaClinicaException | NegocioException ex) {
+            Logger.getLogger(editarPerfilPaciente.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }//GEN-LAST:event_botonGuardarCambiosActionPerformed
+
+    private void botonVolverActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonVolverActionPerformed
+        volverDashboardPaciente();
+    }//GEN-LAST:event_botonVolverActionPerformed
 
     /**
      * @param args the command line arguments
@@ -310,20 +352,22 @@ public class editarPerfilPaciente extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton botonCancelar;
     private javax.swing.JButton botonGuardarCambios;
+    private javax.swing.JButton botonVolver;
     private com.toedter.calendar.JDateChooser fechaNacimientoChooser;
     private javax.swing.JTextField fieldApellidoMaterno;
     private javax.swing.JTextField fieldApellidoPaterno;
     private javax.swing.JTextField fieldCalle;
     private javax.swing.JTextField fieldCodigoPostal;
+    private javax.swing.JTextField fieldEmail;
     private javax.swing.JTextField fieldNombre;
     private javax.swing.JTextField fieldNombre2;
-    private javax.swing.JTextField fieldNumero;
+    private javax.swing.JTextField fieldNumeroExterior;
     private javax.swing.JTextField fieldTelefono;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;
+    private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
@@ -332,40 +376,66 @@ public class editarPerfilPaciente extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel8;
     private javax.swing.JLabel jLabel9;
     // End of variables declaration//GEN-END:variables
-//    public void actualizarPaciente() throws PersistenciaClinicaException {
-//        try {
-//            String nombre = fieldNombre.getText();
-//            String apellidoPaterno = fieldApellidoPaterno.getText();
-//            String apellidoMaterno = fieldApellidoMaterno.getText();
-//            String Calle = fieldCalle.getText();
-//            String Numero = fieldNumero.getText();
-//            String telefono = fieldTelefono.getText();
-//            String cp = fieldCodigoPostal.getText();
-//
-//            // Obtener la fecha del JDateChooser y convertirla a LocalDate
-//            java.util.Date fechaNacimientoUtil = fechaNacimientoChooser.getDate();
-//            LocalDate fechaNacimiento = null;
-//            if (fechaNacimientoUtil != null) {
-//                fechaNacimiento = fechaNacimientoUtil.toInstant()
-//                        .atZone(ZoneId.systemDefault())
-//                        .toLocalDate();
-//            }
-//
-//            DireccionPaciente direccion = new DireccionPaciente(Calle, Numero, cp);
-//            PacienteNuevoDTO pacienteActualizado = new PacienteNuevoDTO(direccion, nombre, apellidoPaterno, apellidoMaterno, fechaNacimiento, telefono);
-//            
-//            
-//            Paciente exito = pacienteBO.actualizarPaciente(pacienteActualizado);
-//            if (exito != null) {
-//                JOptionPane.showMessageDialog(this, "El paciente se ha actualizado exitosamente");
-//                limpiarCampos();
-//            } else {
-//                JOptionPane.showMessageDialog(this, "ERROR al actualizar al paciente");
-//            }
-//        } catch (NegocioException | SQLException ex) {
-//            JOptionPane.showMessageDialog(this, "Error: " + ex.getMessage(), "Advertencia", JOptionPane.WARNING_MESSAGE);
-//        }
-//    }
+
+    public void actualizarPaciente(PacienteViejoDTO paciente) throws PersistenciaClinicaException, NegocioException {
+        try {
+            String nombres = fieldNombre.getText();
+            String apellidoPaterno = fieldApellidoPaterno.getText();
+            String apellidoMaterno = fieldApellidoMaterno.getText();
+            String Calle = fieldCalle.getText();
+            String Numero = fieldNumeroExterior.getText();
+            String email = fieldEmail.getText();
+            String telefono = fieldTelefono.getText();
+            String cp = fieldCodigoPostal.getText();
+
+            // Obtener la fecha del JDateChooser y convertirla a LocalDate
+            java.util.Date fechaNacimientoUtil = fechaNacimientoChooser.getDate();
+            LocalDate fechaNacimiento = null;
+            if (fechaNacimientoUtil != null) {
+                fechaNacimiento = fechaNacimientoUtil.toInstant()
+                        .atZone(ZoneId.systemDefault())
+                        .toLocalDate();
+            }
+
+            DireccionPaciente direccion = new DireccionPaciente(Calle, Numero, cp);
+            PacienteViejoDTO pacienteActualizado = new PacienteViejoDTO(paciente.getIdPaciente(), direccion, paciente.getUsuario(), nombres, apellidoPaterno, apellidoMaterno, fechaNacimiento, email, telefono);
+
+            Paciente exito = pacienteBO.actualizarPaciente(pacienteActualizado);
+            if (exito != null) {
+                JOptionPane.showMessageDialog(this, "El paciente se ha actualizado exitosamente. Vuelva a iniciar sesión para aplicar los cambios.");
+                limpiarCampos();
+            } else {
+                JOptionPane.showMessageDialog(this, "ERROR al actualizar al paciente");
+            }
+        } catch (NegocioException | SQLException ex) {
+            JOptionPane.showMessageDialog(this, "Error: " + ex.getMessage(), "Advertencia", JOptionPane.WARNING_MESSAGE);
+        }
+    }
+
+    public void cargarDatosEditar(PacienteViejoDTO paciente) {
+        fieldNombre.setText(paciente.getNombres());
+        fieldApellidoPaterno.setText(paciente.getApellidoPaterno());
+        fieldApellidoMaterno.setText(paciente.getApellidoMaterno());
+        LocalDate fechaNacimiento = paciente.getFechaNacimiento();
+        Date date = Date.from(fechaNacimiento.atStartOfDay(ZoneId.systemDefault()).toInstant());
+        fechaNacimientoChooser.setDate(date);
+        fieldEmail.setText(paciente.getEmail());
+        fieldTelefono.setText(paciente.getTelefono());
+        fieldCalle.setText(paciente.getDireccion().getCalle());
+        fieldCodigoPostal.setText(paciente.getDireccion().getCodigoPostal());
+        fieldNumeroExterior.setText(paciente.getDireccion().getNumero());
+    }
+
+    public void volverDashboardPaciente() {
+        if (ventanaPaciente == null) {
+            ventanaPaciente = new dashboardPaciente();
+        }
+
+        ventanaPaciente.setVentanaEditarPerfil(this);
+        ventanaPaciente.setLocationRelativeTo(null);
+        ventanaPaciente.setVisible(true);
+        this.setVisible(false);
+    }
 
     public void limpiarCampos() {
         // Limpiar campos de texto
@@ -373,14 +443,12 @@ public class editarPerfilPaciente extends javax.swing.JFrame {
         fieldApellidoPaterno.setText("");
         fieldApellidoMaterno.setText("");
         fieldCalle.setText("");
-        fieldNumero.setText("");
+        fieldNumeroExterior.setText("");
         fieldTelefono.setText("");
         fieldCodigoPostal.setText("");
 
         // Reiniciar fecha
         fechaNacimientoChooser.setDate(null);
     }
-
-
 
 }
