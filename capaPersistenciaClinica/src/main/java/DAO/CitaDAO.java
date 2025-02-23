@@ -170,7 +170,9 @@ public class CitaDAO implements ICitaDAO {
             throw new PersistenciaClinicaException("Error al actualizar estado: " + ex.getMessage());
         }
     }
-
+    
+    
+    
 
     @Override
     public boolean cancelarCita(int idCita) throws PersistenciaClinicaException {
@@ -256,5 +258,6 @@ public class CitaDAO implements ICitaDAO {
             throw new PersistenciaClinicaException("Error al consultar cita: " + ex.getMessage());
         }
     }
+    
 
 }
