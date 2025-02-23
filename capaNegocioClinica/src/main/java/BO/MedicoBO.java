@@ -7,15 +7,20 @@ package BO;
 import Conexion.IConexionBD;
 import DAO.IMedicoDAO;
 import DAO.MedicoDAO;
+import DTO.HorarioMedicoNuevoDTO;
 import DTO.MedicoDTO;
-import DTO.MedicoNuevoDTO;
+import Entidades.HorarioMedico;
 import Entidades.Medico;
 import Exception.NegocioException;
 import Exception.PersistenciaClinicaException;
+import Mappers.HorarioMapper;
 import Mappers.MedicoMapper;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 import de.mkammerer.argon2.Argon2;
 import de.mkammerer.argon2.Argon2Factory;
-import java.sql.SQLException;
+import java.time.LocalTime;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -23,6 +28,7 @@ import java.util.logging.Logger;
  *
  * @author sonic
  */
+
 public class MedicoBO {
 
     private static final Logger logger = Logger.getLogger(MedicoBO.class.getName());
@@ -31,11 +37,13 @@ public class MedicoBO {
 
     private final MedicoMapper mapper = new MedicoMapper();
 
+    private final HorarioMapper horariomapper = new HorarioMapper();
+
     public MedicoBO(IConexionBD conexion) {
         this.medicoDAO = new MedicoDAO(conexion);
     }
 
-    public boolean registrarMedico(MedicoNuevoDTO medicoNuevoDTO) throws NegocioException, SQLException, PersistenciaClinicaException {
+    public boolean registrarPaciente(MedicoNuevoDTO medicoNuevoDTO) throws NegocioException, SQLException, PersistenciaClinicaException {
         // Verificar que el medico no sea nulo.
         if (medicoNuevoDTO == null) {
             throw new NegocioException("El paciente debe tener todos sus datos.");
@@ -44,16 +52,14 @@ public class MedicoBO {
         // Verificar que ninguno de los datos ingresados sea nulo.
         if (medicoNuevoDTO.getNombres() == null || medicoNuevoDTO.getApellidoPaterno() == null
                 || medicoNuevoDTO.getUsuario().getUser() == null || medicoNuevoDTO.getUsuario().getContrasenia() == null
-                || medicoNuevoDTO.getUsuario().getRol() == null || medicoNuevoDTO.getUsuario() == null
-                || medicoNuevoDTO.getEspecialidad() == null || medicoNuevoDTO.getCedula() == null) {
+                || medicoNuevoDTO.getUsuario().getRol() == null || medicoNuevoDTO.getUsuario() == null) {
             throw new NegocioException("Los datos del medico no pueden estar vacios.");
         }
 
         // Verificar que no existan espacios en blanco.
         if (medicoNuevoDTO.getNombres().trim().isEmpty() || medicoNuevoDTO.getApellidoPaterno().trim().isEmpty()
                 || medicoNuevoDTO.getUsuario().getUser().trim().isEmpty() || medicoNuevoDTO.getUsuario().getContrasenia().trim().isEmpty()
-                || medicoNuevoDTO.getUsuario().getRol().trim().isEmpty() || medicoNuevoDTO.getEspecialidad().trim().isEmpty()
-                || medicoNuevoDTO.getCedula().trim().isEmpty()) {
+                || medicoNuevoDTO.getUsuario().getRol().trim().isEmpty()) {
             throw new NegocioException("Los datos del medico no pueden estar vacios o con espacios en blanco.");
         }
 
@@ -66,19 +72,17 @@ public class MedicoBO {
         String contraseña = contraseñaHash(medicoNuevoDTO.getUsuario().getContrasenia());
         medicoNuevoDTO.getUsuario().setContrasenia(contraseña);
 
-        // Se convierte el medicoNuevoDTO a entidad Medico
-        Medico medicoEntity = mapper.toEntity(medicoNuevoDTO);
+        // Se convierte el pacienteNuevoDTO a entidad Paciente
+        Medico medicoEntity = mapper.toEntityNuevo(medicoNuevoDTO);
 
         try {
             // Se manda al metodo registrarPaciente de PacienteDAO
-            Medico pacienteRegistrado = medicoDAO.registrarMedico(medicoEntity);
+            Medico pacienteRegistrado = medicoDAO.registrarPaciente(medicoEntity);
             return pacienteRegistrado != null;
         } catch (PersistenciaClinicaException | SQLException e) {
             logger.log(Level.SEVERE, "Error en el registro del medico.", e);
             throw new NegocioException("Error en el registro del medico.");
         }
-    }
-
     public MedicoDTO buscarMedicoPorUsuario(String user) throws NegocioException {
         try {
             Medico medico = medicoDAO.consultarMedicoPorUsuario(user);
@@ -90,6 +94,58 @@ public class MedicoBO {
         } catch (PersistenciaClinicaException ex) {
             logger.log(Level.SEVERE, "Error al recuperar los datos del medico", ex);
             throw new NegocioException("Error al recuperar los datos del medico: " + ex.getMessage());
+        }
+    }
+
+    public List<HorarioMedicoNuevoDTO> obtenerHorariosMedico(MedicoDTO medicoDTO) throws NegocioException {
+        try {
+            Medico medico = mapper.toEntity(medicoDTO);
+            List<HorarioMedico> horarios = medicoDAO.obtenerHorariosMedico(medico);
+            List<HorarioMedicoNuevoDTO> horariosDTO = new ArrayList<>();
+            for (HorarioMedico horarioMedico : horarios) {
+                horariosDTO.add(horariomapper.toDTO(horarioMedico));
+            }
+            return horariosDTO;
+        } catch (PersistenciaClinicaException ex) {
+            throw new NegocioException("Error al obtener horarios: " + ex.getMessage());
+        }
+    }
+
+    public boolean actualizarEstadoMedico(MedicoDTO medicoDTO) throws NegocioException {
+        try {
+            // Convertimos el DTO a dominio para trabajar con el DAO
+            Medico medico = mapper.toEntity(medicoDTO);
+            boolean actualizado = medicoDAO.ActualizarEstado(medico);
+            // Se actualiza el DTO con el nuevo estado
+            medicoDTO.setActivo(medico.isActivo());
+            return actualizado;
+        } catch (PersistenciaClinicaException ex) {
+            throw new NegocioException("Error al actualizar estado del médico: " + ex.getMessage());
+        }
+    }
+
+    public List<MedicoDTO> consultarMedicoPorEspecialidad(String especialidad) throws NegocioException {
+        try {
+            // Se obtiene la lista de médicos de la capa de datos
+            List<Medico> medicos = medicoDAO.consultarMedicoPorEspecialidad(especialidad);
+            // Se convierte cada objeto Medico en MedicoDTO usando el mapper
+            List<MedicoDTO> medicosDTO = new ArrayList<>();
+            for (Medico medico : medicos) {
+                medicosDTO.add(mapper.toDTO(medico));
+            }
+            return medicosDTO;
+        } catch (PersistenciaClinicaException ex) {
+            logger.log(Level.SEVERE, "Error al consultar médicos por especialidad", ex);
+            throw new NegocioException("Error al consultar médicos por especialidad: " + ex.getMessage());
+        }
+    }
+
+    public MedicoDTO consultarMedicoPorID(int idMedico) throws NegocioException {
+        try {
+            Medico medicoEncontrado = medicoDAO.consultarMedicoPorID(idMedico);
+            return mapper.toDTO(medicoEncontrado);
+        } catch (PersistenciaClinicaException ex) {
+            throw new NegocioException("Error al consultar médico por ID: " + ex.getMessage());
         }
     }
 

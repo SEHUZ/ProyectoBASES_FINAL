@@ -14,7 +14,6 @@ import Entidades.Medico;
  */
 public class MedicoMapper {
 
-    // Entidad medico a MedicoDTO
     public MedicoDTO toDTO(Medico medico) {
         if (medico == null) {
             return null;
@@ -30,20 +29,38 @@ public class MedicoMapper {
                 medico.isActivo()
         );
     }
-
-    public Medico toEntity(MedicoNuevoDTO medicoNuevoDTO) {
-        if (medicoNuevoDTO == null) {
+    
+    public Medico toEntity(MedicoDTO medicoDTO) {
+        if (medicoDTO == null) {
             return null;
         }
         return new Medico(
-                medicoNuevoDTO.getUsuario(),
-                medicoNuevoDTO.getNombres(),
-                medicoNuevoDTO.getApellidoPaterno(),
-                medicoNuevoDTO.getApellidoMaterno(),
-                medicoNuevoDTO.getCedula(),
-                medicoNuevoDTO.getEspecialidad(),
-                medicoNuevoDTO.isActivo()
+        medicoDTO.getIdMedico(),
+        medicoDTO.getUsuario(),
+        medicoDTO.getApellidoMaterno(),
+        medicoDTO.getApellidoMaterno(),
+        medicoDTO.getCedula(),
+        medicoDTO.getEspecialidad(),
+        medicoDTO.getNombres()
+        
+        
         );
     }
     
+    public Medico toEntityNuevo(MedicoNuevoDTO mediconuevoDTO) {
+        if (mediconuevoDTO == null) {
+            return null;
+        }
+        return new Medico(
+        mediconuevoDTO.getUsuario(),
+        mediconuevoDTO.getApellidoMaterno(),
+        mediconuevoDTO.getApellidoMaterno(),
+        mediconuevoDTO.getCedula(),
+        mediconuevoDTO.getEspecialidad(),
+        mediconuevoDTO.getNombres()
+                
+                
+        );
+
+}
 }

@@ -4,7 +4,11 @@
  */
 package pruebas;
 
+import DTO.HorarioMedicoNuevoDTO;
+import DTO.MedicoDTO;
 import Exception.NegocioException;
+import java.time.LocalDateTime;
+import java.util.List;
 
 /**
  *

@@ -9,6 +9,7 @@ import DAO.CitaDAO;
 import DAO.ICitaDAO;
 import DAO.IMedicoDAO;
 import DAO.IPacienteDAO;
+import DAO.MedicoDAO;
 import DAO.PacienteDAO;
 import DTO.CitaNuevaDTO;
 import DTO.CitaViejaDTO;
@@ -16,11 +17,8 @@ import Entidades.Cita;
 import Exception.NegocioException;
 import Exception.PersistenciaClinicaException;
 import Mappers.CitaMapper;
-import Mappers.PacienteMapper;
 import java.sql.SQLException;
 import java.time.LocalDateTime;
-import java.util.List;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
@@ -37,48 +35,32 @@ public class CitaBO {
 
     private final CitaMapper mapper = new CitaMapper();
 
-    public CitaBO(ICitaDAO citaDAO, IPacienteDAO pacienteDAO, IMedicoDAO medicoDAO) {
-        this.citaDAO = citaDAO;
-        this.pacienteDAO = pacienteDAO;
-        this.medicoDAO = medicoDAO;
-    }
-
     public CitaBO(IConexionBD conexion) {
         this.citaDAO = new CitaDAO(conexion);
-        this.pacienteDAO = null;
-        this.medicoDAO = null;
+        this.pacienteDAO = new PacienteDAO(conexion);
+        this.medicoDAO = new MedicoDAO(conexion);
     }
 
     public CitaViejaDTO agendarCita(CitaNuevaDTO citaNuevaDTO) throws NegocioException, SQLException {
         try {
-            if (citaNuevaDTO.getFechaHora() == null || citaNuevaDTO.getFechaHora().isBefore(LocalDateTime.now())) {
-                throw new NegocioException("Fecha y hora inválidas");
-
-            }
-            if (citaNuevaDTO.getFechaHora() == null || citaNuevaDTO.getFechaHora().isBefore(LocalDateTime.now())) {
-                throw new NegocioException("Fecha y hora inválidas");
-            }
-
-            if (citaNuevaDTO.getTipoCita() == null || (!citaNuevaDTO.getTipoCita().equalsIgnoreCase("EMERGENCIA") && !citaNuevaDTO.getTipoCita().equalsIgnoreCase("PROGRAMADA"))) {
-                throw new NegocioException("Tipo de cita inválido");
-            }
-
-            Cita cita = mapper.toEntityNuevo(citaNuevaDTO);
-
-            if (!medicoDAO.verificarDisponibilidad(cita.getMedico().getIdMedico(), cita.getFechaHora())) {
-                throw new NegocioException("El médico no está disponible en ese horario");
-            }
-            if (pacienteDAO.consultarPacientePorID(cita.getPaciente().getIdPaciente()) == null) {
-                throw new NegocioException("Paciente no registrado");
-            }
-
-            Cita citaNueva = citaDAO.agendarCita(cita);
-
-            return mapper.toViejoDTO(citaNueva);
-
-        } catch (PersistenciaClinicaException | IllegalArgumentException e) {
-            throw new NegocioException("Error al agendar cita: " + e.getMessage());
+        // Validación básica de fecha
+        if (citaNuevaDTO.getFechaHora() == null || citaNuevaDTO.getFechaHora().isBefore(LocalDateTime.now())) {
+            throw new NegocioException("Fecha y hora inválidas");
         }
+
+        Cita cita = mapper.toEntityNuevo(citaNuevaDTO);
+
+        // Validar existencia del paciente
+        if (pacienteDAO.consultarPacientePorID(cita.getPaciente().getIdPaciente()) == null) {
+            throw new NegocioException("Paciente no registrado");
+        }
+
+        Cita citaNueva = citaDAO.agendarCita(cita);
+        return mapper.toViejoDTO(citaNueva);
+
+    } catch (PersistenciaClinicaException | SQLException e) {
+        throw new NegocioException(e.getMessage()); // Mensaje claro del SP
+    }
     }
 
     public void cancelarCita(int idCita) throws NegocioException {
@@ -104,17 +86,27 @@ public class CitaBO {
             throw new NegocioException("Error técnico al cancelar: " + ex.getMessage());
         }
     }
-
-    private void validarDisponibilidadMedico(Cita cita) throws NegocioException {
+    
+    public CitaViejaDTO agendarCitaEmergencia(CitaNuevaDTO citaDTO) throws NegocioException {
         try {
-            if (!medicoDAO.verificarDisponibilidad(
-                    cita.getMedico().getIdMedico(),
-                    cita.getFechaHora())) {
-                throw new NegocioException("El médico no está disponible en ese horario");
-            }
-        } catch (PersistenciaClinicaException e) {
-            throw new NegocioException("Error al validar disponibilidad médica");
+            Cita cita = mapper.toEntityNuevo(citaDTO);
+            Cita citaAgendada = citaDAO.agendarCitaEmergencia(cita);
+            return mapper.toViejoDTO(citaAgendada);
+        } catch (PersistenciaClinicaException | SQLException e) {
+            throw new NegocioException("Error agendando emergencia: " + e.getMessage());
         }
     }
+    
 
+
+//    // Método 1: Actualizar estado de una cita
+//    public boolean insertarEstadoCita(int idCita, String descripcion) throws NegocioException {
+//        try {
+//            return citaDAO.insertarEstadoCita(idCita, descripcion);
+//        } catch (PersistenciaClinicaException ex) {
+//            throw new NegocioException("Error al actualizar estado: " + ex.getMessage());
+//        }
+//    }
+//
+//    
 }
