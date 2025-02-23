@@ -9,6 +9,7 @@ import DAO.IMedicoDAO;
 import DAO.MedicoDAO;
 import DTO.HorarioMedicoNuevoDTO;
 import DTO.MedicoDTO;
+import DTO.MedicoNuevoDTO;
 import Entidades.HorarioMedico;
 import Entidades.Medico;
 import Exception.NegocioException;
@@ -20,6 +21,7 @@ import java.util.ArrayList;
 import java.util.List;
 import de.mkammerer.argon2.Argon2;
 import de.mkammerer.argon2.Argon2Factory;
+import java.sql.SQLException;
 import java.time.LocalTime;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -43,7 +45,7 @@ public class MedicoBO {
         this.medicoDAO = new MedicoDAO(conexion);
     }
 
-    public boolean registrarPaciente(MedicoNuevoDTO medicoNuevoDTO) throws NegocioException, SQLException, PersistenciaClinicaException {
+    public boolean registrarMedico(MedicoNuevoDTO medicoNuevoDTO) throws NegocioException, SQLException, PersistenciaClinicaException {
         // Verificar que el medico no sea nulo.
         if (medicoNuevoDTO == null) {
             throw new NegocioException("El paciente debe tener todos sus datos.");
@@ -52,14 +54,16 @@ public class MedicoBO {
         // Verificar que ninguno de los datos ingresados sea nulo.
         if (medicoNuevoDTO.getNombres() == null || medicoNuevoDTO.getApellidoPaterno() == null
                 || medicoNuevoDTO.getUsuario().getUser() == null || medicoNuevoDTO.getUsuario().getContrasenia() == null
-                || medicoNuevoDTO.getUsuario().getRol() == null || medicoNuevoDTO.getUsuario() == null) {
+                || medicoNuevoDTO.getUsuario().getRol() == null || medicoNuevoDTO.getUsuario() == null
+                || medicoNuevoDTO.getEspecialidad() == null || medicoNuevoDTO.getCedula() == null) {
             throw new NegocioException("Los datos del medico no pueden estar vacios.");
         }
 
         // Verificar que no existan espacios en blanco.
         if (medicoNuevoDTO.getNombres().trim().isEmpty() || medicoNuevoDTO.getApellidoPaterno().trim().isEmpty()
                 || medicoNuevoDTO.getUsuario().getUser().trim().isEmpty() || medicoNuevoDTO.getUsuario().getContrasenia().trim().isEmpty()
-                || medicoNuevoDTO.getUsuario().getRol().trim().isEmpty()) {
+                || medicoNuevoDTO.getUsuario().getRol().trim().isEmpty() || medicoNuevoDTO.getEspecialidad().trim().isEmpty()
+                || medicoNuevoDTO.getCedula().trim().isEmpty()) {
             throw new NegocioException("Los datos del medico no pueden estar vacios o con espacios en blanco.");
         }
 
@@ -72,17 +76,18 @@ public class MedicoBO {
         String contraseña = contraseñaHash(medicoNuevoDTO.getUsuario().getContrasenia());
         medicoNuevoDTO.getUsuario().setContrasenia(contraseña);
 
-        // Se convierte el pacienteNuevoDTO a entidad Paciente
-        Medico medicoEntity = mapper.toEntityNuevo(medicoNuevoDTO);
+        // Se convierte el medicoNuevoDTO a entidad Medico
+        Medico medicoEntity = mapper.toEntity(medicoNuevoDTO);
 
         try {
             // Se manda al metodo registrarPaciente de PacienteDAO
-            Medico pacienteRegistrado = medicoDAO.registrarPaciente(medicoEntity);
+            Medico pacienteRegistrado = medicoDAO.registrarMedico(medicoEntity);
             return pacienteRegistrado != null;
         } catch (PersistenciaClinicaException | SQLException e) {
             logger.log(Level.SEVERE, "Error en el registro del medico.", e);
             throw new NegocioException("Error en el registro del medico.");
         }
+    }
     public MedicoDTO buscarMedicoPorUsuario(String user) throws NegocioException {
         try {
             Medico medico = medicoDAO.consultarMedicoPorUsuario(user);
