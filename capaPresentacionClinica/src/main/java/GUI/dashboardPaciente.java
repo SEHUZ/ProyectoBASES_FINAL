@@ -223,9 +223,7 @@ public class dashboardPaciente extends javax.swing.JFrame {
     }//GEN-LAST:event_BotonConsultaEmergenciaActionPerformed
 
     private void botonAgendarCitaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonAgendarCitaActionPerformed
-        agendarCita pantallaAgendarCita = new agendarCita();
-        pantallaAgendarCita.setPaciente(paciente);
-        pantallaAgendarCita.setVisible(true);
+        // TODO add your handling code here:
     }//GEN-LAST:event_botonAgendarCitaActionPerformed
 
     private void botonHistorialConsultasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonHistorialConsultasActionPerformed
@@ -315,7 +313,7 @@ public class dashboardPaciente extends javax.swing.JFrame {
         ventanaEditarPerfil.setVentanaPaciente(this);
         ventanaEditarPerfil.setLocationRelativeTo(null);
         ventanaEditarPerfil.setVisible(true);
-        this.setVisible(false);
+        this.dispose();
     }
 
     public void cerrarSesion() {

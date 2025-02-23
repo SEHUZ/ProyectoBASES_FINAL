@@ -71,7 +71,7 @@ public class registrarUsuario extends javax.swing.JFrame {
         fieldCorreoElectronico = new javax.swing.JTextField();
         jLabel11 = new javax.swing.JLabel();
         jLabel12 = new javax.swing.JLabel();
-        botonCancelar = new javax.swing.JButton();
+        botonVolver = new javax.swing.JButton();
         fechaNacimientoChooser = new com.toedter.calendar.JDateChooser();
         fieldUser = new javax.swing.JTextField();
         jLabel13 = new javax.swing.JLabel();
@@ -149,10 +149,10 @@ public class registrarUsuario extends javax.swing.JFrame {
 
         jLabel12.setText("Constraseña*");
 
-        botonCancelar.setText("Volver");
-        botonCancelar.addActionListener(new java.awt.event.ActionListener() {
+        botonVolver.setText("Volver");
+        botonVolver.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                botonCancelarActionPerformed(evt);
+                botonVolverActionPerformed(evt);
             }
         });
 
@@ -215,7 +215,7 @@ public class registrarUsuario extends javax.swing.JFrame {
                 .addContainerGap(261, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                     .addComponent(botonRegistrar1, javax.swing.GroupLayout.DEFAULT_SIZE, 140, Short.MAX_VALUE)
-                    .addComponent(botonCancelar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(botonVolver, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addGap(231, 231, 231))
             .addGroup(layout.createSequentialGroup()
                 .addGap(147, 147, 147)
@@ -290,7 +290,7 @@ public class registrarUsuario extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 38, Short.MAX_VALUE)
                 .addComponent(botonRegistrar1, javax.swing.GroupLayout.PREFERRED_SIZE, 48, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(27, 27, 27)
-                .addComponent(botonCancelar)
+                .addComponent(botonVolver)
                 .addGap(27, 27, 27))
         );
 
@@ -321,9 +321,9 @@ public class registrarUsuario extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_fieldCorreoElectronicoActionPerformed
 
-    private void botonCancelarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonCancelarActionPerformed
-        cancelarRegistro();
-    }//GEN-LAST:event_botonCancelarActionPerformed
+    private void botonVolverActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonVolverActionPerformed
+        volverInicio();
+    }//GEN-LAST:event_botonVolverActionPerformed
 
     private void fieldApellidoPaternoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_fieldApellidoPaternoActionPerformed
         // TODO add your handling code here:
@@ -385,8 +385,8 @@ public class registrarUsuario extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton botonCancelar;
     private javax.swing.JButton botonRegistrar1;
+    private javax.swing.JButton botonVolver;
     private com.toedter.calendar.JDateChooser fechaNacimientoChooser;
     private javax.swing.JTextField fieldApellidoMaterno;
     private javax.swing.JTextField fieldApellidoPaterno;
@@ -453,12 +453,12 @@ public class registrarUsuario extends javax.swing.JFrame {
         }
     }
 
-    public void cancelarRegistro() {
+    public void volverInicio() {
         limpiarCampos();
         ventanaInicio.setVentanaRegistro(this);
         ventanaInicio.setLocationRelativeTo(null);
         ventanaInicio.setVisible(true);
-        this.setVisible(false);
+        this.dispose();
     }
 
     public void limpiarCampos() {

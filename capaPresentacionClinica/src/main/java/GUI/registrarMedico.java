@@ -12,6 +12,8 @@ import Exception.NegocioException;
 import Exception.PersistenciaClinicaException;
 import configuracion.DependencyInjector;
 import java.sql.SQLException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 
 /**
@@ -46,7 +48,6 @@ public class registrarMedico extends javax.swing.JFrame {
         jLabel14 = new javax.swing.JLabel();
         jPopupMenu1 = new javax.swing.JPopupMenu();
         tituloRegistroMedico = new javax.swing.JLabel();
-        jLabel15 = new javax.swing.JLabel();
         fieldApellidoMaterno = new javax.swing.JTextField();
         jLabel5 = new javax.swing.JLabel();
         fieldNombre = new javax.swing.JTextField();
@@ -62,7 +63,8 @@ public class registrarMedico extends javax.swing.JFrame {
         fieldUser = new javax.swing.JTextField();
         jLabel13 = new javax.swing.JLabel();
         botonRegistrar1 = new javax.swing.JButton();
-        botonCancelar = new javax.swing.JButton();
+        botonVolver = new javax.swing.JButton();
+        jLabel16 = new javax.swing.JLabel();
 
         jLabel14.setText("Los campos marcados con asterisco (*) son obligatorios.");
 
@@ -71,8 +73,6 @@ public class registrarMedico extends javax.swing.JFrame {
         tituloRegistroMedico.setFont(new java.awt.Font("Segoe UI", 0, 36)); // NOI18N
         tituloRegistroMedico.setText("REGISTRO MEDICO");
         tituloRegistroMedico.setToolTipText("");
-
-        jLabel15.setText("Todos los campos son obligatorios.");
 
         jLabel5.setText("Apellido Materno");
 
@@ -119,12 +119,14 @@ public class registrarMedico extends javax.swing.JFrame {
             }
         });
 
-        botonCancelar.setText("Volver");
-        botonCancelar.addActionListener(new java.awt.event.ActionListener() {
+        botonVolver.setText("Volver");
+        botonVolver.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                botonCancelarActionPerformed(evt);
+                botonVolverActionPerformed(evt);
             }
         });
+
+        jLabel16.setText("Los campos marcados con asterisco (*) son obligatorios.");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -132,15 +134,10 @@ public class registrarMedico extends javax.swing.JFrame {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addComponent(jLabel15)
-                        .addGap(212, 212, 212))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                            .addComponent(botonRegistrar1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(botonCancelar, javax.swing.GroupLayout.PREFERRED_SIZE, 140, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(243, 243, 243))))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                    .addComponent(botonRegistrar1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(botonVolver, javax.swing.GroupLayout.PREFERRED_SIZE, 140, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(243, 243, 243))
             .addGroup(layout.createSequentialGroup()
                 .addGap(37, 37, 37)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -171,15 +168,17 @@ public class registrarMedico extends javax.swing.JFrame {
                                 .addGap(0, 0, Short.MAX_VALUE)))
                         .addGap(34, 34, 34))))
             .addGroup(layout.createSequentialGroup()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(162, 162, 162)
-                        .addComponent(tituloRegistroMedico))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(188, 188, 188)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel13)
-                            .addComponent(fieldUser, javax.swing.GroupLayout.PREFERRED_SIZE, 251, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(jLabel16)
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(layout.createSequentialGroup()
+                            .addGap(162, 162, 162)
+                            .addComponent(tituloRegistroMedico))
+                        .addGroup(layout.createSequentialGroup()
+                            .addGap(188, 188, 188)
+                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                .addComponent(jLabel13)
+                                .addComponent(fieldUser, javax.swing.GroupLayout.PREFERRED_SIZE, 251, javax.swing.GroupLayout.PREFERRED_SIZE)))))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
@@ -188,7 +187,7 @@ public class registrarMedico extends javax.swing.JFrame {
                 .addGap(35, 35, 35)
                 .addComponent(tituloRegistroMedico, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jLabel15)
+                .addComponent(jLabel16)
                 .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel3)
@@ -222,7 +221,7 @@ public class registrarMedico extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 98, Short.MAX_VALUE)
                 .addComponent(botonRegistrar1, javax.swing.GroupLayout.PREFERRED_SIZE, 48, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(27, 27, 27)
-                .addComponent(botonCancelar)
+                .addComponent(botonVolver)
                 .addContainerGap(123, Short.MAX_VALUE))
         );
 
@@ -253,9 +252,9 @@ public class registrarMedico extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_botonRegistrar1ActionPerformed
 
-    private void botonCancelarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonCancelarActionPerformed
-        cancelarRegistro();
-    }//GEN-LAST:event_botonCancelarActionPerformed
+    private void botonVolverActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonVolverActionPerformed
+        volverInicio();
+    }//GEN-LAST:event_botonVolverActionPerformed
 
     /**
      * @param args the command line arguments
@@ -293,8 +292,8 @@ public class registrarMedico extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton botonCancelar;
     private javax.swing.JButton botonRegistrar1;
+    private javax.swing.JButton botonVolver;
     private javax.swing.JTextField fieldApellidoMaterno;
     private javax.swing.JTextField fieldApellidoPaterno;
     private javax.swing.JTextField fieldCedula;
@@ -305,7 +304,7 @@ public class registrarMedico extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel12;
     private javax.swing.JLabel jLabel13;
     private javax.swing.JLabel jLabel14;
-    private javax.swing.JLabel jLabel15;
+    private javax.swing.JLabel jLabel16;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
@@ -338,6 +337,14 @@ public class registrarMedico extends javax.swing.JFrame {
         } catch (NegocioException | SQLException ex) {
             JOptionPane.showMessageDialog(this, "Error: " + ex.getMessage(), "Advertencia", JOptionPane.WARNING_MESSAGE);
         }
+    }
+
+    public void volverInicio() {
+        limpiarCampos();
+        ventanaInicio.setVentanaRegistroMedico(this);
+        ventanaInicio.setLocationRelativeTo(null);
+        ventanaInicio.setVisible(true);
+        this.dispose();
     }
 
     public void limpiarCampos() {

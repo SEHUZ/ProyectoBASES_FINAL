@@ -77,7 +77,7 @@
               <EmptySpace pref="261" max="32767" attributes="0"/>
               <Group type="103" groupAlignment="1" max="-2" attributes="0">
                   <Component id="botonRegistrar1" pref="140" max="32767" attributes="0"/>
-                  <Component id="botonCancelar" max="32767" attributes="0"/>
+                  <Component id="botonVolver" max="32767" attributes="0"/>
               </Group>
               <EmptySpace min="-2" pref="231" max="-2" attributes="0"/>
           </Group>
@@ -172,7 +172,7 @@
               <EmptySpace pref="38" max="32767" attributes="0"/>
               <Component id="botonRegistrar1" min="-2" pref="48" max="-2" attributes="0"/>
               <EmptySpace min="-2" pref="27" max="-2" attributes="0"/>
-              <Component id="botonCancelar" min="-2" max="-2" attributes="0"/>
+              <Component id="botonVolver" min="-2" max="-2" attributes="0"/>
               <EmptySpace min="-2" pref="27" max="-2" attributes="0"/>
           </Group>
       </Group>
@@ -275,12 +275,12 @@
         <Property name="text" type="java.lang.String" value="Constrase&#xf1;a*"/>
       </Properties>
     </Component>
-    <Component class="javax.swing.JButton" name="botonCancelar">
+    <Component class="javax.swing.JButton" name="botonVolver">
       <Properties>
         <Property name="text" type="java.lang.String" value="Volver"/>
       </Properties>
       <Events>
-        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="botonCancelarActionPerformed"/>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="botonVolverActionPerformed"/>
       </Events>
     </Component>
     <Component class="com.toedter.calendar.JDateChooser" name="fechaNacimientoChooser">

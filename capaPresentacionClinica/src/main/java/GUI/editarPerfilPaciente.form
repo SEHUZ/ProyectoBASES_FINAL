@@ -41,29 +41,65 @@
           <Group type="102" alignment="0" attributes="0">
               <EmptySpace min="-2" pref="45" max="-2" attributes="0"/>
               <Group type="103" groupAlignment="0" attributes="0">
-                  <Component id="jLabel11" alignment="0" min="-2" max="-2" attributes="0"/>
+                  <Group type="102" alignment="0" attributes="0">
+                      <Component id="jLabel11" min="-2" max="-2" attributes="0"/>
+                      <EmptySpace max="-2" attributes="0"/>
+                      <Component id="cargarNumeroExterior" min="-2" max="-2" attributes="0"/>
+                  </Group>
                   <Component id="fieldNumeroExterior" alignment="0" min="-2" pref="251" max="-2" attributes="0"/>
-                  <Component id="jLabel3" alignment="0" min="-2" max="-2" attributes="0"/>
+                  <Group type="102" alignment="0" attributes="0">
+                      <Component id="jLabel3" min="-2" max="-2" attributes="0"/>
+                      <EmptySpace max="-2" attributes="0"/>
+                      <Component id="cargarNombres" min="-2" max="-2" attributes="0"/>
+                  </Group>
                   <Component id="fieldNombre" alignment="0" min="-2" pref="251" max="-2" attributes="0"/>
-                  <Component id="jLabel6" alignment="0" min="-2" max="-2" attributes="0"/>
+                  <Group type="102" alignment="0" attributes="0">
+                      <Component id="jLabel6" min="-2" max="-2" attributes="0"/>
+                      <EmptySpace max="-2" attributes="0"/>
+                      <Component id="cargarApellidoMaterno" min="-2" max="-2" attributes="0"/>
+                  </Group>
                   <Component id="fieldApellidoMaterno" alignment="0" min="-2" pref="251" max="-2" attributes="0"/>
-                  <Component id="jLabel8" alignment="0" min="-2" max="-2" attributes="0"/>
+                  <Group type="102" alignment="0" attributes="0">
+                      <Component id="jLabel8" min="-2" max="-2" attributes="0"/>
+                      <EmptySpace max="-2" attributes="0"/>
+                      <Component id="cargarTelefono" min="-2" max="-2" attributes="0"/>
+                  </Group>
                   <Component id="fieldTelefono" alignment="0" min="-2" pref="251" max="-2" attributes="0"/>
-                  <Component id="jLabel9" alignment="0" min="-2" max="-2" attributes="0"/>
+                  <Group type="102" alignment="0" attributes="0">
+                      <Component id="jLabel9" min="-2" max="-2" attributes="0"/>
+                      <EmptySpace max="-2" attributes="0"/>
+                      <Component id="cargarCalle" min="-2" max="-2" attributes="0"/>
+                  </Group>
                   <Component id="fieldCalle" alignment="0" min="-2" pref="251" max="-2" attributes="0"/>
               </Group>
               <EmptySpace pref="52" max="32767" attributes="0"/>
               <Group type="103" groupAlignment="0" attributes="0">
                   <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                      <Component id="jLabel4" alignment="0" min="-2" max="-2" attributes="0"/>
+                      <Group type="102" alignment="0" attributes="0">
+                          <Component id="jLabel4" min="-2" max="-2" attributes="0"/>
+                          <EmptySpace max="-2" attributes="0"/>
+                          <Component id="cargarApellidoPaterno" min="-2" max="-2" attributes="0"/>
+                      </Group>
                       <Component id="fieldApellidoPaterno" alignment="0" pref="251" max="32767" attributes="0"/>
-                      <Component id="jLabel7" alignment="0" min="-2" max="-2" attributes="0"/>
+                      <Group type="102" alignment="0" attributes="0">
+                          <Component id="jLabel7" min="-2" max="-2" attributes="0"/>
+                          <EmptySpace max="-2" attributes="0"/>
+                          <Component id="cargarFechaNacimiento" min="-2" max="-2" attributes="0"/>
+                      </Group>
                       <Component id="fechaNacimientoChooser" alignment="0" max="32767" attributes="0"/>
-                      <Component id="jLabel10" alignment="0" min="-2" max="-2" attributes="0"/>
+                      <Group type="102" alignment="0" attributes="0">
+                          <Component id="jLabel10" min="-2" max="-2" attributes="0"/>
+                          <EmptySpace max="-2" attributes="0"/>
+                          <Component id="cargarCodigoPostal" min="-2" max="-2" attributes="0"/>
+                      </Group>
                       <Component id="fieldCodigoPostal" alignment="0" pref="251" max="32767" attributes="0"/>
                       <Component id="fieldEmail" max="32767" attributes="0"/>
                   </Group>
-                  <Component id="jLabel2" min="-2" max="-2" attributes="0"/>
+                  <Group type="102" attributes="0">
+                      <Component id="jLabel2" min="-2" max="-2" attributes="0"/>
+                      <EmptySpace max="-2" attributes="0"/>
+                      <Component id="cargarCorreoElectronico" min="-2" max="-2" attributes="0"/>
+                  </Group>
               </Group>
               <EmptySpace min="-2" pref="33" max="-2" attributes="0"/>
           </Group>
@@ -93,12 +129,18 @@
               <EmptySpace min="-2" pref="48" max="-2" attributes="0"/>
               <Group type="103" groupAlignment="1" attributes="0">
                   <Group type="102" attributes="0">
-                      <Component id="jLabel4" min="-2" max="-2" attributes="0"/>
+                      <Group type="103" groupAlignment="3" attributes="0">
+                          <Component id="jLabel4" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="cargarApellidoPaterno" alignment="3" min="-2" max="-2" attributes="0"/>
+                      </Group>
                       <EmptySpace max="-2" attributes="0"/>
                       <Component id="fieldApellidoPaterno" min="-2" pref="42" max="-2" attributes="0"/>
                   </Group>
                   <Group type="102" attributes="0">
-                      <Component id="jLabel3" min="-2" max="-2" attributes="0"/>
+                      <Group type="103" groupAlignment="3" attributes="0">
+                          <Component id="jLabel3" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="cargarNombres" alignment="3" min="-2" max="-2" attributes="0"/>
+                      </Group>
                       <EmptySpace max="-2" attributes="0"/>
                       <Component id="fieldNombre" min="-2" pref="42" max="-2" attributes="0"/>
                   </Group>
@@ -106,12 +148,18 @@
               <EmptySpace type="separate" max="-2" attributes="0"/>
               <Group type="103" groupAlignment="1" attributes="0">
                   <Group type="102" alignment="1" attributes="0">
-                      <Component id="jLabel6" min="-2" max="-2" attributes="0"/>
+                      <Group type="103" groupAlignment="3" attributes="0">
+                          <Component id="jLabel6" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="cargarApellidoMaterno" alignment="3" min="-2" max="-2" attributes="0"/>
+                      </Group>
                       <EmptySpace max="-2" attributes="0"/>
                       <Component id="fieldApellidoMaterno" min="-2" pref="42" max="-2" attributes="0"/>
                   </Group>
                   <Group type="102" alignment="1" attributes="0">
-                      <Component id="jLabel7" min="-2" max="-2" attributes="0"/>
+                      <Group type="103" groupAlignment="3" attributes="0">
+                          <Component id="jLabel7" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="cargarFechaNacimiento" alignment="3" min="-2" max="-2" attributes="0"/>
+                      </Group>
                       <EmptySpace max="-2" attributes="0"/>
                       <Component id="fechaNacimientoChooser" min="-2" pref="42" max="-2" attributes="0"/>
                   </Group>
@@ -120,6 +168,8 @@
               <Group type="103" groupAlignment="3" attributes="0">
                   <Component id="jLabel8" alignment="3" min="-2" max="-2" attributes="0"/>
                   <Component id="jLabel2" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="cargarTelefono" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="cargarCorreoElectronico" alignment="3" min="-2" max="-2" attributes="0"/>
               </Group>
               <EmptySpace max="-2" attributes="0"/>
               <Group type="103" groupAlignment="0" max="-2" attributes="0">
@@ -129,18 +179,27 @@
               <EmptySpace min="-2" pref="24" max="-2" attributes="0"/>
               <Group type="103" groupAlignment="1" attributes="0">
                   <Group type="102" alignment="1" attributes="0">
-                      <Component id="jLabel10" min="-2" max="-2" attributes="0"/>
+                      <Group type="103" groupAlignment="3" attributes="0">
+                          <Component id="jLabel10" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="cargarCodigoPostal" alignment="3" min="-2" max="-2" attributes="0"/>
+                      </Group>
                       <EmptySpace max="-2" attributes="0"/>
                       <Component id="fieldCodigoPostal" min="-2" pref="42" max="-2" attributes="0"/>
                   </Group>
                   <Group type="102" alignment="1" attributes="0">
-                      <Component id="jLabel9" min="-2" max="-2" attributes="0"/>
+                      <Group type="103" groupAlignment="3" attributes="0">
+                          <Component id="jLabel9" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="cargarCalle" alignment="3" min="-2" max="-2" attributes="0"/>
+                      </Group>
                       <EmptySpace max="-2" attributes="0"/>
                       <Component id="fieldCalle" min="-2" pref="42" max="-2" attributes="0"/>
                   </Group>
               </Group>
               <EmptySpace type="separate" max="-2" attributes="0"/>
-              <Component id="jLabel11" min="-2" max="-2" attributes="0"/>
+              <Group type="103" groupAlignment="3" attributes="0">
+                  <Component id="jLabel11" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="cargarNumeroExterior" alignment="3" min="-2" max="-2" attributes="0"/>
+              </Group>
               <EmptySpace max="-2" attributes="0"/>
               <Component id="fieldNumeroExterior" min="-2" pref="42" max="-2" attributes="0"/>
               <EmptySpace pref="71" max="32767" attributes="0"/>
@@ -160,7 +219,7 @@
     </Component>
     <Component class="javax.swing.JLabel" name="jLabel3">
       <Properties>
-        <Property name="text" type="java.lang.String" value="Nombres"/>
+        <Property name="text" type="java.lang.String" value="Nombres:"/>
       </Properties>
     </Component>
     <Component class="javax.swing.JTextField" name="fieldApellidoPaterno">
@@ -170,7 +229,7 @@
     </Component>
     <Component class="javax.swing.JLabel" name="jLabel4">
       <Properties>
-        <Property name="text" type="java.lang.String" value="Apellido Paterno"/>
+        <Property name="text" type="java.lang.String" value="Apellido Paterno:"/>
       </Properties>
     </Component>
     <Component class="javax.swing.JTextField" name="fieldApellidoMaterno">
@@ -180,12 +239,12 @@
     </Component>
     <Component class="javax.swing.JLabel" name="jLabel6">
       <Properties>
-        <Property name="text" type="java.lang.String" value="Apellido Materno"/>
+        <Property name="text" type="java.lang.String" value="Apellido Materno:"/>
       </Properties>
     </Component>
     <Component class="javax.swing.JLabel" name="jLabel7">
       <Properties>
-        <Property name="text" type="java.lang.String" value="Fecha de Nacimiento"/>
+        <Property name="text" type="java.lang.String" value="Fecha de Nacimiento:"/>
       </Properties>
     </Component>
     <Component class="com.toedter.calendar.JDateChooser" name="fechaNacimientoChooser">
@@ -197,7 +256,7 @@
     </Component>
     <Component class="javax.swing.JLabel" name="jLabel8">
       <Properties>
-        <Property name="text" type="java.lang.String" value="Telefono"/>
+        <Property name="text" type="java.lang.String" value="Telefono:"/>
       </Properties>
     </Component>
     <Component class="javax.swing.JTextField" name="fieldCalle">
@@ -207,7 +266,7 @@
     </Component>
     <Component class="javax.swing.JLabel" name="jLabel9">
       <Properties>
-        <Property name="text" type="java.lang.String" value="Calle"/>
+        <Property name="text" type="java.lang.String" value="Calle:"/>
       </Properties>
     </Component>
     <Component class="javax.swing.JTextField" name="fieldCodigoPostal">
@@ -217,12 +276,12 @@
     </Component>
     <Component class="javax.swing.JLabel" name="jLabel10">
       <Properties>
-        <Property name="text" type="java.lang.String" value="Codigo Postal"/>
+        <Property name="text" type="java.lang.String" value="Codigo Postal:"/>
       </Properties>
     </Component>
     <Component class="javax.swing.JLabel" name="jLabel11">
       <Properties>
-        <Property name="text" type="java.lang.String" value="Numero exterior"/>
+        <Property name="text" type="java.lang.String" value="Numero exterior:"/>
       </Properties>
     </Component>
     <Component class="javax.swing.JTextField" name="fieldNumeroExterior">
@@ -258,7 +317,52 @@
     </Component>
     <Component class="javax.swing.JLabel" name="jLabel2">
       <Properties>
-        <Property name="text" type="java.lang.String" value="Correo Electronico"/>
+        <Property name="text" type="java.lang.String" value="Correo Electronico:"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JLabel" name="cargarNombres">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="nombres"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JLabel" name="cargarApellidoPaterno">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="apellidoPaterno"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JLabel" name="cargarApellidoMaterno">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="apellidoMaterno"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JLabel" name="cargarFechaNacimiento">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="fechaNacimiento"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JLabel" name="cargarTelefono">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="telefono"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JLabel" name="cargarCorreoElectronico">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="correElectronico"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JLabel" name="cargarCalle">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="calle"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JLabel" name="cargarCodigoPostal">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="codigoPostal"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JLabel" name="cargarNumeroExterior">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="numeroExterior"/>
       </Properties>
     </Component>
   </SubComponents>

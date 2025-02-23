@@ -10,6 +10,7 @@ import BO.UsuarioBO;
 import DTO.MedicoDTO;
 import DTO.PacienteViejoDTO;
 import Exception.NegocioException;
+import Exception.PersistenciaClinicaException;
 import configuracion.DependencyInjector;
 import java.text.Normalizer;
 import javax.swing.JOptionPane;
@@ -21,8 +22,10 @@ import javax.swing.JOptionPane;
 public class iniciarSesion extends javax.swing.JFrame {
 
     private registrarUsuario ventanaRegistro;
+    private registrarMedico ventanaRegistroMedico;
     private dashBoardMedico ventanaMedico;
     private dashboardPaciente ventanaPaciente;
+    private editarPerfilPaciente ventanaEditar;
 
     private PacienteBO pacienteBO = DependencyInjector.crearPacienteBO();
     private MedicoBO medicoBO = DependencyInjector.crearMedicoBO();
@@ -55,6 +58,7 @@ public class iniciarSesion extends javax.swing.JFrame {
         jLabel4 = new javax.swing.JLabel();
         BotonSalir = new javax.swing.JButton();
         JFieldContrasenia = new javax.swing.JPasswordField();
+        botonRegistrarMedico = new javax.swing.JButton();
 
         BotonIniciarSesion1.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
         BotonIniciarSesion1.setText("Iniciar Sesion");
@@ -114,6 +118,13 @@ public class iniciarSesion extends javax.swing.JFrame {
             }
         });
 
+        botonRegistrarMedico.setText("Registrar un medico");
+        botonRegistrarMedico.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                botonRegistrarMedicoActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -126,9 +137,6 @@ public class iniciarSesion extends javax.swing.JFrame {
                         .addGap(87, 87, 87))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                                .addComponent(BotonIniciarSesion, javax.swing.GroupLayout.PREFERRED_SIZE, 141, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(65, 65, 65))
                             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                 .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 194, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addComponent(BotonRegistrarse))
@@ -141,15 +149,22 @@ public class iniciarSesion extends javax.swing.JFrame {
                                     .addComponent(jLabel3)
                                     .addComponent(jLabel2)
                                     .addComponent(JFieldContrasenia, javax.swing.GroupLayout.PREFERRED_SIZE, 255, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addGap(11, 11, 11)))
+                                .addGap(11, 11, 11))
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                                .addComponent(BotonIniciarSesion, javax.swing.GroupLayout.PREFERRED_SIZE, 141, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(65, 65, 65)))
                         .addGap(179, 179, 179))))
+            .addGroup(layout.createSequentialGroup()
+                .addGap(27, 27, 27)
+                .addComponent(botonRegistrarMedico)
+                .addGap(0, 0, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addGap(89, 89, 89)
                 .addComponent(jLabel1)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 50, Short.MAX_VALUE)
+                .addGap(66, 66, 66)
                 .addComponent(jLabel2)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(fieldUsuario, javax.swing.GroupLayout.PREFERRED_SIZE, 51, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -157,7 +172,7 @@ public class iniciarSesion extends javax.swing.JFrame {
                 .addComponent(jLabel3)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(JFieldContrasenia, javax.swing.GroupLayout.PREFERRED_SIZE, 51, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(137, 137, 137)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 121, Short.MAX_VALUE)
                 .addComponent(BotonIniciarSesion)
                 .addGap(18, 18, 18)
                 .addComponent(jLabel4)
@@ -165,7 +180,9 @@ public class iniciarSesion extends javax.swing.JFrame {
                 .addComponent(BotonRegistrarse)
                 .addGap(49, 49, 49)
                 .addComponent(BotonSalir)
-                .addGap(84, 84, 84))
+                .addGap(39, 39, 39)
+                .addComponent(botonRegistrarMedico)
+                .addGap(22, 22, 22))
         );
 
         pack();
@@ -173,6 +190,10 @@ public class iniciarSesion extends javax.swing.JFrame {
 
     public void setVentanaRegistro(registrarUsuario ventanaRegistro) {
         this.ventanaRegistro = ventanaRegistro;
+    }
+
+    public void setVentanaRegistroMedico(registrarMedico ventanaRegistroMedico) {
+        this.ventanaRegistroMedico = ventanaRegistroMedico;
     }
 
     public void setVentanaMedico(dashBoardMedico ventanaMedico) {
@@ -183,6 +204,10 @@ public class iniciarSesion extends javax.swing.JFrame {
         this.ventanaPaciente = ventanaPaciente;
     }
     
+    public void setVentanaEditarPerfil(editarPerfilPaciente ventanaEditar) {
+        this.ventanaEditar = ventanaEditar;
+    }
+
     private void BotonRegistrarseActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BotonRegistrarseActionPerformed
         abrirPantallaRegistro();
     }//GEN-LAST:event_BotonRegistrarseActionPerformed
@@ -200,12 +225,16 @@ public class iniciarSesion extends javax.swing.JFrame {
     }//GEN-LAST:event_BotonRegistrarse1ActionPerformed
 
     private void BotonSalirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BotonSalirActionPerformed
-        System.exit(0);
+        salirSistema();
     }//GEN-LAST:event_BotonSalirActionPerformed
 
     private void fieldUsuarioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_fieldUsuarioActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_fieldUsuarioActionPerformed
+
+    private void botonRegistrarMedicoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonRegistrarMedicoActionPerformed
+        abrirPantallaRegistroMedico();
+    }//GEN-LAST:event_botonRegistrarMedicoActionPerformed
 
     /**
      * @param args the command line arguments
@@ -249,6 +278,7 @@ public class iniciarSesion extends javax.swing.JFrame {
     private javax.swing.JButton BotonRegistrarse1;
     private javax.swing.JButton BotonSalir;
     private javax.swing.JPasswordField JFieldContrasenia;
+    private javax.swing.JButton botonRegistrarMedico;
     private javax.swing.JTextField fieldUsuario;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
@@ -259,6 +289,11 @@ public class iniciarSesion extends javax.swing.JFrame {
     public void iniciarSesionUsuario() {
         String user = fieldUsuario.getText();
         String contrasenia = JFieldContrasenia.getText();
+
+        if (user.isBlank() || contrasenia.isBlank()) {
+            JOptionPane.showMessageDialog(this, "Ingrese los datos de inicio de sesión.");
+            return;
+        }
 
         try {
             String rolRaw = usuarioBO.login(user, contrasenia);
@@ -271,31 +306,33 @@ public class iniciarSesion extends javax.swing.JFrame {
                 switch (rol) {
                     case "paciente":
                         PacienteViejoDTO paciente = pacienteBO.buscarPacientePorUsuario(user);
+                        JOptionPane.showMessageDialog(this, "Inicio de sesión exitoso.");
                         if (ventanaPaciente == null) {
                             ventanaPaciente = new dashboardPaciente(paciente);
                         }
-                        
+
                         ventanaPaciente = new dashboardPaciente(paciente);
                         ventanaPaciente.setVentanaInicio(this);
                         ventanaPaciente.setLocationRelativeTo(null);
                         ventanaPaciente.setVisible(true);
-                        this.setVisible(false);
+                        this.dispose();
                         limpiarCampos();
 
                         break;
                     case "medico":
                         MedicoDTO medico = medicoBO.buscarMedicoPorUsuario(user);
-                        if(ventanaMedico == null){
+                        JOptionPane.showMessageDialog(this, "Inicio de sesión exitoso.");
+                        if (ventanaMedico == null) {
                             ventanaMedico = new dashBoardMedico(medico);
                         }
-                        
+
                         ventanaMedico = new dashBoardMedico(medico);
                         ventanaMedico.setVentanaInicio(this);
-                        ventanaPaciente.setLocationRelativeTo(null);
-                        ventanaPaciente.setVisible(true);
-                        this.setVisible(false);
+                        ventanaMedico.setLocationRelativeTo(null);
+                        ventanaMedico.setVisible(true);
+                        this.dispose();
                         limpiarCampos();
-                        
+
                         break;
                     default:
                         JOptionPane.showMessageDialog(this, "Rol no reconocido.");
@@ -303,10 +340,10 @@ public class iniciarSesion extends javax.swing.JFrame {
 
                 }
             } else {
-                JOptionPane.showMessageDialog(this, "Correo o contraseña incorrectos.");
+                JOptionPane.showMessageDialog(this, "Usuario o contraseña incorrectos.");
             }
         } catch (NegocioException ex) {
-            JOptionPane.showMessageDialog(this, "Correo o contraseña incorrectos.");
+            JOptionPane.showMessageDialog(this, "Error: " + ex.getMessage(), "Advertencia", JOptionPane.WARNING_MESSAGE);
         }
     }
 
@@ -318,7 +355,33 @@ public class iniciarSesion extends javax.swing.JFrame {
         ventanaRegistro.setVentanaInicio(this);
         ventanaRegistro.setLocationRelativeTo(null);
         ventanaRegistro.setVisible(true);
-        this.setVisible(false);
+        this.dispose();
+    }
+
+    public void salirSistema() {
+        int respuesta = JOptionPane.showConfirmDialog(
+                this,
+                "¿Salir del sistema?",
+                "Salir",
+                JOptionPane.YES_NO_OPTION
+        );
+
+        if (respuesta == JOptionPane.YES_OPTION) {
+            System.exit(0);
+        } else {
+            System.out.println("El usuario canceló.");
+        }
+    }
+
+    public void abrirPantallaRegistroMedico() {
+        if (ventanaRegistroMedico == null) {
+            ventanaRegistroMedico = new registrarMedico();
+        }
+
+        ventanaRegistroMedico.setVentanaInicio(this);
+        ventanaRegistroMedico.setLocationRelativeTo(null);
+        ventanaRegistroMedico.setVisible(true);
+        this.dispose();
     }
 
     public void limpiarCampos() {
