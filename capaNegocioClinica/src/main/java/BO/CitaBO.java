@@ -9,12 +9,10 @@ import DAO.CitaDAO;
 import DAO.ICitaDAO;
 import DAO.IMedicoDAO;
 import DAO.IPacienteDAO;
-import DAO.MedicoDAO;
 import DAO.PacienteDAO;
 import DTO.CitaNuevaDTO;
 import DTO.CitaViejaDTO;
 import Entidades.Cita;
-import Entidades.Medico;
 import Exception.NegocioException;
 import Exception.PersistenciaClinicaException;
 import Mappers.CitaMapper;
@@ -39,10 +37,16 @@ public class CitaBO {
 
     private final CitaMapper mapper = new CitaMapper();
 
+    public CitaBO(ICitaDAO citaDAO, IPacienteDAO pacienteDAO, IMedicoDAO medicoDAO) {
+        this.citaDAO = citaDAO;
+        this.pacienteDAO = pacienteDAO;
+        this.medicoDAO = medicoDAO;
+    }
+
     public CitaBO(IConexionBD conexion) {
         this.citaDAO = new CitaDAO(conexion);
-        this.pacienteDAO = new PacienteDAO(conexion);
-        this.medicoDAO = new MedicoDAO(conexion);
+        this.pacienteDAO = null;
+        this.medicoDAO = null;
     }
 
     public CitaViejaDTO agendarCita(CitaNuevaDTO citaNuevaDTO) throws NegocioException, SQLException {
@@ -51,9 +55,15 @@ public class CitaBO {
                 throw new NegocioException("Fecha y hora inválidas");
 
             }
-            
+            if (citaNuevaDTO.getFechaHora() == null || citaNuevaDTO.getFechaHora().isBefore(LocalDateTime.now())) {
+                throw new NegocioException("Fecha y hora inválidas");
+            }
+
+            if (citaNuevaDTO.getTipoCita() == null || (!citaNuevaDTO.getTipoCita().equalsIgnoreCase("EMERGENCIA") && !citaNuevaDTO.getTipoCita().equalsIgnoreCase("PROGRAMADA"))) {
+                throw new NegocioException("Tipo de cita inválido");
+            }
+
             Cita cita = mapper.toEntityNuevo(citaNuevaDTO);
-            Medico medico = cita.getMedico();
 
             if (!medicoDAO.verificarDisponibilidad(cita.getMedico().getIdMedico(), cita.getFechaHora())) {
                 throw new NegocioException("El médico no está disponible en ese horario");
@@ -97,8 +107,9 @@ public class CitaBO {
 
     private void validarDisponibilidadMedico(Cita cita) throws NegocioException {
         try {
-            
-            if (!medicoDAO.verificarDisponibilidad(cita.getMedico().getIdMedico(), cita.getFechaHora())) {
+            if (!medicoDAO.verificarDisponibilidad(
+                    cita.getMedico().getIdMedico(),
+                    cita.getFechaHora())) {
                 throw new NegocioException("El médico no está disponible en ese horario");
             }
         } catch (PersistenciaClinicaException e) {

@@ -7,10 +7,8 @@ package BO;
 import Conexion.IConexionBD;
 import DAO.IUsuarioDAO;
 import DAO.UsuarioDAO;
-import Entidades.Usuario;
 import Exception.NegocioException;
 import Exception.PersistenciaClinicaException;
-import Mappers.PacienteMapper;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 

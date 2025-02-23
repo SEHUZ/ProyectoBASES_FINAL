@@ -4,7 +4,6 @@
  */
 package configuracion;
 
-import BO.CitaBO;
 import BO.MedicoBO;
 import BO.PacienteBO;
 import BO.UsuarioBO;
@@ -36,13 +35,6 @@ public class DependencyInjector {
         UsuarioBO usuarioBO = new UsuarioBO(conexion);
 
         return usuarioBO;
-    }
-    
-    public static CitaBO crearCitaBO() {
-        IConexionBD conexion = new ConexionBD();
-        CitaBO citaBO = new CitaBO(conexion);
-
-        return citaBO;
     }
     
 }

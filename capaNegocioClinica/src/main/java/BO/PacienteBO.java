@@ -134,17 +134,7 @@ public class PacienteBO {
     public Paciente actualizarPaciente(PacienteViejoDTO pacienteViejoDTO) throws NegocioException, SQLException, PersistenciaClinicaException {
         // Verificar que el paciente no sea nulo.
         if (pacienteViejoDTO == null) {
-            throw new NegocioException("El paciente debe tener todos sus datos.");
-        }
-        
-        // Verificar que el numero de telefono sea estrictamente de 10 digitos.
-        if (pacienteViejoDTO.getTelefono().length() != 10) {
-            throw new NegocioException("El numero de telefono debe ser estrictamente de 10 digitos.");
-        }
-
-        // Verificar que la fecha de nacimiento no sea despues del momento en el que se esta ingresando.
-        if (pacienteViejoDTO.getFechaNacimiento().isAfter(LocalDate.now())) {
-            throw new NegocioException("La fecha de nacimiento debe ser valida.");
+            throw new NegocioException("Para actualizar el paciente debe cambiar al menos un campo.");
         }
 
         // Verificar si el correo ya ha sido registrado.
@@ -155,11 +145,6 @@ public class PacienteBO {
         // Verificar si el telefono ya ha sido registrado.
         if (pacienteDAO.consultarPacientePorTelefono(pacienteViejoDTO.getTelefono()) != null) {
             throw new NegocioException("El telefono ingresado ya esta registrado.");
-        }
-
-        // Verificar si el correo tiene un formato valido.
-        if (!validarCorreo(pacienteViejoDTO.getEmail())) {
-            throw new NegocioException("El correo ingresado tiene un formato incorrecto.");
         }
 
         try {
