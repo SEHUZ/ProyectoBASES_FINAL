@@ -10,6 +10,7 @@ import java.time.LocalDateTime;
  *
  * @author sonic
  */
+
 public class Auditoria {
     private int idAuditoria;
     private Cita cita;

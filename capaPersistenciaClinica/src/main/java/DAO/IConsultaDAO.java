@@ -7,6 +7,7 @@ package DAO;
 import Entidades.Consulta;
 import Exception.PersistenciaClinicaException;
 import java.sql.SQLException;
+import java.time.LocalDateTime;
 import java.util.List;
 
 /**
@@ -31,7 +32,11 @@ public interface IConsultaDAO {
 
     // Método para obtener una consulta por ID
     Consulta obtenerConsultaPorId(int idConsulta) throws SQLException, PersistenciaClinicaException;
+    
+    List<Consulta> obtenerConsultasPorEspecialidadYFechas(int idPaciente, String especialidad, LocalDateTime fechaInicio, LocalDateTime fechaFin) throws SQLException, PersistenciaClinicaException;
 }
+
+
 
 
 
