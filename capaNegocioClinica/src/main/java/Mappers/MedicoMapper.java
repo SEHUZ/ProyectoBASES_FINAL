@@ -28,5 +28,22 @@ public class MedicoMapper {
                 medico.isActivo()
         );
     }
+    
+    public Medico toEntity(MedicoDTO medicoDTO) {
+        if (medicoDTO == null) {
+            return null;
+        }
+        return new Medico(
+        medicoDTO.getIdMedico(),
+        medicoDTO.getUsuario(),
+        medicoDTO.getApellidoMaterno(),
+        medicoDTO.getApellidoMaterno(),
+        medicoDTO.getCedula(),
+        medicoDTO.getEspecialidad(),
+        medicoDTO.getNombres()
+        
+        
+        );
+    }
 
 }

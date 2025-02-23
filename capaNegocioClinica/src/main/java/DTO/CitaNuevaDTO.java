@@ -4,10 +4,17 @@
  */
 package DTO;
 
+import Entidades.Auditoria;
+import Entidades.Cita;
+import Entidades.Cita.TipoCita;
+import Entidades.CitaEmergencia;
+import Entidades.CitaNormal;
+import Entidades.Consulta;
 import Entidades.EstadosCita;
 import Entidades.Medico;
 import Entidades.Paciente;
 import java.time.LocalDateTime;
+import java.util.List;
 
 /**
  *
@@ -18,27 +25,26 @@ public class CitaNuevaDTO {
     private Medico medico;
     private EstadosCita estado;
     private LocalDateTime fechaHora;
-    private String tipoCita;
+    private Cita.TipoCita tipoCita;
+    private List<Auditoria> auditorias;
+    private CitaEmergencia emergencia;
+    private CitaNormal normal;
+    private List<Consulta> consultas;
 
-    public CitaNuevaDTO() {
-    }
-
-    public CitaNuevaDTO(Paciente paciente, Medico medico, EstadosCita estado, LocalDateTime fechaHora, String tipoCita) {
+    public CitaNuevaDTO(Paciente paciente, Medico medico, EstadosCita estado, LocalDateTime fechaHora, TipoCita tipoCita, List<Auditoria> auditorias, CitaEmergencia emergencia, CitaNormal normal, List<Consulta> consultas) {
         this.paciente = paciente;
         this.medico = medico;
         this.estado = estado;
         this.fechaHora = fechaHora;
         this.tipoCita = tipoCita;
+        this.auditorias = auditorias;
+        this.emergencia = emergencia;
+        this.normal = normal;
+        this.consultas = consultas;
     }
 
-    public String getTipoCita() {
-        return tipoCita;
+    public CitaNuevaDTO() {
     }
-
-    public void setTipoCita(String tipoCita) {
-        this.tipoCita = tipoCita;
-    }
-    
 
     public Paciente getPaciente() {
         return paciente;
@@ -72,10 +78,47 @@ public class CitaNuevaDTO {
         this.fechaHora = fechaHora;
     }
 
-    @Override
-    public String toString() {
-        return "CitaNuevaDTO{" + "paciente=" + paciente + ", medico=" + medico + ", estado=" + estado + ", fechaHora=" + fechaHora + '}';
+    public TipoCita getTipoCita() {
+        return tipoCita;
+    }
+
+    public void setTipoCita(TipoCita tipoCita) {
+        this.tipoCita = tipoCita;
+    }
+
+    public List<Auditoria> getAuditorias() {
+        return auditorias;
+    }
+
+    public void setAuditorias(List<Auditoria> auditorias) {
+        this.auditorias = auditorias;
+    }
+
+    public CitaEmergencia getEmergencia() {
+        return emergencia;
+    }
+
+    public void setEmergencia(CitaEmergencia emergencia) {
+        this.emergencia = emergencia;
+    }
+
+    public CitaNormal getNormal() {
+        return normal;
+    }
+
+    public void setNormal(CitaNormal normal) {
+        this.normal = normal;
+    }
+
+    public List<Consulta> getConsultas() {
+        return consultas;
+    }
+
+    public void setConsultas(List<Consulta> consultas) {
+        this.consultas = consultas;
     }
     
     
+
+   
 }

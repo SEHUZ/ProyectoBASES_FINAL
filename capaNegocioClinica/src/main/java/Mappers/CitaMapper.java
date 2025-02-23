@@ -26,7 +26,7 @@ public class CitaMapper {
             dto.getMedico(),
             dto.getEstado(),
             dto.getFechaHora(),
-            dto.getTipoCita() != null ? Cita.TipoCita.valueOf(dto.getTipoCita().toUpperCase()):null
+            dto.getTipoCita()
                
         );
     }
@@ -37,11 +37,17 @@ public class CitaMapper {
             return null;
         }
         CitaViejaDTO dto = new CitaViejaDTO();
-        dto.setMedico(cita.getMedico());
-        dto.setPaciente(cita.getPaciente());
-        dto.setEstado(cita.getEstado());
         dto.setIdCita(cita.getIdCita());
+        dto.setPaciente(cita.getPaciente());
+        dto.setMedico(cita.getMedico());
+        dto.setEstado(cita.getEstado());
         dto.setFechaHora(cita.getFechaHora());
+        dto.setTipoCita(cita.getTipoCita());
+        dto.setAuditorias(cita.getAuditorias());
+        dto.setEmergencia(cita.getEmergencia());
+        dto.setNormal(cita.getNormal());
+        dto.setConsultas(cita.getConsultas());
+        
         return dto;
     }
 
@@ -51,11 +57,12 @@ public class CitaMapper {
             return null;
         }
         return new Cita(
+            dto.getIdCita(),
             dto.getPaciente(),
             dto.getMedico(),
             dto.getEstado(),
             dto.getFechaHora(),
-            dto.getTipoCita() != null ? Cita.TipoCita.valueOf(dto.getTipoCita().toUpperCase()):null
+            dto.getTipoCita()
                 
 
         );
