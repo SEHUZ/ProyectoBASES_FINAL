@@ -11,8 +11,10 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.sql.*;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+
 
 public class ConsultaDAO implements IConsultaDAO {
 
@@ -143,4 +145,58 @@ public class ConsultaDAO implements IConsultaDAO {
         }
         return null;  // Si no se encuentra la consulta
     }
+    
+    
+    public List<Consulta> obtenerConsultasPorEspecialidadYFechas(int idPaciente, String especialidad, LocalDateTime fechaInicio, LocalDateTime fechaFin) throws SQLException, PersistenciaClinicaException {
+    List<Consulta> consultas = new ArrayList<>();
+    
+    // Query para obtener consultas de un paciente filtradas por especialidad y fechas
+    String query = "SELECT c.* " +
+                   "FROM Consultas c " +
+                   "JOIN Citas ci ON c.idCita = ci.idCita " +
+                   "JOIN Medicos m ON ci.idMedico = m.idMedico " +
+                   "WHERE ci.idPaciente = ? " +
+                   "AND m.especialidad = ? " +
+                   "AND c.fechaHora BETWEEN ? AND ?";
+
+    try (Connection conn = conexion.crearConexion();  // Usamos la conexión
+         PreparedStatement pst = conn.prepareStatement(query)) {
+        
+        // Establecemos los parámetros para la consulta
+        pst.setInt(1, idPaciente); // ID del paciente
+        pst.setString(2, especialidad); // Especialidad del médico
+        pst.setTimestamp(3, Timestamp.valueOf(fechaInicio)); // Fecha de inicio del rango
+        pst.setTimestamp(4, Timestamp.valueOf(fechaFin)); // Fecha de fin del rango
+
+        // Ejecutamos la consulta
+        try (ResultSet rs = pst.executeQuery()) {
+            while (rs.next()) {
+                // Crear objeto Consulta y asignar valores
+                Consulta consulta = new Consulta();
+                consulta.setIdConsulta(rs.getInt("idConsulta"));
+                consulta.setDiagnostico(rs.getString("diagnostico"));
+                consulta.setEstado(rs.getString("estado"));
+                consulta.setFechaHora(rs.getTimestamp("fechaHora").toLocalDateTime());
+                consulta.setTratamiento(rs.getString("tratamiento"));
+
+                // Obtener la cita asociada usando el ID de la cita
+                int idCita = rs.getInt("idCita");
+                CitaDAO citaDAO = new CitaDAO(conexion); 
+                Cita cita = citaDAO.consultarCitaPorID(idCita);  
+                consulta.setCita(cita); 
+
+                // Agregar consulta a la lista
+                consultas.add(consulta);
+            }
+        }
+    } catch (SQLException e) {
+        throw new PersistenciaClinicaException("Error al obtener consultas por especialidad y fechas", e);
+    }
+
+    return consultas;
+}
+
+    
+    
+    
 }
