@@ -7,6 +7,7 @@ package GUI;
 import BO.MedicoBO;
 import BO.PacienteBO;
 import BO.UsuarioBO;
+import DTO.MedicoDTO;
 import DTO.PacienteViejoDTO;
 import Exception.NegocioException;
 import configuracion.DependencyInjector;
@@ -283,7 +284,17 @@ public class iniciarSesion extends javax.swing.JFrame {
 
                         break;
                     case "medico":
+                        MedicoDTO medico = medicoBO.buscarMedicoPorUsuario(user);
+                        if(ventanaMedico == null){
+                            ventanaMedico = new dashBoardMedico(medico);
+                        }
                         
+                        ventanaMedico = new dashBoardMedico(medico);
+                        ventanaMedico.setVentanaInicio(this);
+                        ventanaPaciente.setLocationRelativeTo(null);
+                        ventanaPaciente.setVisible(true);
+                        this.setVisible(false);
+                        limpiarCampos();
                         
                         break;
                     default:
