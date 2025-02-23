@@ -4,6 +4,40 @@
  */
 package GUI;
 
+import BO.CitaBO;
+import DTO.PacienteViejoDTO;
+import Entidades.Medico;
+import BO.MedicoBO;
+import DTO.CitaNuevaDTO;
+import DTO.CitaViejaDTO;
+import DTO.HorarioMedicoNuevoDTO;
+import DTO.MedicoDTO;
+import Entidades.Cita;
+import Entidades.HorarioMedico;
+import Entidades.Paciente;
+import Exception.NegocioException;
+import Mappers.CitaMapper;
+import Mappers.MedicoMapper;
+import Mappers.PacienteMapper;
+import configuracion.DependencyInjector;
+import java.awt.print.PrinterException;
+import java.sql.SQLException;
+import java.time.DayOfWeek;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
+import java.time.format.TextStyle;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import java.util.Locale;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.DefaultListModel;
+import javax.swing.JOptionPane;
+
 /**
  *
  * @author sonic
@@ -13,9 +47,20 @@ public class agendarCita extends javax.swing.JFrame {
     /**
      * Creates new form agendarCita
      */
+    private PacienteViejoDTO paciente;
+    private MedicoBO medicoBO = DependencyInjector.crearMedicoBO();
+    private CitaBO citaBO = DependencyInjector.crearCitaBO();
+    private final PacienteMapper pacienteMAPPER = new PacienteMapper();
+    private final MedicoMapper mapper = new MedicoMapper();
+
     public agendarCita() {
         initComponents();
     }
+
+    public void setPaciente(PacienteViejoDTO paciente) {
+        this.paciente = paciente;
+    }
+
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -26,20 +71,36 @@ public class agendarCita extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        jScrollPane1 = new javax.swing.JScrollPane();
+        jTable1 = new javax.swing.JTable();
         jLabel1 = new javax.swing.JLabel();
         fieldEspecialidad = new javax.swing.JTextField();
         jLabel3 = new javax.swing.JLabel();
         jCalendar1 = new com.toedter.calendar.JCalendar();
-        jDateChooser1 = new com.toedter.calendar.JDateChooser();
         jLabel4 = new javax.swing.JLabel();
         jComboBox1 = new javax.swing.JComboBox<>();
-        list1 = new java.awt.List();
         jLabel5 = new javax.swing.JLabel();
         botonAgendarCita = new javax.swing.JButton();
         botonVolver = new javax.swing.JButton();
+        jScrollPane2 = new javax.swing.JScrollPane();
+        jTextAreaHorarios = new javax.swing.JTextArea();
+        fieldHora = new javax.swing.JTextField();
+        jLabel6 = new javax.swing.JLabel();
+
+        jTable1.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null}
+            },
+            new String [] {
+                "Title 1", "Title 2", "Title 3", "Title 4"
+            }
+        ));
+        jScrollPane1.setViewportView(jTable1);
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-        setMaximumSize(new java.awt.Dimension(632, 757));
         setMinimumSize(new java.awt.Dimension(632, 757));
 
         jLabel1.setFont(new java.awt.Font("Segoe UI", 0, 36)); // NOI18N
@@ -54,8 +115,6 @@ public class agendarCita extends javax.swing.JFrame {
         jLabel3.setText("Especialidad");
 
         jLabel4.setText("Medico");
-
-        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
 
         jLabel5.setText("Horarios del Medico");
 
@@ -73,10 +132,26 @@ public class agendarCita extends javax.swing.JFrame {
             }
         });
 
+        jTextAreaHorarios.setColumns(20);
+        jTextAreaHorarios.setRows(5);
+        jScrollPane2.setViewportView(jTextAreaHorarios);
+
+        fieldHora.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                fieldHoraActionPerformed(evt);
+            }
+        });
+
+        jLabel6.setText("Hora");
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jLabel1)
+                .addGap(272, 272, 272))
             .addGroup(layout.createSequentialGroup()
                 .addGap(32, 32, 32)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -85,30 +160,34 @@ public class agendarCita extends javax.swing.JFrame {
                         .addGap(0, 0, Short.MAX_VALUE))
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(jLabel3)
-                        .addContainerGap())
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addGap(0, 0, Short.MAX_VALUE)
-                        .addComponent(jLabel1)
-                        .addGap(176, 176, 176))
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                     .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                .addComponent(list1, javax.swing.GroupLayout.PREFERRED_SIZE, 251, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                    .addComponent(fieldEspecialidad, javax.swing.GroupLayout.DEFAULT_SIZE, 251, Short.MAX_VALUE)
-                                    .addComponent(jLabel4)
-                                    .addComponent(jComboBox1, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
-                            .addComponent(jLabel5))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 108, Short.MAX_VALUE)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                                .addComponent(jDateChooser1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(123, 123, 123))
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                    .addComponent(botonAgendarCita, javax.swing.GroupLayout.PREFERRED_SIZE, 211, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(jCalendar1, javax.swing.GroupLayout.PREFERRED_SIZE, 208, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addGap(66, 66, 66))))))
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(fieldEspecialidad, javax.swing.GroupLayout.DEFAULT_SIZE, 251, Short.MAX_VALUE)
+                            .addComponent(jLabel4)
+                            .addComponent(jComboBox1, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(jLabel5)
+                            .addComponent(jScrollPane2))
+                        .addGap(167, 167, 167)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addGroup(layout.createSequentialGroup()
+                                .addGap(10, 10, 10)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                                        .addComponent(botonAgendarCita, javax.swing.GroupLayout.PREFERRED_SIZE, 211, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addGap(125, 125, 125))
+                                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                                        .addComponent(jCalendar1, javax.swing.GroupLayout.PREFERRED_SIZE, 241, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addGap(109, 109, 109))))
+                            .addGroup(layout.createSequentialGroup()
+                                .addGap(6, 6, 6)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addComponent(jLabel6)
+                                        .addContainerGap())
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addComponent(fieldHora)
+                                        .addGap(109, 109, 109))))))))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -118,13 +197,18 @@ public class agendarCita extends javax.swing.JFrame {
                 .addGap(18, 18, 18)
                 .addComponent(jLabel3)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(jCalendar1, javax.swing.GroupLayout.PREFERRED_SIZE, 243, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(jDateChooser1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jLabel6)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(fieldHora, javax.swing.GroupLayout.PREFERRED_SIZE, 42, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(41, 41, 41)
+                        .addComponent(botonAgendarCita, javax.swing.GroupLayout.PREFERRED_SIZE, 47, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(botonAgendarCita, javax.swing.GroupLayout.PREFERRED_SIZE, 47, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(botonVolver, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(26, 26, 26))
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(fieldEspecialidad, javax.swing.GroupLayout.PREFERRED_SIZE, 42, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(22, 22, 22)
@@ -133,18 +217,22 @@ public class agendarCita extends javax.swing.JFrame {
                         .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(27, 27, 27)
                         .addComponent(jLabel5)
-                        .addGap(2, 2, 2)
-                        .addComponent(list1, javax.swing.GroupLayout.PREFERRED_SIZE, 304, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 119, Short.MAX_VALUE)
-                .addComponent(botonVolver, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(26, 26, 26))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 372, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addContainerGap(99, Short.MAX_VALUE))))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
     private void fieldEspecialidadActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_fieldEspecialidadActionPerformed
-        // TODO add your handling code here:
+        try {
+            cargarMedicosPorEspecialidad();
+
+            // TODO add your handling code here:
+        } catch (NegocioException ex) {
+            Logger.getLogger(agendarCita.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }//GEN-LAST:event_fieldEspecialidadActionPerformed
 
     private void botonAgendarCitaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonAgendarCitaActionPerformed
@@ -154,6 +242,10 @@ public class agendarCita extends javax.swing.JFrame {
     private void botonVolverActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonVolverActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_botonVolverActionPerformed
+
+    private void fieldHoraActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_fieldHoraActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_fieldHoraActionPerformed
 
     /**
      * @param args the command line arguments
@@ -194,13 +286,181 @@ public class agendarCita extends javax.swing.JFrame {
     private javax.swing.JButton botonAgendarCita;
     private javax.swing.JButton botonVolver;
     private javax.swing.JTextField fieldEspecialidad;
+    private javax.swing.JTextField fieldHora;
     private com.toedter.calendar.JCalendar jCalendar1;
     private javax.swing.JComboBox<String> jComboBox1;
-    private com.toedter.calendar.JDateChooser jDateChooser1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
-    private java.awt.List list1;
+    private javax.swing.JLabel jLabel6;
+    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JTable jTable1;
+    private javax.swing.JTextArea jTextAreaHorarios;
     // End of variables declaration//GEN-END:variables
+    private void cargarMedicosPorEspecialidad() throws NegocioException {
+        String especialidad = fieldEspecialidad.getText().trim();
+        if (especialidad.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Ingrese una especialidad válida");
+            return;
+        }
+
+        try {
+            List<MedicoDTO> medicos = medicoBO.consultarMedicoPorEspecialidad(especialidad);
+            jComboBox1.removeAllItems();
+            for (MedicoDTO medico : medicos) {
+                jComboBox1.addItem(medico.getIdMedico() + " " + medico.getNombres() + " " + medico.getApellidoPaterno());
+            }
+        } catch (NegocioException ex) {
+            JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+        }
+        String seleccionado = (String) jComboBox1.getSelectedItem();
+        String[] partes = seleccionado.split(" ", 2); // Dividir solo en dos partes: ID y resto
+        int idMedico = Integer.parseInt(partes[0]); // Convertir la primera parte a entero
+        MedicoDTO medicoSELECCIONADO = medicoBO.consultarMedicoPorID(idMedico);
+
+        try {
+            List<HorarioMedicoNuevoDTO> horarios = medicoBO.obtenerHorariosMedico(medicoSELECCIONADO);
+
+            if (horarios.isEmpty()) {
+                jTextAreaHorarios.setText("El médico no tiene horarios registrados");
+                return;
+            }
+
+            // Crear formateador para la hora
+            DateTimeFormatter formateadorHora = DateTimeFormatter.ofPattern("HH:mm");
+
+            // Construir el texto con formato
+            StringBuilder horariosTexto = new StringBuilder();
+            horariosTexto.append("Horarios del Dr. ")
+                    .append(medicoSELECCIONADO.getNombres())
+                    .append(" ")
+                    .append(medicoSELECCIONADO.getApellidoPaterno())
+                    .append("\n\n");
+
+            for (HorarioMedicoNuevoDTO horario : horarios) {
+                horariosTexto.append("• ")
+                        .append(horario.getDiaSemana())
+                        .append(": ")
+                        .append(horario.getHoraEntrada().format(formateadorHora))
+                        .append(" - ")
+                        .append(horario.getHoraSalida().format(formateadorHora))
+                        .append("\n");
+            }
+
+            // Mostrar en el JTextArea
+            jTextAreaHorarios.setText(horariosTexto.toString());
+            jTextAreaHorarios.setCaretPosition(0); // Mover scroll al inicio
+
+        } catch (NegocioException ex) {
+            JOptionPane.showMessageDialog(this,
+                    "Error al cargar horarios: " + ex.getMessage(),
+                    "Error",
+                    JOptionPane.ERROR_MESSAGE);
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this,
+                    "Error inesperado al mostrar horarios",
+                    "Error",
+                    JOptionPane.ERROR_MESSAGE);
+        }
+    }
+
+    private boolean validarFechaHora(LocalDateTime fechaHoraSeleccionada) throws NegocioException {
+        String seleccionado = (String) jComboBox1.getSelectedItem();
+        String[] partes = seleccionado.split(" ", 2); // Dividir solo en dos partes: ID y resto
+        int idMedico = Integer.parseInt(partes[0]); // Convertir la primera parte a entero
+        MedicoDTO medicoSELECCIONADO = medicoBO.consultarMedicoPorID(idMedico);
+
+        if (medicoSELECCIONADO == null) {
+            JOptionPane.showMessageDialog(this, "Seleccione un médico");
+            return false;
+        }
+
+        try {
+            return medicoBO.verificarDisponibilidadMedico(idMedico, fechaHoraSeleccionada);
+        } catch (NegocioException ex) {
+            JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+            return false;
+        }
+
+    }
+
+    private void agendarCita() throws NegocioException, SQLException {
+        // Obtener médico seleccionado
+        LocalDateTime fechaHoraCita = obtenerFechaHoraSeleccionada();
+
+        String seleccionado = (String) jComboBox1.getSelectedItem();
+        String[] partes = seleccionado.split(" ", 2); // Dividir solo en dos partes: ID y resto
+        int idMedico = Integer.parseInt(partes[0]); // Convertir la primera parte a entero
+        MedicoDTO medicoSELECCIONADO = medicoBO.consultarMedicoPorID(idMedico);
+
+        if (medicoSELECCIONADO == null) {
+            JOptionPane.showMessageDialog(this, "Seleccione un médico");
+            return;
+        }
+
+        if (fechaHoraCita == null) {
+            JOptionPane.showMessageDialog(this, "Seleccione una fecha y hora");
+            return;
+        }
+
+        // Validar disponibilidad
+
+        // Crear DTO y agendar
+        try {
+            Medico medicoSELECCIONADOCITA = mapper.toEntity(medicoSELECCIONADO);
+            CitaNuevaDTO dto = new CitaNuevaDTO();
+            Paciente pacienteSELECCIONADOCITA = pacienteMAPPER.toEntityViejo(paciente);
+            dto.setPaciente(pacienteSELECCIONADOCITA);
+            dto.setMedico(medicoSELECCIONADOCITA);
+            dto.setFechaHora(fechaHoraCita);
+            dto.setTipoCita(Cita.TipoCita.PROGRAMADA); // O EMERGENCIA si aplica
+
+            CitaViejaDTO citaAgendada = citaBO.agendarCita(dto);
+            JOptionPane.showMessageDialog(this, "Cita agendada con éxito");
+            this.dispose(); // Cerrar ventana
+        } catch (NegocioException ex) {
+            JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+        }
+    }
+
+    private LocalDateTime obtenerFechaHoraSeleccionada() throws NegocioException {
+        // 1. Obtener fecha del JCalendar (JDateChooser)
+        Date fechaSeleccionada = jCalendar1.getDate();
+        if (fechaSeleccionada == null) {
+            throw new NegocioException("Seleccione una fecha");
+        }
+
+        // 2. Convertir Date a LocalDate
+        LocalDate fecha = fechaSeleccionada.toInstant()
+                .atZone(ZoneId.systemDefault())
+                .toLocalDate();
+
+        // 3. Obtener hora del ComboBox/TextField
+        String horaStr = fieldHora.getText(); // Ej: "14:30"
+        if (horaStr == null || horaStr.isEmpty()) {
+            throw new NegocioException("Seleccione una hora válida");
+        }
+
+        // 4. Parsear la hora
+        try {
+            String[] partesHora = horaStr.split(":");
+            int horas = Integer.parseInt(partesHora[0]);
+            int minutos = Integer.parseInt(partesHora[1]);
+
+            // Validar valores numéricos
+            if (horas < 0 || horas > 23 || minutos < 0 || minutos > 59) {
+                throw new NegocioException("Hora inválida: " + horaStr);
+            }
+
+            LocalTime hora = LocalTime.of(horas, minutos);
+
+            // 5. Combinar fecha y hora
+            return LocalDateTime.of(fecha, hora);
+
+        } catch (ArrayIndexOutOfBoundsException | NumberFormatException e) {
+            throw new NegocioException("Formato de hora inválido. Use HH:mm");
+        }
+    }
 }

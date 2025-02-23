@@ -223,7 +223,9 @@ public class dashboardPaciente extends javax.swing.JFrame {
     }//GEN-LAST:event_BotonConsultaEmergenciaActionPerformed
 
     private void botonAgendarCitaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonAgendarCitaActionPerformed
-        // TODO add your handling code here:
+        agendarCita pantallaAgendarCita = new agendarCita();
+        pantallaAgendarCita.setPaciente(paciente);
+        pantallaAgendarCita.setVisible(true);
     }//GEN-LAST:event_botonAgendarCitaActionPerformed
 
     private void botonHistorialConsultasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonHistorialConsultasActionPerformed
