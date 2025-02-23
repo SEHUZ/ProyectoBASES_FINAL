@@ -8,6 +8,7 @@ import Entidades.Cita;
 import Entidades.Medico;
 import Entidades.Paciente;
 import Exception.PersistenciaClinicaException;
+import java.time.LocalDateTime;
 import java.util.List;
 
 /**
@@ -22,4 +23,6 @@ public interface IMedicoDAO {
     public Medico consultarMedicoPorID (Medico medico) throws PersistenciaClinicaException;
     
     public Medico consultarMedicoPorUsuario(String user) throws PersistenciaClinicaException;
+    
+    public boolean verificarDisponibilidad(int idMedico, LocalDateTime fechaHoraCita) throws PersistenciaClinicaException;
 }

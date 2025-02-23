@@ -12,6 +12,11 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.sql.Time;
+import java.sql.Timestamp;
+import java.time.LocalDateTime;
+import java.time.format.TextStyle;
+import java.util.Locale;
 import java.util.logging.Logger;
 
 /**
@@ -19,6 +24,7 @@ import java.util.logging.Logger;
  * @author sonic
  */
 public class MedicoDAO implements IMedicoDAO {
+    private static final int DURACION = 30;
 
     IConexionBD conexion;
 
@@ -163,6 +169,44 @@ public class MedicoDAO implements IMedicoDAO {
         }
         
         return medico;
+    }
+    
+    @Override
+    public boolean verificarDisponibilidad(int idMedico, LocalDateTime fechaHoraCita) throws PersistenciaClinicaException {
+        String disponibilidadSQL = "SELECT COUNT(*) AS disponible "
+                   + "FROM HorariosMedicos h "
+                   + "LEFT JOIN Citas c ON h.idMedico = c.idMedico "
+                   + "WHERE h.idMedico = ? "
+                   + "AND h.diaSemana = ? "
+                   + "AND TIME(?) BETWEEN h.horaEntrada AND h.horaSalida "
+                   + "AND NOT EXISTS ("
+                   + "    SELECT 1 FROM Citas "
+                   + "    WHERE idMedico = ? "
+                   + "    AND fechaHora BETWEEN SUBTIME(?, ?) AND ADDTIME(?, ?)"
+                   + ")";
+
+        try (Connection conn = conexion.crearConexion();
+             PreparedStatement ps = conn.prepareStatement(disponibilidadSQL)) {
+            
+            ps.setInt(1, idMedico);
+            ps.setString(2, fechaHoraCita.getDayOfWeek().getDisplayName(TextStyle.FULL, new Locale("es", "ES")));
+            ps.setTime(3, Time.valueOf(fechaHoraCita.toLocalTime()));
+            ps.setInt(4, idMedico);
+            ps.setTimestamp(5, Timestamp.valueOf(fechaHoraCita));
+            ps.setString(6, "00:" + DURACION + ":00");
+            ps.setTimestamp(7, Timestamp.valueOf(fechaHoraCita));
+            ps.setString(8, "00:" + DURACION + ":00");
+
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    return rs.getInt("disponible") > 0;
+                }
+                return false;
+            }
+            
+        } catch (SQLException ex) {
+            throw new PersistenciaClinicaException("Error verificando disponibilidad: " + ex.getMessage());
+        }
     }
 
 }

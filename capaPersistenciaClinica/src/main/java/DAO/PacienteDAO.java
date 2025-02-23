@@ -565,7 +565,9 @@ public class PacienteDAO implements IPacienteDAO {
                 estado.setDescripcion(rs.getString("estadoCita"));
                 cita.setEstado(estado);
                 
-                cita.setTipoCita(rs.getString("tipoCita"));
+                String tipoStr = rs.getString("tipoCita"); //Se recibe como tipo string
+                Cita.TipoCita tipo = Cita.TipoCita.valueOf(tipoStr.toUpperCase()); //Se debe convertir a el valor del Enum
+                cita.setTipoCita(tipo);
 
                 citasProximas.add(cita);
             }
