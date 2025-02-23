@@ -46,7 +46,6 @@ public class iniciarSesion extends javax.swing.JFrame {
         BotonIniciarSesion1 = new javax.swing.JButton();
         BotonRegistrarse1 = new javax.swing.JButton();
         jLabel1 = new javax.swing.JLabel();
-        fieldContraseña = new javax.swing.JTextField();
         fieldUsuario = new javax.swing.JTextField();
         jLabel2 = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
@@ -54,6 +53,7 @@ public class iniciarSesion extends javax.swing.JFrame {
         BotonIniciarSesion = new javax.swing.JButton();
         jLabel4 = new javax.swing.JLabel();
         BotonSalir = new javax.swing.JButton();
+        JFieldContrasenia = new javax.swing.JPasswordField();
 
         BotonIniciarSesion1.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
         BotonIniciarSesion1.setText("Iniciar Sesion");
@@ -126,13 +126,6 @@ public class iniciarSesion extends javax.swing.JFrame {
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(fieldContraseña, javax.swing.GroupLayout.PREFERRED_SIZE, 255, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(fieldUsuario, javax.swing.GroupLayout.PREFERRED_SIZE, 255, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(jLabel3)
-                                    .addComponent(jLabel2))
-                                .addGap(11, 11, 11))
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                                 .addComponent(BotonIniciarSesion, javax.swing.GroupLayout.PREFERRED_SIZE, 141, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addGap(65, 65, 65))
                             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -140,7 +133,14 @@ public class iniciarSesion extends javax.swing.JFrame {
                                 .addComponent(BotonRegistrarse))
                             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                                 .addComponent(BotonSalir)
-                                .addGap(102, 102, 102)))
+                                .addGap(102, 102, 102))
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(fieldUsuario, javax.swing.GroupLayout.PREFERRED_SIZE, 255, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(jLabel3)
+                                    .addComponent(jLabel2)
+                                    .addComponent(JFieldContrasenia, javax.swing.GroupLayout.PREFERRED_SIZE, 255, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addGap(11, 11, 11)))
                         .addGap(179, 179, 179))))
         );
         layout.setVerticalGroup(
@@ -148,15 +148,15 @@ public class iniciarSesion extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addGap(89, 89, 89)
                 .addComponent(jLabel1)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 106, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 50, Short.MAX_VALUE)
                 .addComponent(jLabel2)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(fieldUsuario, javax.swing.GroupLayout.PREFERRED_SIZE, 51, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addComponent(jLabel3)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(fieldContraseña, javax.swing.GroupLayout.PREFERRED_SIZE, 51, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(81, 81, 81)
+                .addComponent(JFieldContrasenia, javax.swing.GroupLayout.PREFERRED_SIZE, 51, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(137, 137, 137)
                 .addComponent(BotonIniciarSesion)
                 .addGap(18, 18, 18)
                 .addComponent(jLabel4)
@@ -247,7 +247,7 @@ public class iniciarSesion extends javax.swing.JFrame {
     private javax.swing.JButton BotonRegistrarse;
     private javax.swing.JButton BotonRegistrarse1;
     private javax.swing.JButton BotonSalir;
-    private javax.swing.JTextField fieldContraseña;
+    private javax.swing.JPasswordField JFieldContrasenia;
     private javax.swing.JTextField fieldUsuario;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
@@ -257,7 +257,7 @@ public class iniciarSesion extends javax.swing.JFrame {
 
     public void iniciarSesionUsuario() {
         String user = fieldUsuario.getText();
-        String contrasenia = fieldContraseña.getText();
+        String contrasenia = JFieldContrasenia.getText();
 
         try {
             String rolRaw = usuarioBO.login(user, contrasenia);
@@ -313,7 +313,7 @@ public class iniciarSesion extends javax.swing.JFrame {
     public void limpiarCampos() {
         // Limpiar campos de texto
         fieldUsuario.setText("");
-        fieldContraseña.setText("");
+        JFieldContrasenia.setText("");
 
     }
 }
