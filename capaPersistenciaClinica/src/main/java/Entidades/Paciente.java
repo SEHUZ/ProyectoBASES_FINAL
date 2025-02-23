@@ -28,7 +28,7 @@ public class Paciente {
     public Paciente() {
     }
 
-    public Paciente(int idPaciente, DireccionPaciente direccion, Usuario usuario, String nombre, String apellidoPaterno, String apellidoMaterno, LocalDate fechaNacimiento, String email, String telefono) {
+    public Paciente(int idPaciente, DireccionPaciente direccion, Usuario usuario, String nombres, String apellidoPaterno, String apellidoMaterno, LocalDate fechaNacimiento, String email, String telefono) {
         this.idPaciente = idPaciente;
         this.direccion = direccion;
         this.usuario = usuario;

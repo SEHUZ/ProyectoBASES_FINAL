@@ -195,18 +195,19 @@ public class PacienteDAO implements IPacienteDAO {
             con.setAutoCommit(false); // Iniciar transacción
 
             // 1. Actualizar datos del paciente
-            String updatePacienteSQL = "UPDATE pacientes SET nombres = ?, apellidoPaterno = ?, apellidoMaterno = ?, fechaNacimiento = ?, telefono = ? WHERE idPaciente = ?";
+            String updatePacienteSQL = "UPDATE pacientes SET nombres = ?, apellidoPaterno = ?, apellidoMaterno = ?, fechaNacimiento = ?, email = ?, telefono = ? WHERE idPaciente = ?";
             try (PreparedStatement psPaciente = con.prepareStatement(updatePacienteSQL)) {
                 psPaciente.setString(1, paciente.getNombres());
                 psPaciente.setString(2, paciente.getApellidoPaterno());
                 psPaciente.setString(3, paciente.getApellidoMaterno());
                 psPaciente.setObject(4, paciente.getFechaNacimiento());
-                psPaciente.setString(5, paciente.getTelefono());
-                psPaciente.setInt(6, paciente.getIdPaciente());
+                psPaciente.setString(5, paciente.getEmail());
+                psPaciente.setString(6, paciente.getTelefono());
+                psPaciente.setInt(7, paciente.getIdPaciente());
 
                 int filasPaciente = psPaciente.executeUpdate();
                 if (filasPaciente == 0) {
-                    throw new PersistenciaClinicaException("No se actualizó el paciente, verifique el ID: " + paciente.getIdPaciente());
+                    throw new PersistenciaClinicaException("No se actualizó el paciente.");
                 }
             }
 
@@ -222,22 +223,6 @@ public class PacienteDAO implements IPacienteDAO {
                     int filasDireccion = psDireccion.executeUpdate();
                     if (filasDireccion == 0) {
                         logger.warning("No se actualizó la dirección para el paciente con ID: " + paciente.getIdPaciente());
-                    }
-                }
-            }
-
-            // 3. Actualizar datos del usuario, si existe
-            if (paciente.getUsuario() != null) {
-                String updateUsuarioSQL = "UPDATE usuarios SET user = ?, contrasenia = ?, rol = ? WHERE idUsuario = ?";
-                try (PreparedStatement psUsuario = con.prepareStatement(updateUsuarioSQL)) {
-                    psUsuario.setString(1, paciente.getUsuario().getUser());
-                    psUsuario.setString(2, paciente.getUsuario().getContrasenia());
-                    psUsuario.setString(3, paciente.getUsuario().getRol());
-                    psUsuario.setInt(4, paciente.getUsuario().getIdUsuario());
-
-                    int filasUsuario = psUsuario.executeUpdate();
-                    if (filasUsuario == 0) {
-                        logger.warning("No se actualizó el usuario para el paciente con ID: " + paciente.getIdPaciente());
                     }
                 }
             }
