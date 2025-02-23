@@ -48,6 +48,34 @@ public class Cita {
         this.tipoCita = tipoCita;
     }
 
+    public Cita(int idCita, Paciente paciente, Medico medico, EstadosCita estado, LocalDateTime fechaHora, TipoCita tipoCita, List<Auditoria> auditorias, CitaNormal normal, List<Consulta> consultas) {
+        this.idCita = idCita;
+        this.paciente = paciente;
+        this.medico = medico;
+        this.estado = estado;
+        this.fechaHora = fechaHora;
+        this.tipoCita = tipoCita;
+        this.auditorias = auditorias;
+        this.normal = normal;
+        this.consultas = consultas;
+    }
+
+    public Cita(int idCita, Paciente paciente, Medico medico, EstadosCita estado, LocalDateTime fechaHora, TipoCita tipoCita, List<Auditoria> auditorias, CitaEmergencia emergencia, List<Consulta> consultas) {
+        this.idCita = idCita;
+        this.paciente = paciente;
+        this.medico = medico;
+        this.estado = estado;
+        this.fechaHora = fechaHora;
+        this.tipoCita = tipoCita;
+        this.auditorias = auditorias;
+        this.emergencia = emergencia;
+        this.consultas = consultas;
+    }
+    
+    
+    
+    
+
     public TipoCita getTipoCita() {
         return tipoCita;
     }
