@@ -4,6 +4,7 @@
  */
 package Entidades;
 
+import java.time.DayOfWeek;
 import java.time.LocalTime;
 
 /**
@@ -15,9 +16,9 @@ public class HorarioMedico {
     private Medico medico;
     private LocalTime horaEntrada;
     private LocalTime horaSalida;
-    private String diaSemana;
+    private DayOfWeek diaSemana;
 
-    public HorarioMedico(int idHorario, Medico medico, LocalTime horaEntrada, LocalTime horaSalida, String diaSemana) {
+    public HorarioMedico(int idHorario, Medico medico, LocalTime horaEntrada, LocalTime horaSalida, DayOfWeek diaSemana) {
         this.idHorario = idHorario;
         this.medico = medico;
         this.horaEntrada = horaEntrada;
@@ -25,12 +26,14 @@ public class HorarioMedico {
         this.diaSemana = diaSemana;
     }
 
-    public HorarioMedico(Medico medico, LocalTime horaEntrada, LocalTime horaSalida, String diaSemana) {
+    public HorarioMedico(Medico medico, LocalTime horaEntrada, LocalTime horaSalida, DayOfWeek diaSemana) {
         this.medico = medico;
         this.horaEntrada = horaEntrada;
         this.horaSalida = horaSalida;
         this.diaSemana = diaSemana;
     }
+    
+    
 
     public HorarioMedico() {
     }
@@ -67,13 +70,16 @@ public class HorarioMedico {
         this.horaSalida = horaSalida;
     }
 
-    public String getDiaSemana() {
+    public DayOfWeek getDiaSemana() {
         return diaSemana;
     }
 
-    public void setDiaSemana(String diaSemana) {
+    public void setDiaSemana(DayOfWeek diaSemana) {
         this.diaSemana = diaSemana;
     }
+    
+    
+
 
     @Override
     public String toString() {

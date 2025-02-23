@@ -262,6 +262,7 @@ public class PacienteDAO implements IPacienteDAO {
         }
     }
 
+
     @Override
     public Paciente consultarPacientePorID(int id) throws PersistenciaClinicaException {
         Paciente paciente = null;
@@ -531,57 +532,52 @@ public class PacienteDAO implements IPacienteDAO {
 
         return paciente;
     }
-
+    
     @Override
     public List<Cita> obtenerCitasProximasPorPaciente(int idPaciente) throws PersistenciaClinicaException {
         List<Cita> citasProximas = new ArrayList<>();
-        String procedimiento = "{CALL ObtenerCitasProximasPorPaciente(?)}";
+    String procedimiento = "{CALL ObtenerCitasProximasPorPaciente(?)}";
 
-        try (Connection con = conexion.crearConexion(); CallableStatement cs = con.prepareCall(procedimiento)) {
+    try (Connection con = conexion.crearConexion();
+         CallableStatement cs = con.prepareCall(procedimiento)) {
 
-            cs.setInt(1, idPaciente);
+        cs.setInt(1, idPaciente);
 
-            try (ResultSet rs = cs.executeQuery()) {
-                while (rs.next()) {
-                    Cita cita = new Cita();
+        try (ResultSet rs = cs.executeQuery()) {
+            while (rs.next()) {
+                Cita cita = new Cita();
+                
+                cita.setIdCita(rs.getInt("idCita"));
+                cita.setFechaHora(rs.getTimestamp("fechaHoraCita").toLocalDateTime());
+                
+                // Crear objeto Medico
+                Medico medico = new Medico();
+                medico.setNombres(rs.getString("nombreMedico"));
+                medico.setApellidoPaterno(rs.getString("apellidoMedico"));
+                medico.setEspecialidad(rs.getString("especialidad"));
+                cita.setMedico(medico);
+                
+                // Crear objeto EstadosCita
+                EstadosCita estado = new EstadosCita();
+                estado.setDescripcion(rs.getString("estadoCita"));
+                cita.setEstado(estado);
+                
+                String tipoStr = rs.getString("tipoCita"); //Se recibe como tipo string
+                Cita.TipoCita tipo = Cita.TipoCita.valueOf(tipoStr.toUpperCase()); //Se debe convertir a el valor del Enum
+                cita.setTipoCita(tipo);
 
-                    cita.setIdCita(rs.getInt("idCita"));
-                    cita.setFechaHora(rs.getTimestamp("fechaHoraCita").toLocalDateTime());
-
-                    // Crear objeto Medico
-                    Medico medico = new Medico();
-                    medico.setNombres(rs.getString("nombreMedico"));
-                    medico.setApellidoPaterno(rs.getString("apellidoMedico"));
-                    medico.setEspecialidad(rs.getString("especialidad"));
-                    cita.setMedico(medico);
-
-                    // Crear objeto EstadosCita
-                    EstadosCita estado = new EstadosCita();
-                    estado.setDescripcion(rs.getString("estadoCita"));
-                    cita.setEstado(estado);
-
-                    String tipoStr = rs.getString("tipoCita"); //Se recibe como tipo string
-                    Cita.TipoCita tipo = Cita.TipoCita.valueOf(tipoStr.toUpperCase()); //Se debe convertir a el valor del Enum
-                    cita.setTipoCita(tipo);
-
-                    citasProximas.add(cita);
-                }
+                citasProximas.add(cita);
             }
-
-        } catch (SQLException ex) {
-            logger.log(Level.SEVERE, "Error al obtener citas próximas", ex);
-            throw new PersistenciaClinicaException("Error al obtener citas próximas: " + ex.getMessage());
         }
+        
+    } catch (SQLException ex) {
+        logger.log(Level.SEVERE, "Error al obtener citas próximas", ex);
+        throw new PersistenciaClinicaException("Error al obtener citas próximas: " + ex.getMessage());
+    }
 
-        return citasProximas;
+    return citasProximas;
     }
     
-    /**
-     * Metodo que valida el formato del correo del usuario.
-     *
-     * @param correo El correo que se verificara
-     * @return True si el formato es valido, False en caso contrario.
-     */
     public static boolean validarCorreo(String correo) {
         String regex = "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$";
 
@@ -590,5 +586,4 @@ public class PacienteDAO implements IPacienteDAO {
 
         return matcher.matches();
     }
-    
 }

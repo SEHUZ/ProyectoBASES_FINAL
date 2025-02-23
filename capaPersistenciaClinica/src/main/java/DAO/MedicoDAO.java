@@ -5,6 +5,7 @@
 package DAO;
 
 import Conexion.IConexionBD;
+import Entidades.HorarioMedico;
 import Entidades.Medico;
 import Exception.PersistenciaClinicaException;
 import java.sql.Connection;
@@ -14,8 +15,12 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.sql.Time;
 import java.sql.Timestamp;
+import java.time.DayOfWeek;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.time.format.TextStyle;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Locale;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -35,7 +40,7 @@ public class MedicoDAO implements IMedicoDAO {
     }
 
     private static final Logger logger = Logger.getLogger(PacienteDAO.class.getName());
-
+    
     @Override
     public Medico registrarMedico(Medico medico) throws PersistenciaClinicaException, SQLException {
         String sentenciaUsuarioSQL = "INSERT INTO usuarios (User, contrasenia, rol) VALUES (?, ?, ?)";
@@ -120,6 +125,7 @@ public class MedicoDAO implements IMedicoDAO {
         }
     }
 
+
     @Override
     public boolean ActualizarEstado(Medico medico) throws PersistenciaClinicaException {
         String updateEstadoSQL = "UPDATE Medicos SET activo = ? WHERE idMedico = ?";
@@ -144,45 +150,35 @@ public class MedicoDAO implements IMedicoDAO {
     }
 
     @Override
-    public Medico consultarMedicoPorEspecialidad(Medico medico) throws PersistenciaClinicaException {
-        String consultaMedicoEspecialidadSQL = "SELECT m.idMedico, m.idUsuario, m.nombres, m.apellidoPaterno, "
+    public List<Medico> consultarMedicoPorEspecialidad(String Especialidad) throws PersistenciaClinicaException {
+        List<Medico> medicos = new ArrayList<>();
+        String consultaSQL = "SELECT m.idMedico, m.idUsuario, m.nombres, m.apellidoPaterno, "
                 + "m.apellidoMaterno, m.cedula, m.especialidad, m.activo "
                 + "FROM Medicos m "
-                + "WHERE m.especialidad = ? AND m.activo = TRUE "
-                + "LIMIT 1";
-
-        try (Connection con = conexion.crearConexion(); PreparedStatement ps = con.prepareStatement(consultaMedicoEspecialidadSQL)) {
-            if (medico.getEspecialidad() == null || medico.getEspecialidad().isEmpty()) {
-                throw new PersistenciaClinicaException("La especialidad no puede estar vacía");
-            }
-
-            ps.setString(1, medico.getEspecialidad());
-
+                + "WHERE m.especialidad = ? AND m.activo = TRUE";
+        try (Connection con = conexion.crearConexion(); PreparedStatement ps = con.prepareStatement(consultaSQL)) {
+            ps.setString(1, Especialidad);
             try (ResultSet rs = ps.executeQuery()) {
-                if (rs.next()) {
-                    Medico medicoEncontrado = new Medico();
-                    medicoEncontrado.setIdMedico(rs.getInt("idMedico"));
-                    medicoEncontrado.setNombres(rs.getString("nombres"));
-                    medicoEncontrado.setApellidoPaterno(rs.getString("apellidoPaterno"));
-                    medicoEncontrado.setApellidoMaterno(rs.getString("apellidoMaterno"));
-                    medicoEncontrado.setCedula(rs.getString("cedula"));
-                    medicoEncontrado.setEspecialidad(rs.getString("especialidad"));
-                    medicoEncontrado.setActivo(rs.getBoolean("activo"));
-
-                    return medico;
-                } else {
-                    throw new PersistenciaClinicaException(
-                            "No se encontraron médicos activos con la especialidad: " + medico.getEspecialidad()
-                    );
+                while (rs.next()) {
+                    Medico medico = new Medico();
+                    medico.setIdMedico(rs.getInt("idMedico"));
+                    medico.setNombres(rs.getString("nombres"));
+                    medico.setApellidoPaterno(rs.getString("apellidoPaterno"));
+                    medico.setApellidoMaterno(rs.getString("apellidoMaterno"));
+                    medico.setCedula(rs.getString("cedula"));
+                    medico.setEspecialidad(rs.getString("especialidad"));
+                    medico.setActivo(rs.getBoolean("activo"));
+                    medicos.add(medico);  // Asegúrate de agregar el objeto Medico, no un String
                 }
             }
         } catch (SQLException ex) {
-            throw new PersistenciaClinicaException("Error al consultar médico por especialidad: " + ex.getMessage());
+            throw new PersistenciaClinicaException("Error al consultar medicos por especialidad: " + ex.getMessage(), ex);
         }
+        return medicos;
     }
 
     @Override
-    public Medico consultarMedicoPorID(Medico medico) throws PersistenciaClinicaException {
+    public Medico consultarMedicoPorID(int idMedico) throws PersistenciaClinicaException {
         String consultaMedicoIDSQL = "SELECT m.idMedico, m.idUsuario, m.nombres, m.apellidoPaterno, "
                 + "m.apellidoMaterno, m.cedula, m.especialidad, m.activo "
                 + "FROM Medicos m "
@@ -190,11 +186,11 @@ public class MedicoDAO implements IMedicoDAO {
                 + "LIMIT 1";
 
         try (Connection con = conexion.crearConexion(); PreparedStatement ps = con.prepareStatement(consultaMedicoIDSQL)) {
-            if (medico.getIdMedico() <= 0) {
+            if (idMedico <= 0) {
                 throw new PersistenciaClinicaException("El ID del médico no es válido");
             }
 
-            ps.setInt(1, medico.getIdMedico());
+            ps.setInt(1, idMedico);
 
             try (ResultSet rs = ps.executeQuery()) {
                 if (rs.next()) {
@@ -207,11 +203,9 @@ public class MedicoDAO implements IMedicoDAO {
                     medicoEncontrado.setEspecialidad(rs.getString("especialidad"));
                     medicoEncontrado.setActivo(rs.getBoolean("activo"));
 
-                    return medico;
+                    return medicoEncontrado;
                 } else {
-                    throw new PersistenciaClinicaException(
-                            "No se encontraron médicos activos con la especialidad: " + medico.getEspecialidad()
-                    );
+                    throw new PersistenciaClinicaException("No se encontraron médicos");
                 }
             }
         } catch (SQLException ex) {
@@ -247,6 +241,7 @@ public class MedicoDAO implements IMedicoDAO {
                     logger.info("Medico encontrado: " + medico);
                 } else {
                     logger.warning("No se encontró el paciente con usuario: " + user);
+                    throw new PersistenciaClinicaException("No se encontró un médico activo con el usuario: " + user);
                 }
             }
         } catch (SQLException ex) {
@@ -257,39 +252,33 @@ public class MedicoDAO implements IMedicoDAO {
     }
 
     @Override
-    public boolean verificarDisponibilidad(int idMedico, LocalDateTime fechaHoraCita) throws PersistenciaClinicaException {
-        String disponibilidadSQL = "SELECT COUNT(*) AS disponible "
-                + "FROM HorariosMedicos h "
-                + "LEFT JOIN Citas c ON h.idMedico = c.idMedico "
-                + "WHERE h.idMedico = ? "
-                + "AND h.diaSemana = ? "
-                + "AND TIME(?) BETWEEN h.horaEntrada AND h.horaSalida "
-                + "AND NOT EXISTS ("
-                + "    SELECT 1 FROM Citas "
-                + "    WHERE idMedico = ? "
-                + "    AND fechaHora BETWEEN SUBTIME(?, ?) AND ADDTIME(?, ?)"
-                + ")";
+    public List<HorarioMedico> obtenerHorariosMedico(Medico medico) throws PersistenciaClinicaException {
+        if (medico == null || medico.getIdMedico() <= 0) {
+            throw new PersistenciaClinicaException("Médico no válido");
+        }
+        int idMedico = medico.getIdMedico();
+        String sql = "SELECT diaSemana, horaEntrada, horaSalida FROM HorariosMedicos WHERE idMedico = ?";
+        List<HorarioMedico> horarios = new ArrayList<>();
 
-        try (Connection conn = conexion.crearConexion(); PreparedStatement ps = conn.prepareStatement(disponibilidadSQL)) {
+        try (Connection conn = conexion.crearConexion(); PreparedStatement ps = conn.prepareStatement(sql)) {
 
             ps.setInt(1, idMedico);
-            ps.setString(2, fechaHoraCita.getDayOfWeek().getDisplayName(TextStyle.FULL, new Locale("es", "ES")));
-            ps.setTime(3, Time.valueOf(fechaHoraCita.toLocalTime()));
-            ps.setInt(4, idMedico);
-            ps.setTimestamp(5, Timestamp.valueOf(fechaHoraCita));
-            ps.setString(6, "00:" + DURACION + ":00");
-            ps.setTimestamp(7, Timestamp.valueOf(fechaHoraCita));
-            ps.setString(8, "00:" + DURACION + ":00");
 
             try (ResultSet rs = ps.executeQuery()) {
-                if (rs.next()) {
-                    return rs.getInt("disponible") > 0;
+                while (rs.next()) {
+                    // Convertir datos de la base de datos
+                    DayOfWeek dia = DayOfWeek.valueOf(rs.getString("diaSemana").toUpperCase());
+                    LocalTime entrada = rs.getTime("horaEntrada").toLocalTime();
+                    LocalTime salida = rs.getTime("horaSalida").toLocalTime();
+
+                    Medico medicoEncontrado = consultarMedicoPorID(idMedico);
+                    horarios.add(new HorarioMedico(medicoEncontrado, entrada, salida, dia));
                 }
-                return false;
             }
+            return horarios;
 
         } catch (SQLException ex) {
-            throw new PersistenciaClinicaException("Error verificando disponibilidad: " + ex.getMessage());
+            throw new PersistenciaClinicaException("Error al obtener horarios: " + ex.getMessage());
         }
     }
 
