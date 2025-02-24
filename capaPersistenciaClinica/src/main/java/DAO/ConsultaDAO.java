@@ -17,7 +17,7 @@ import java.util.List;
 
 
 public class ConsultaDAO implements IConsultaDAO {
-
+   
    IConexionBD conexion;
 
     public ConsultaDAO(IConexionBD conexion) {
@@ -222,7 +222,7 @@ public class ConsultaDAO implements IConsultaDAO {
         return false; // Por defecto, no existe consulta
     }
 
-    
+   
     
     
 }
