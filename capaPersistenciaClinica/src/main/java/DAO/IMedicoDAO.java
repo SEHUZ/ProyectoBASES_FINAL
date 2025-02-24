@@ -24,6 +24,8 @@ public interface IMedicoDAO {
 
     public Medico consultarMedicoPorID (int IdMedico) throws PersistenciaClinicaException;
     
+    public Medico consultarMedicoParaAlta(String user) throws PersistenciaClinicaException;
+    
     public Medico consultarMedicoPorUsuario(String user) throws PersistenciaClinicaException;
     
     public List<HorarioMedico> obtenerHorariosMedico(Medico medico) throws PersistenciaClinicaException;
