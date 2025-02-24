@@ -11,11 +11,14 @@ import DAO.ICitaDAO;
 import DAO.IConsultaDAO;
 import DAO.MedicoDAO;
 import DTO.ConsultaNuevaDTO;
+import DTO.ConsultaViejaDTO;
 import DTO.MedicoNuevoDTO;
 import Entidades.Cita;
 import Entidades.Consulta;
 import Exception.NegocioException;
 import Exception.PersistenciaClinicaException;
+import Mappers.CitaMapper;
+import Mappers.ConsultaMapper;
 import Mappers.HorarioMapper;
 import Mappers.MedicoMapper;
 import java.sql.SQLException;
@@ -28,68 +31,80 @@ import java.util.logging.Logger;
  */
 public class ConsultaBO {
 
-    private static final Logger logger = Logger.getLogger(MedicoBO.class.getName());
+     private static final Logger logger = Logger.getLogger(ConsultaBO.class.getName());
 
     private final IConsultaDAO consultaDAO;
     private final ICitaDAO citaDAO;
+    private final ConsultaMapper consultaMapper = new ConsultaMapper();
+    private final CitaMapper citaMapper = new CitaMapper();
 
-    //private final ConsultaMapper horariomapper = new HorarioMapper();
     public ConsultaBO(IConexionBD conexion) {
         this.consultaDAO = new ConsultaDAO(conexion);
         this.citaDAO = new CitaDAO(conexion);
     }
 
-    //public boolean registrarConsulta(ConsultaNuevaDTO consultaDTO) throws NegocioException, SQLException, PersistenciaClinicaException {
-//        try {
-//             1. Validar campos obligatorios
-//            if (consultaDTO.getDiagnostico() == null || consultaDTO.getDiagnostico().isBlank()
-//                    || consultaDTO.getEstado() == null || consultaDTO.getCita().getIdCita() == 0) {
-//                throw new NegocioException("Campos requeridos incompletos");
-//            }
-//
-//             2. Convertir DTO a entidad
-//            Consulta consulta = mapper.toEntity(consultaDTO);
-//
-//             3. Validar cita relacionada
-//            Cita cita = citaDAO.consultarCitaPorID(consultaDTO.getCita().getIdCita());
-//            if (cita == null) {
-//                throw new NegocioException("La cita no existe");
-//            }
-//
-//             4. Validar estado de la cita (debe estar en estado "Atendida")
-//            if (!cita.getEstado().getDescripcion().equals("Atendida")) {
-//                throw new NegocioException("La cita no está en estado válido para generar consulta");
-//            }
-//
-//             5. Validar que no exista consulta previa para esta cita
-//            if (consultaDAO.existeConsultaParaCita(consultaDTO.getIdCita())) {
-//                throw new NegocioException("Ya existe una consulta registrada para esta cita");
-//            }
-//
-//             6. Validar fecha de consulta
-//            if (consulta.getFechaHora().isAfter(LocalDateTime.now())) {
-//                throw new NegocioException("Fecha de consulta no puede ser futura");
-//            }
-//
-//             7. Validar coherencia con fecha de la cita
-//            if (consulta.getFechaHora().isBefore(cita.getFechaHora())) {
-//                throw new NegocioException("Fecha de consulta no puede ser anterior a la cita");
-//            }
-//
-//             8. Insertar consulta
-//            Consulta nuevaConsulta = consultaDAO.insertarConsulta(consulta);
-//
-//             9. Actualizar estado de la cita si es necesario
-//            cita.setEstado(obtenerEstado("Completada"));
-//            citaDAO.actualizarCita(cita);
-//
-//            return mapper.toDTO(nuevaConsulta);
-//
-//        } catch (PersistenciaClinicaException | SQLException e) {
-//            throw new NegocioException("Error al crear consulta: " + e.getMessage());
-//        }
-//    }
-// }
+  //  public ConsultaViejaDTO registrarConsulta(ConsultaNuevaDTO consultaDTO) throws NegocioException {
+       // try {
+            // Validaciones básicas
+           // if (consultaDTO.getDiagnostico() == null || consultaDTO.getDiagnostico().isBlank()) {
+            //    throw new NegocioException("El diagnóstico es obligatorio");
+            }
+          //  if (consultaDTO.getCita() == null || consultaDTO.getCita().getIdCita() == 0) {
+              //  throw new NegocioException("Debe especificar una cita válida");
+           // }
+            
+            // Validar existencia de la cita
+          //  Cita cita = citaDAO.consultarCitaPorID(consultaDTO.getCita().getIdCita());
+          //  if (cita == null) {
+               // throw new NegocioException("La cita no existe");
+           // }
+            
+            // Verificar que la cita esté en estado "Atendida"
+           // if (!"Atendida".equalsIgnoreCase(cita.getEstado().getDescripcion())) {
+                // throw new NegocioException("La cita debe estar en estado 'Atendida'");
+           //  }
+            
+            // Verificar que no exista una consulta previa para la cita
+            // if (consultaDAO.existeConsultaParaCita(cita.getIdCita())) {
+             //    throw new NegocioException("Ya existe una consulta para esta cita");
+            // }
+            
+            // Validar coherencia de fechas
+             //if (consultaDTO.getFechaHora().isAfter(LocalDateTime.now())) {
+               //  throw new NegocioException("La fecha de la consulta no puede ser futura");
+           //  }
+            // if (consultaDTO.getFechaHora().isBefore(cita.getFechaHora())) {
+              //   throw new NegocioException("La fecha de la consulta no puede ser anterior a la cita");
+            // }
+            
+            // Convertir DTO a entidad
+          //  Consulta consulta = consultaMapper.toEntity(consultaDTO);
+          //  Consulta consultaRegistrada = consultaDAO.insertarConsulta(consulta);
+            
+            // Actualizar el estado de la cita a "Completada"
+          //  cita.setEstado(new Estado("Completada"));
+          //   citaDAO.actualizarCita(cita);
+            
+           // return consultaMapper.toViejoDTO(consultaRegistrada);
+       // } catch (PersistenciaClinicaException | SQLException e) {
+         //   logger.log(Level.SEVERE, "Error al registrar consulta", e);
+           // throw new NegocioException("Error al registrar la consulta: " + e.getMessage());
+       //  }
+    // }
+    
+   // public List<ConsultaViejaDTO> consultarConsultasPorMedico(MedicoDTO medicoDTO) throws NegocioException {
+       // try {
+           // if (medicoDTO == null || medicoDTO.getIdMedico() == 0) {
+              //  throw new NegocioException("Datos del médico inválidos");
+           // }
+            
+           // return consultas.stream().map(consultaMapper::toViejoDTO).collect(Collectors.toList());
+       // } catch (PersistenciaClinicaException e) {
+           // logger.log(Level.SEVERE, "Error al consultar consultas del médico", e);
+           // throw new NegocioException("Error al obtener las consultas: " + e.getMessage());
+       //  }
+   // }
+
     
     
-}
+ //}
