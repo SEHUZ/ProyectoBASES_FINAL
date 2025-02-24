@@ -18,6 +18,7 @@ import DTO.citaEmergenciaNuevaDTO;
 import DTO.citaEmergenciaViejaDTO;
 import Entidades.Cita;
 import Entidades.CitaEmergencia;
+import Entidades.EstadosCita;
 import Entidades.Medico;
 import Entidades.Paciente;
 import Exception.NegocioException;
@@ -25,6 +26,9 @@ import Exception.PersistenciaClinicaException;
 import Mappers.CitaEmergenciaMapper;
 import Mappers.CitaMapper;
 import Mappers.MedicoMapper;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -46,7 +50,7 @@ public class CitaBO {
 
     private final CitaMapper mapper = new CitaMapper();
     private final CitaEmergenciaMapper emergenciaMapper = new CitaEmergenciaMapper();
-    
+
     private final MedicoMapper medicoMapper = new MedicoMapper();
 
     public CitaBO(IConexionBD conexion) {
@@ -100,8 +104,8 @@ public class CitaBO {
             throw new NegocioException("Error técnico al cancelar: " + ex.getMessage());
         }
     }
-    
-     public List<CitaViejaDTO> consultarCitasMedico(MedicoDTO medicoDTO) throws NegocioException {
+
+    public List<CitaViejaDTO> consultarCitasMedico(MedicoDTO medicoDTO) throws NegocioException {
         try {
             // 1. Validar datos básicos del médico
             if (medicoDTO == null || medicoDTO.getIdMedico() == 0) {
@@ -130,8 +134,51 @@ public class CitaBO {
             throw new NegocioException("Error al obtener las citas: " + ex.getMessage());
         }
     }
-
     
+    public CitaViejaDTO agendarCitaEmergencia(CitaNuevaDTO citanuevaDTO) throws NegocioException, PersistenciaClinicaException {
+        try {
+            // 1. Convertir el DTO a la entidad de dominio
+            Cita cita = new Cita();
+            cita.setPaciente(citanuevaDTO.getPaciente());
+            cita.setMedico(citanuevaDTO.getMedico());
+            cita.setEstado(citanuevaDTO.getEstado());
+            cita.setFechaHora(citanuevaDTO.getFechaHora());
+            cita.setTipoCita(citanuevaDTO.getTipoCita()); 
+            // Ojo: si es emergencia, setTipoCita(Cita.TipoCita.EMERGENCIA)
+
+            // Para emergencias, crea también el objeto CitaEmergencia
+            // (aunque la SP genera folio y fechaExpiración, puedes setear datos iniciales si hace falta)
+            if (citanuevaDTO.getTipoCita() == Cita.TipoCita.EMERGENCIA) {
+                CitaEmergencia emergencia = new CitaEmergencia();
+                // Si el DTO trae algo que quieras conservar
+                // emergencia.setFolio(citaNuevaDTO.getEmergencia().getFolio()); // Normalmente se genera en SP
+                cita.setEmergencia(emergencia);
+            }
+
+            // 2. Invocar el DAO para agendar la cita de emergencia
+            //    Este método ya vimos que retorna la entidad 'Cita' con id, folio, expiración, etc.
+            Cita citaAgendada = citaDAO.agendarCitaEmergencia(cita);
+
+            // 3. Convertir la entidad resultante en un CitaViejaDTO
+            
+            CitaViejaDTO citaviejaDTO = mapper.toViejoDTO(cita);
+
+
+            // 4. Retornar el DTO final
+            return citaviejaDTO;
+
+        } catch (SQLException e) {
+            // En caso de error, encapsulamos la excepción en nuestra excepción de negocio
+            throw new NegocioException("Error al agendar la cita de emergencia: " + e.getMessage(), e);
+        }
+    }
+    
+    
+    public CitaViejaDTO consultarCitaPorsuID(int idCita) throws NegocioException, PersistenciaClinicaException {
+        Cita citaencontrada = citaDAO.consultarCitaPorID(1);
+        CitaViejaDTO citaviejaDTOnueva = mapper.toViejoDTO(citaencontrada);
+        return citaviejaDTOnueva;
+    }
 
 //    // Método 1: Actualizar estado de una cita
 //    public boolean insertarEstadoCita(int idCita, String descripcion) throws NegocioException {

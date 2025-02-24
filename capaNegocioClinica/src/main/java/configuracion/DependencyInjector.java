@@ -45,11 +45,11 @@ public class DependencyInjector {
         return citaBO;
     }
     
-    public static ConsultaBO crearConsultaBO() {
-        IConexionBD conexion = new ConexionBD();
-        ConsultaBO consultaBO = new ConsultaBO(conexion);
-
-        return consultaBO;
-    }
+//    public static ConsultaBO crearConsultaBO() {
+//        IConexionBD conexion = new ConexionBD();
+//        ConsultaBO consultaBO = new ConsultaBO(conexion);
+//
+//        return consultaBO;
+//    }
     
 }
