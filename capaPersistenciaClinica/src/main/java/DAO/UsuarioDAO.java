@@ -30,31 +30,51 @@ public class UsuarioDAO implements IUsuarioDAO {
     private static final Logger logger = Logger.getLogger(PacienteDAO.class.getName());
 
     @Override
-    public String login(String user, String contrasenia) throws PersistenciaClinicaException {
-        String rol = null;
+    public boolean loginPaciente(String user, String contrasenia) throws PersistenciaClinicaException {
         String hashAlmacenado = null;
-        String sentenciaSQL = "SELECT rol, contrasenia FROM usuarios WHERE User = ?";
+        String sentenciaSQL = "SELECT contrasenia FROM usuarios WHERE User = ?";
+
         try (Connection con = conexion.crearConexion(); PreparedStatement ps = con.prepareStatement(sentenciaSQL)) {
             ps.setString(1, user);
             ResultSet resultSet = ps.executeQuery();
 
             if (resultSet.next()) {
-                rol = resultSet.getString("rol");
                 hashAlmacenado = resultSet.getString("contrasenia");
 
                 Argon2 argon2 = Argon2Factory.create();
-                if (!argon2.verify(hashAlmacenado, contrasenia)) {
-                    throw new PersistenciaClinicaException("Contraseña incorrecta.");
-                }
+                return argon2.verify(hashAlmacenado, contrasenia);
             } else {
-                throw new PersistenciaClinicaException("Usuario no encontrado.");
+                logger.warning("No se encontro el usuario del paciente.");
+                return false;
             }
         } catch (SQLException ex) {
-            logger.log(Level.SEVERE, "Error al crear activista", ex);
-            throw new PersistenciaClinicaException("Error al crear al activista", ex);
+            logger.log(Level.SEVERE, "Error al verificar la contraseña", ex);
+            throw new PersistenciaClinicaException("Error al verificar la contraseña", ex);
         }
+    }
 
-        return rol;
+    @Override
+    public boolean loginMedico(String user, String contrasenia) throws PersistenciaClinicaException {
+        String contraseniaAlmacenada = null;
+        String sentenciaSQL = "SELECT contrasenia FROM usuarios WHERE User = ?";
+
+        try (Connection con = conexion.crearConexion(); PreparedStatement ps = con.prepareStatement(sentenciaSQL)) {
+            ps.setString(1, user);
+            ResultSet resultSet = ps.executeQuery();
+
+            if (resultSet.next()) {
+                contraseniaAlmacenada = resultSet.getString("contrasenia");
+
+                // Comparar directamente sin encriptación
+                return contraseniaAlmacenada.equals(contrasenia);
+            } else {
+                logger.warning("No se encontro el usuario del medico.");
+                return false; // Usuario no encontrado
+            }
+        } catch (SQLException ex) {
+            logger.log(Level.SEVERE, "Error al verificar la contraseña", ex);
+            throw new PersistenciaClinicaException("Error al verificar la contraseña", ex);
+        }
     }
 
 }

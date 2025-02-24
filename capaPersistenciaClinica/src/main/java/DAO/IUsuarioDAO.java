@@ -12,6 +12,8 @@ import Exception.PersistenciaClinicaException;
  */
 public interface IUsuarioDAO {
     
-    public String login(String correo, String contraseña) throws PersistenciaClinicaException;
+    public boolean loginPaciente(String correo, String contraseña) throws PersistenciaClinicaException;
+    
+    public boolean loginMedico(String user, String contrasenia) throws PersistenciaClinicaException;
     
 }
