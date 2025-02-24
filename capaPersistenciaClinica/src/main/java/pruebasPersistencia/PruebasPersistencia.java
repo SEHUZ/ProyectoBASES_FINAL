@@ -36,15 +36,13 @@ public class PruebasPersistencia {
         IPacienteDAO pacienteDAO = new PacienteDAO(conexion);
         IUsuarioDAO usuarioDAO = new UsuarioDAO(conexion);
         IMedicoDAO medicoDAO = new MedicoDAO(conexion);
-        
+
         try {
-            medicoDAO.consultarMedicoPorUsuario("elAbrahama");
+            Medico medico = medicoDAO.consultarMedicoPorID(1);
+            System.out.println(medicoDAO.obtenerHorariosMedico(medico));
         } catch (PersistenciaClinicaException ex) {
-            logger.log(Level.SEVERE, "Error al consultar el paciente: " + ex);
+            logger.log(Level.SEVERE, "Error al consultar el medico: " + ex);
         }
-        
-        Medico medico = medicoDAO.consultarMedicoPorID(1);
-        System.out.println(medicoDAO.obtenerHorariosMedico(medico));
 
     }
 
