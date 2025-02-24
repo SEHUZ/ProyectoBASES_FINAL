@@ -67,6 +67,7 @@ public class MedicoMapper {
             return null;
         }
         return new Medico(
+                medicoDTO.getIdMedico(),
                 medicoDTO.getUsuario(),
                 medicoDTO.getNombres(),
                 medicoDTO.getApellidoPaterno(),

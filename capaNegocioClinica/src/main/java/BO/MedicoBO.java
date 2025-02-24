@@ -16,11 +16,13 @@ import Exception.NegocioException;
 import Exception.PersistenciaClinicaException;
 import Mappers.HorarioMapper;
 import Mappers.MedicoMapper;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import de.mkammerer.argon2.Argon2;
 import de.mkammerer.argon2.Argon2Factory;
 import java.sql.SQLException;
+import java.time.LocalTime;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -28,7 +30,6 @@ import java.util.logging.Logger;
  *
  * @author sonic
  */
-
 public class MedicoBO {
 
     private static final Logger logger = Logger.getLogger(MedicoBO.class.getName());
@@ -86,6 +87,7 @@ public class MedicoBO {
             throw new NegocioException("Error en el registro del medico.");
         }
     }
+
     public MedicoDTO buscarMedicoPorUsuario(String user) throws NegocioException {
         try {
             Medico medico = medicoDAO.consultarMedicoPorUsuario(user);
@@ -101,14 +103,27 @@ public class MedicoBO {
     }
 
     public List<HorarioMedicoNuevoDTO> obtenerHorariosMedico(MedicoDTO medicoDTO) throws NegocioException {
+        if (medicoDTO == null || medicoDTO.getIdMedico() <= 0) {
+            throw new NegocioException("Error: El médico proporcionado no es válido.");
+        }
+
         try {
+            System.out.println("MedicoDTO recibido: " + medicoDTO);
             Medico medico = mapper.toEntity(medicoDTO);
+            System.out.println("Medico convertido a entidad: " + medico);
+
+            if (medico == null || medico.getIdMedico() <= 0) {
+                throw new NegocioException("Error: Conversión de DTO a entidad fallida.");
+            }
+
             List<HorarioMedico> horarios = medicoDAO.obtenerHorariosMedico(medico);
             List<HorarioMedicoNuevoDTO> horariosDTO = new ArrayList<>();
+
             for (HorarioMedico horarioMedico : horarios) {
                 horariosDTO.add(horariomapper.toDTO(horarioMedico));
             }
             return horariosDTO;
+
         } catch (PersistenciaClinicaException ex) {
             throw new NegocioException("Error al obtener horarios: " + ex.getMessage());
         }
