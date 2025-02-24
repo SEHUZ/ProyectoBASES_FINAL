@@ -34,6 +34,9 @@ public interface IConsultaDAO {
     Consulta obtenerConsultaPorId(int idConsulta) throws SQLException, PersistenciaClinicaException;
     
     List<Consulta> obtenerConsultasPorEspecialidadYFechas(int idPaciente, String especialidad, LocalDateTime fechaInicio, LocalDateTime fechaFin) throws SQLException, PersistenciaClinicaException;
+
+    public boolean existeConsultaParaCita(int idCita) throws PersistenciaClinicaException;
+
 }
 
 

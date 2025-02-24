@@ -23,7 +23,7 @@ public class ConsultaDAO implements IConsultaDAO {
     public ConsultaDAO(IConexionBD conexion) {
         this.conexion = conexion;
     }
-
+    @Override
     public Consulta insertarConsulta(Consulta consulta) throws SQLException, PersistenciaClinicaException {
     String query = "INSERT INTO Consultas (diagnostico, estado, fechaHora, tratamiento, idCita) VALUES (?, ?, ?, ?, ?)";
 
@@ -51,7 +51,7 @@ public class ConsultaDAO implements IConsultaDAO {
     }
 }
 
-
+    @Override
     // Método para obtener todas las consultas de un paciente específico
     public List<Consulta> obtenerConsultasPorPaciente(int idPaciente) throws SQLException, PersistenciaClinicaException {
         List<Consulta> consultas = new ArrayList<>();
@@ -84,7 +84,8 @@ public class ConsultaDAO implements IConsultaDAO {
         }
         return consultas;
     }
-
+    
+    @Override
     // Método para actualizar una consulta
     public boolean actualizarConsulta(Consulta consulta) throws SQLException, PersistenciaClinicaException {
         String query = "UPDATE Consultas SET diagnostico = ?, estado = ?, fechaHora = ?, tratamiento = ? WHERE idConsulta = ?";
@@ -103,6 +104,7 @@ public class ConsultaDAO implements IConsultaDAO {
         }
     }
 
+    @Override
     // Método para cancelar una consulta (actualizando el estado)
     public boolean cancelarConsulta(int idConsulta) throws SQLException, PersistenciaClinicaException {
         String query = "UPDATE Consultas SET estado = 'Cancelada' WHERE idConsulta = ?";
@@ -146,7 +148,7 @@ public class ConsultaDAO implements IConsultaDAO {
         return null;  // Si no se encuentra la consulta
     }
     
-    
+    @Override
     public List<Consulta> obtenerConsultasPorEspecialidadYFechas(int idPaciente, String especialidad, LocalDateTime fechaInicio, LocalDateTime fechaFin) throws SQLException, PersistenciaClinicaException {
     List<Consulta> consultas = new ArrayList<>();
     
@@ -195,6 +197,30 @@ public class ConsultaDAO implements IConsultaDAO {
 
     return consultas;
 }
+    @Override
+     public boolean existeConsultaParaCita(int idCita) throws PersistenciaClinicaException {
+        String query = "SELECT COUNT(*) FROM Consultas WHERE idCita = ?";
+
+        try (Connection conn = conexion.crearConexion();
+             PreparedStatement pst = conn.prepareStatement(query)) {
+
+            // Establecer el parámetro de la consulta
+            pst.setInt(1, idCita);
+
+            // Ejecutar la consulta
+            try (ResultSet rs = pst.executeQuery()) {
+                if (rs.next()) {
+                    int count = rs.getInt(1); // Obtener el conteo de registros
+                    return count > 0; // Si hay al menos un registro, existe una consulta
+                }
+            }
+
+        } catch (SQLException e) {
+            throw new PersistenciaClinicaException("Error al verificar existencia de consulta para la cita: " + e.getMessage());
+        }
+
+        return false; // Por defecto, no existe consulta
+    }
 
     
     
