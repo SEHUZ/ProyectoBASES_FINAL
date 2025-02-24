@@ -46,12 +46,12 @@ public class agendarCita extends javax.swing.JFrame {
     private final MedicoMapper mapper = new MedicoMapper();
 
     private dashboardPaciente ventanaPaciente;
-    
+
     public agendarCita(PacienteViejoDTO paciente) {
         this.paciente = paciente;
         initComponents();
     }
-    
+
     public agendarCita() {
         initComponents();
     }
@@ -63,7 +63,7 @@ public class agendarCita extends javax.swing.JFrame {
     public void setVentanaPaciente(dashboardPaciente ventanaPaciente) {
         this.ventanaPaciente = ventanaPaciente;
     }
-    
+
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -397,7 +397,7 @@ public class agendarCita extends javax.swing.JFrame {
             CitaViejaDTO citaAgendada = citaBO.agendarCita(citaDTO);
 
             JOptionPane.showMessageDialog(this, "Cita agendada con éxito");
-            this.dispose(); // Cerrar ventana
+            
         } catch (NegocioException ex) {
             JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
         }
@@ -441,7 +441,7 @@ public class agendarCita extends javax.swing.JFrame {
             throw new NegocioException("Formato de hora inválido. Use HH:mm");
         }
     }
-    
+
     public void volverDashboardPaciente() {
         if (ventanaPaciente == null) {
             ventanaPaciente = new dashboardPaciente();
