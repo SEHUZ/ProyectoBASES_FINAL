@@ -109,11 +109,11 @@
               <Component id="BotonConsultaEmergencia" min="-2" pref="47" max="-2" attributes="0"/>
               <EmptySpace type="separate" max="-2" attributes="0"/>
               <Component id="botonAgendarCita" min="-2" pref="47" max="-2" attributes="0"/>
-              <EmptySpace min="-2" pref="33" max="-2" attributes="0"/>
+              <EmptySpace type="separate" max="-2" attributes="0"/>
               <Component id="botonCitasProximas" min="-2" pref="62" max="-2" attributes="0"/>
               <EmptySpace type="separate" max="-2" attributes="0"/>
               <Component id="botonHistorialConsultas" min="-2" pref="61" max="-2" attributes="0"/>
-              <EmptySpace min="-2" pref="70" max="-2" attributes="0"/>
+              <EmptySpace min="-2" pref="85" max="-2" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>
@@ -137,7 +137,7 @@
     </Component>
     <Component class="javax.swing.JButton" name="BotonConsultaEmergencia">
       <Properties>
-        <Property name="text" type="java.lang.String" value="Consulta de emergencia"/>
+        <Property name="text" type="java.lang.String" value="Agendar cita de emergencia"/>
       </Properties>
       <Events>
         <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="BotonConsultaEmergenciaActionPerformed"/>

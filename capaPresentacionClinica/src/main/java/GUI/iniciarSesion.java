@@ -24,6 +24,7 @@ import javax.swing.JOptionPane;
 public class iniciarSesion extends javax.swing.JFrame {
 
     private registrarUsuario ventanaRegistro;
+    private altaMedico ventanaAltaMedico;
     private dashBoardMedico ventanaMedico;
     private dashboardPaciente ventanaPaciente;
     private editarPerfilPaciente ventanaEditar;
@@ -59,6 +60,7 @@ public class iniciarSesion extends javax.swing.JFrame {
         jLabel4 = new javax.swing.JLabel();
         BotonSalir = new javax.swing.JButton();
         JFieldContrasenia = new javax.swing.JPasswordField();
+        darAltaMedico = new javax.swing.JButton();
 
         BotonIniciarSesion1.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
         BotonIniciarSesion1.setText("Iniciar Sesion");
@@ -118,6 +120,13 @@ public class iniciarSesion extends javax.swing.JFrame {
             }
         });
 
+        darAltaMedico.setText("Dar de alta un médico");
+        darAltaMedico.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                darAltaMedicoActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -147,6 +156,10 @@ public class iniciarSesion extends javax.swing.JFrame {
                                 .addComponent(BotonIniciarSesion, javax.swing.GroupLayout.PREFERRED_SIZE, 141, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addGap(65, 65, 65)))
                         .addGap(179, 179, 179))))
+            .addGroup(layout.createSequentialGroup()
+                .addGap(20, 20, 20)
+                .addComponent(darAltaMedico)
+                .addGap(0, 0, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -169,7 +182,9 @@ public class iniciarSesion extends javax.swing.JFrame {
                 .addComponent(BotonRegistrarse)
                 .addGap(49, 49, 49)
                 .addComponent(BotonSalir)
-                .addGap(84, 84, 84))
+                .addGap(40, 40, 40)
+                .addComponent(darAltaMedico)
+                .addGap(21, 21, 21))
         );
 
         pack();
@@ -178,7 +193,11 @@ public class iniciarSesion extends javax.swing.JFrame {
     public void setVentanaRegistro(registrarUsuario ventanaRegistro) {
         this.ventanaRegistro = ventanaRegistro;
     }
-
+    
+    public void setventanaAltaMedico(altaMedico ventanaAltaMedico) {
+        this.ventanaAltaMedico = ventanaAltaMedico;
+    }
+    
     public void setVentanaMedico(dashBoardMedico ventanaMedico) {
         this.ventanaMedico = ventanaMedico;
     }
@@ -218,6 +237,10 @@ public class iniciarSesion extends javax.swing.JFrame {
     private void fieldUsuarioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_fieldUsuarioActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_fieldUsuarioActionPerformed
+
+    private void darAltaMedicoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_darAltaMedicoActionPerformed
+        abrirVentanaAltaMedico();
+    }//GEN-LAST:event_darAltaMedicoActionPerformed
 
     /**
      * @param args the command line arguments
@@ -261,6 +284,7 @@ public class iniciarSesion extends javax.swing.JFrame {
     private javax.swing.JButton BotonRegistrarse1;
     private javax.swing.JButton BotonSalir;
     private javax.swing.JPasswordField JFieldContrasenia;
+    private javax.swing.JButton darAltaMedico;
     private javax.swing.JTextField fieldUsuario;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
@@ -320,6 +344,17 @@ public class iniciarSesion extends javax.swing.JFrame {
         }
     }
 
+    public void abrirPantallaAltaMedico() {
+        if (ventanaRegistro == null) {
+            ventanaRegistro = new registrarUsuario();
+        }
+
+        ventanaRegistro.setVentanaInicio(this);
+        ventanaRegistro.setLocationRelativeTo(null);
+        ventanaRegistro.setVisible(true);
+        this.dispose();
+    }
+
     public void abrirPantallaRegistro() {
         if (ventanaRegistro == null) {
             ventanaRegistro = new registrarUsuario();
@@ -328,6 +363,17 @@ public class iniciarSesion extends javax.swing.JFrame {
         ventanaRegistro.setVentanaInicio(this);
         ventanaRegistro.setLocationRelativeTo(null);
         ventanaRegistro.setVisible(true);
+        this.dispose();
+    }
+    
+    public void abrirVentanaAltaMedico() {
+        if (ventanaAltaMedico == null) {
+            ventanaAltaMedico = new altaMedico();
+        }
+
+        ventanaAltaMedico.setVentanaInicio(this);
+        ventanaAltaMedico.setLocationRelativeTo(null);
+        ventanaAltaMedico.setVisible(true);
         this.dispose();
     }
 

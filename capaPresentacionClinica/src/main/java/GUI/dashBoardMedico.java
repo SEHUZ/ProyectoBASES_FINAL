@@ -4,7 +4,15 @@
  */
 package GUI;
 
+import BO.MedicoBO;
+import DTO.HorarioMedicoNuevoDTO;
 import DTO.MedicoDTO;
+import Exception.NegocioException;
+import configuracion.DependencyInjector;
+import java.time.format.DateTimeFormatter;
+import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 
 /**
@@ -14,21 +22,23 @@ import javax.swing.JOptionPane;
 public class dashBoardMedico extends javax.swing.JFrame {
 
     private MedicoDTO medico;
+    private MedicoBO medicoBO = DependencyInjector.crearMedicoBO();
     private iniciarSesion ventanaInicio;
-    
+
     public dashBoardMedico(MedicoDTO medico) {
         this.medico = medico;
         initComponents();
         cargarDatosMedico(medico);
+        cargarHorariosMedico(medico);
     }
-    
+
     /**
      * Creates new form dashBoardMedico
      */
     public dashBoardMedico() {
         initComponents();
     }
-    
+
     public void setVentanaInicio(iniciarSesion ventanaInicio) {
         this.ventanaInicio = ventanaInicio;
     }
@@ -51,8 +61,9 @@ public class dashBoardMedico extends javax.swing.JFrame {
         lblNombre = new javax.swing.JLabel();
         lblApellidoPaterno = new javax.swing.JLabel();
         lblApellidoMaterno = new javax.swing.JLabel();
-        list1 = new java.awt.List();
         jLabel4 = new javax.swing.JLabel();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        jTextAreaHorarios = new javax.swing.JTextArea();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setMinimumSize(new java.awt.Dimension(632, 757));
@@ -93,6 +104,11 @@ public class dashBoardMedico extends javax.swing.JFrame {
         jLabel4.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         jLabel4.setText("HORARIOS DE ATENCION");
 
+        jTextAreaHorarios.setEditable(false);
+        jTextAreaHorarios.setColumns(20);
+        jTextAreaHorarios.setRows(5);
+        jScrollPane1.setViewportView(jTextAreaHorarios);
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -106,15 +122,7 @@ public class dashBoardMedico extends javax.swing.JFrame {
                             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                                 .addComponent(botonCerrarSesion, javax.swing.GroupLayout.PREFERRED_SIZE, 122, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addGap(15, 15, 15)))
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(layout.createSequentialGroup()
-                                .addGap(0, 34, Short.MAX_VALUE)
-                                .addComponent(botonHistorialConsultas, javax.swing.GroupLayout.PREFERRED_SIZE, 166, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(241, 241, 241))
-                            .addGroup(layout.createSequentialGroup()
-                                .addGap(37, 37, 37)
-                                .addComponent(jLabel4)
-                                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(lblEspecialidad)
@@ -127,9 +135,17 @@ public class dashBoardMedico extends javax.swing.JFrame {
                                 .addComponent(lblApellidoPaterno)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(list1, javax.swing.GroupLayout.PREFERRED_SIZE, 214, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                                     .addComponent(lblApellidoMaterno))))
-                        .addGap(0, 0, Short.MAX_VALUE))))
+                        .addGap(0, 199, Short.MAX_VALUE))))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(botonHistorialConsultas, javax.swing.GroupLayout.PREFERRED_SIZE, 166, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(231, 231, 231))
+            .addGroup(layout.createSequentialGroup()
+                .addGap(236, 236, 236)
+                .addComponent(jLabel4)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -144,27 +160,26 @@ public class dashBoardMedico extends javax.swing.JFrame {
                 .addComponent(lblCedula)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(lblEspecialidad)
+                .addGap(32, 32, 32)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(BotonBajaTemporal, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(55, 55, 55)
-                        .addComponent(BotonBajaTemporal, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(116, 116, 116)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(botonCerrarSesion, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel4))))
+                        .addGap(61, 61, 61)
+                        .addComponent(botonCerrarSesion, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(list1, javax.swing.GroupLayout.PREFERRED_SIZE, 346, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 30, Short.MAX_VALUE)
+                .addComponent(jLabel4)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 332, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(32, 32, 32)
                 .addComponent(botonHistorialConsultas, javax.swing.GroupLayout.PREFERRED_SIZE, 42, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(70, 70, 70))
+                .addContainerGap(77, Short.MAX_VALUE))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
     private void BotonBajaTemporalActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BotonBajaTemporalActionPerformed
-        // TODO add your handling code here:
+        darBajaMedico(medico);
     }//GEN-LAST:event_BotonBajaTemporalActionPerformed
 
     private void botonHistorialConsultasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonHistorialConsultasActionPerformed
@@ -215,14 +230,50 @@ public class dashBoardMedico extends javax.swing.JFrame {
     private javax.swing.JButton botonCerrarSesion;
     private javax.swing.JButton botonHistorialConsultas;
     private javax.swing.JLabel jLabel4;
+    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JTextArea jTextAreaHorarios;
     private javax.swing.JLabel lblApellidoMaterno;
     private javax.swing.JLabel lblApellidoPaterno;
     private javax.swing.JLabel lblCedula;
     private javax.swing.JLabel lblEspecialidad;
     private javax.swing.JLabel lblNombre;
     private javax.swing.JLabel lblRol;
-    private java.awt.List list1;
     // End of variables declaration//GEN-END:variables
+
+    public void darBajaMedico(MedicoDTO medico) {
+        int respuesta = JOptionPane.showConfirmDialog(
+                this,
+                "No podras ofrecer servicios hasta que vuelvas a activar tu cuenta.",
+                "¿Dar baja temporal?",
+                JOptionPane.YES_NO_OPTION
+        );
+
+        if (respuesta == JOptionPane.YES_OPTION) {
+            try {
+                MedicoDTO bajaMedico = new MedicoDTO(
+                        medico.getIdMedico(),
+                        medico.getUsuario(),
+                        medico.getNombres(),
+                        medico.getApellidoPaterno(),
+                        medico.getApellidoMaterno(),
+                        medico.getCedula(),
+                        medico.getEspecialidad(),
+                        false);
+
+                medicoBO.actualizarEstadoMedico(bajaMedico);
+
+                JOptionPane.showMessageDialog(this, "Has sido dado de baja. Para volver a ofrecer servicios, tendras que activar tu cuenta.");
+                ventanaInicio.setVentanaMedico(this);
+                ventanaInicio.setLocationRelativeTo(null);
+                ventanaInicio.setVisible(true);
+                this.dispose();
+            } catch (NegocioException ex) {
+                JOptionPane.showMessageDialog(this, "Ocurrió un error en el proceso de baja." + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+            }
+        } else {
+            System.out.println("El usuario canceló.");
+        }
+    }
 
     public void cerrarSesion() {
         int respuesta = JOptionPane.showConfirmDialog(
@@ -242,7 +293,7 @@ public class dashBoardMedico extends javax.swing.JFrame {
             System.out.println("El usuario canceló.");
         }
     }
-    
+
     private void cargarDatosMedico(MedicoDTO medico) {
         lblRol.setText("Médico:");
         lblNombre.setText(medico.getNombres());
@@ -252,4 +303,44 @@ public class dashBoardMedico extends javax.swing.JFrame {
         lblEspecialidad.setText(medico.getEspecialidad());
     }
 
+    public void cargarHorariosMedico(MedicoDTO medico) {
+        try {
+            List<HorarioMedicoNuevoDTO> horarios = medicoBO.obtenerHorariosMedico(medico);
+
+            if (horarios.isEmpty()) {
+                jTextAreaHorarios.setText("El médico no tiene horarios registrados");
+                return;
+            }
+
+            // Crear formateador para la hora
+            DateTimeFormatter formateadorHora = DateTimeFormatter.ofPattern("HH:mm");
+
+            // Construir el texto con formato
+            StringBuilder horariosTexto = new StringBuilder();
+            horariosTexto.append("Horarios del Dr. ")
+                    .append(medico.getNombres())
+                    .append(" ")
+                    .append(medico.getApellidoPaterno())
+                    .append("\n\n");
+
+            for (HorarioMedicoNuevoDTO horario : horarios) {
+                horariosTexto.append("• ")
+                        .append(horario.getDiaSemana())
+                        .append(": ")
+                        .append(horario.getHoraEntrada().format(formateadorHora))
+                        .append(" - ")
+                        .append(horario.getHoraSalida().format(formateadorHora))
+                        .append("\n");
+            }
+
+            // Mostrar en el JTextArea
+            jTextAreaHorarios.setText(horariosTexto.toString());
+            jTextAreaHorarios.setCaretPosition(0); // Mover scroll al inicio
+
+        } catch (NegocioException ex) {
+            JOptionPane.showMessageDialog(this, "Error al cargar horarios: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this, "Error inesperado al mostrar horarios", "Error", JOptionPane.ERROR_MESSAGE);
+        }
+    }
 }

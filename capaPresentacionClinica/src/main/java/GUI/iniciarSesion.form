@@ -85,6 +85,11 @@
                   </Group>
               </Group>
           </Group>
+          <Group type="102" alignment="0" attributes="0">
+              <EmptySpace min="-2" pref="20" max="-2" attributes="0"/>
+              <Component id="darAltaMedico" min="-2" max="-2" attributes="0"/>
+              <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
+          </Group>
       </Group>
     </DimensionLayout>
     <DimensionLayout dim="1">
@@ -108,7 +113,9 @@
               <Component id="BotonRegistrarse" min="-2" max="-2" attributes="0"/>
               <EmptySpace min="-2" pref="49" max="-2" attributes="0"/>
               <Component id="BotonSalir" min="-2" max="-2" attributes="0"/>
-              <EmptySpace min="-2" pref="84" max="-2" attributes="0"/>
+              <EmptySpace min="-2" pref="40" max="-2" attributes="0"/>
+              <Component id="darAltaMedico" min="-2" max="-2" attributes="0"/>
+              <EmptySpace min="-2" pref="21" max="-2" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>
@@ -176,6 +183,14 @@
       </Events>
     </Component>
     <Component class="javax.swing.JPasswordField" name="JFieldContrasenia">
+    </Component>
+    <Component class="javax.swing.JButton" name="darAltaMedico">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Dar de alta un m&#xe9;dico"/>
+      </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="darAltaMedicoActionPerformed"/>
+      </Events>
     </Component>
   </SubComponents>
 </Form>

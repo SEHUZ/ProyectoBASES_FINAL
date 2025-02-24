@@ -134,6 +134,7 @@ public class agendarCita extends javax.swing.JFrame {
             }
         });
 
+        jTextAreaHorarios.setEditable(false);
         jTextAreaHorarios.setColumns(20);
         jTextAreaHorarios.setRows(5);
         jScrollPane2.setViewportView(jTextAreaHorarios);
@@ -390,7 +391,7 @@ public class agendarCita extends javax.swing.JFrame {
         try {
             CitaNuevaDTO citaDTO = new CitaNuevaDTO();
             citaDTO.setPaciente(pacienteMAPPER.toEntityViejo(paciente));
-            citaDTO.setMedico(mapper.toEntity(medicoSELECCIONADO));
+            citaDTO.setMedico(mapper.toEntityDTO(medicoSELECCIONADO));
             citaDTO.setFechaHora(fechaHoraCita);
             citaDTO.setTipoCita(Cita.TipoCita.PROGRAMADA); // o EMERGENCIA según lógica
 

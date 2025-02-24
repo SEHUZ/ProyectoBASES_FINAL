@@ -90,7 +90,7 @@ public class dashboardPaciente extends javax.swing.JFrame {
             }
         });
 
-        BotonConsultaEmergencia.setText("Consulta de emergencia");
+        BotonConsultaEmergencia.setText("Agendar cita de emergencia");
         BotonConsultaEmergencia.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 BotonConsultaEmergenciaActionPerformed(evt);
@@ -203,11 +203,11 @@ public class dashboardPaciente extends javax.swing.JFrame {
                 .addComponent(BotonConsultaEmergencia, javax.swing.GroupLayout.PREFERRED_SIZE, 47, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addComponent(botonAgendarCita, javax.swing.GroupLayout.PREFERRED_SIZE, 47, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(33, 33, 33)
+                .addGap(18, 18, 18)
                 .addComponent(botonCitasProximas, javax.swing.GroupLayout.PREFERRED_SIZE, 62, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addComponent(botonHistorialConsultas, javax.swing.GroupLayout.PREFERRED_SIZE, 61, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(70, 70, 70))
+                .addGap(85, 85, 85))
         );
 
         pack();
@@ -218,7 +218,7 @@ public class dashboardPaciente extends javax.swing.JFrame {
     }//GEN-LAST:event_BotonEditarPerfilActionPerformed
 
     private void botonCitasProximasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonCitasProximasActionPerformed
-        // TODO add your handling code here:
+        // citas proximas
     }//GEN-LAST:event_botonCitasProximasActionPerformed
 
     private void botonCerrarSesionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonCerrarSesionActionPerformed
