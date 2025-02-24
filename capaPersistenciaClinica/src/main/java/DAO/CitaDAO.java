@@ -13,6 +13,7 @@ import java.util.List;
 import Conexion.IConexionBD;
 import Entidades.Cita;
 import Entidades.CitaEmergencia;
+import Entidades.CitaNormal;
 import Entidades.Paciente;
 import Entidades.Medico;
 import Entidades.EstadosCita;
@@ -267,48 +268,108 @@ public class CitaDAO implements ICitaDAO {
 
     @Override
     public Cita agendarCitaEmergencia(Cita cita) throws PersistenciaClinicaException, SQLException {
-    String sql = "{CALL AgendarCitaEmergencia(?, ?, ?, ?)}";
+        String sql = "{CALL AgendarCitaEmergencia(?, ?, ?, ?)}";
 
-    try (Connection conn = conexion.crearConexion();
-         CallableStatement cstmt = conn.prepareCall(sql)) {
+        try (Connection conn = conexion.crearConexion(); CallableStatement cstmt = conn.prepareCall(sql)) {
 
-        // 1. Parámetro IN
-        cstmt.setInt(1, cita.getPaciente().getIdPaciente());  // p_idPaciente
+            // 1. Parámetro IN
+            cstmt.setInt(1, cita.getPaciente().getIdPaciente());  // p_idPaciente
 
-        // 2. Registrar parámetros OUT
-        cstmt.registerOutParameter(2, Types.VARCHAR);   // p_folio
-        cstmt.registerOutParameter(3, Types.INTEGER);   // p_idCita
-        cstmt.registerOutParameter(4, Types.TIMESTAMP); // p_fechaExpiracion
+            // 2. Registrar parámetros OUT
+            cstmt.registerOutParameter(2, Types.VARCHAR);   // p_folio
+            cstmt.registerOutParameter(3, Types.INTEGER);   // p_idCita
+            cstmt.registerOutParameter(4, Types.TIMESTAMP); // p_fechaExpiracion
 
-        // 3. Ejecutar el SP
-        cstmt.execute();
+            // 3. Ejecutar el SP
+            cstmt.execute();
 
-        // 4. Obtener los valores OUT
-        String folio = cstmt.getString(2);
-        int idCita = cstmt.getInt(3);
-        Timestamp fechaExpiracion = cstmt.getTimestamp(4);
+            // 4. Obtener los valores OUT
+            String folio = cstmt.getString(2);
+            int idCita = cstmt.getInt(3);
+            Timestamp fechaExpiracion = cstmt.getTimestamp(4);
 
-        // 5. Asignar valores a la entidad Cita
-        cita.setIdCita(idCita);
-        cita.setTipoCita(Cita.TipoCita.EMERGENCIA);
+            // 5. Asignar valores a la entidad Cita
+            cita.setIdCita(idCita);
+            cita.setTipoCita(Cita.TipoCita.EMERGENCIA);
 
-        // 6. Crear el objeto CitaEmergencia y asignarlo a la cita
-        CitaEmergencia emergencia = new CitaEmergencia();
-        emergencia.setFolio(folio);
-        
-        if (fechaExpiracion != null) {
-            emergencia.setFechaExpiracion(fechaExpiracion.toLocalDateTime());
+            // 6. Crear el objeto CitaEmergencia y asignarlo a la cita
+            CitaEmergencia emergencia = new CitaEmergencia();
+            emergencia.setFolio(folio);
+
+            if (fechaExpiracion != null) {
+                emergencia.setFechaExpiracion(fechaExpiracion.toLocalDateTime());
+            }
+
+            // En tu entidad, si quieres enlazar bidireccionalmente:
+            // emergencia.setCita(cita);
+            cita.setEmergencia(emergencia);
+
+            return cita;
+
+        } catch (SQLException e) {
+            throw new PersistenciaClinicaException("Error al agendar cita de emergencia: " + e.getMessage());
         }
-        
-        // En tu entidad, si quieres enlazar bidireccionalmente:
-        // emergencia.setCita(cita);
-
-        cita.setEmergencia(emergencia);
-
-        return cita;
-
-    } catch (SQLException e) {
-        throw new PersistenciaClinicaException("Error al agendar cita de emergencia: " + e.getMessage());
     }
-}
+
+    @Override
+    public List<Cita> consultarCitasProximasPorPaciente(Paciente paciente) throws PersistenciaClinicaException {
+        List<Cita> citas = new ArrayList<>();
+        String procedimiento = "{CALL ObtenerCitasProximasPorPaciente(?)}";
+
+        try (Connection con = conexion.crearConexion(); CallableStatement cs = con.prepareCall(procedimiento)) {
+
+            // Establecer parámetro
+            cs.setInt(1, paciente.getIdPaciente());
+
+            try (ResultSet rs = cs.executeQuery()) {
+                while (rs.next()) {
+                    Cita cita = new Cita();
+
+                    // Datos básicos de la cita
+                    cita.setIdCita(rs.getInt("idCita"));
+                    cita.setFechaHora(rs.getTimestamp("fechaHoraCita").toLocalDateTime());
+
+                    // Tipo de cita String a Enum
+                    String tipoCitaStr = rs.getString("tipoCita");
+                    Cita.TipoCita tipoCita = Cita.TipoCita.valueOf(tipoCitaStr);
+                    cita.setTipoCita(tipoCita);
+
+                    // Médico
+                    Medico medico = new Medico();
+                    medico.setNombres(rs.getString("nombreMedico"));
+                    medico.setApellidoPaterno(rs.getString("apellidoMedico"));
+                    medico.setEspecialidad(rs.getString("especialidad"));
+                    cita.setMedico(medico);
+
+                    // Estado de la cita
+                    EstadosCita estado = new EstadosCita();
+                    estado.setDescripcion(rs.getString("estadoCita"));
+                    cita.setEstado(estado);
+
+                    // CitaEmergencia o CitaNormal según el tipo
+                    if (tipoCita == Cita.TipoCita.EMERGENCIA) {
+                        CitaEmergencia emergencia = new CitaEmergencia();
+                        emergencia.setFolio(rs.getString("folioEmergencia"));
+                        emergencia.setFechaExpiracion(rs.getTimestamp("fechaExpiracionEmergencia") != null ? rs.getTimestamp("fechaExpiracionEmergencia").toLocalDateTime(): null);
+                        cita.setEmergencia(emergencia);
+                    } else if (tipoCita == Cita.TipoCita.PROGRAMADA) {
+                        CitaNormal normal = new CitaNormal();
+                        cita.setNormal(normal);
+                    }
+
+                    citas.add(cita);
+                }
+            }
+
+        } catch (SQLException ex) {
+            // Manejar error específico de "paciente no existe"
+            if (ex.getErrorCode() == 1644) { // Código de error para SIGNAL SQLSTATE '45000'
+                throw new PersistenciaClinicaException("El paciente no existe");
+            }
+            throw new PersistenciaClinicaException("Error al consultar citas próximas: " + ex.getMessage());
+        }
+
+        return citas;
+    }
+
 }
