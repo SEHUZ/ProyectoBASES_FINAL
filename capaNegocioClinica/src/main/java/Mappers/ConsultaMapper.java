@@ -4,23 +4,28 @@
  */
 package Mappers;
 
-import DTO.HorarioMedicoNuevoDTO;
+import DTO.ConsultaNuevaDTO;
+import Entidades.Cita;
+import Entidades.Consulta;
 import Entidades.HorarioMedico;
+import java.time.LocalDateTime;
 
 /**
  *
  * @author sonic
  */
 public class ConsultaMapper {
-    public HorarioMedico toEntityNuevo(HorarioMedicoNuevoDTO dto) {
+    public Consulta toEntityNuevo(ConsultaNuevaDTO dto) {
         if (dto == null) {
             return null;
         }
-        return new HorarioMedico(
-            dto.getMedico(),
-            dto.getHoraEntrada(),
-            dto.getHoraSalida(),
-            dto.getDiaSemana()
+        return new Consulta(
+            dto.getCita(),
+            dto.getDiagnostico(),
+            dto.getEstado(),
+            dto.getFechaHora(),
+            dto.getTratamiento()
+                    
         );
     }
 }

@@ -13,6 +13,7 @@ import DAO.MedicoDAO;
 import DAO.PacienteDAO;
 import DTO.CitaNuevaDTO;
 import DTO.CitaViejaDTO;
+import DTO.MedicoDTO;
 import DTO.citaEmergenciaNuevaDTO;
 import DTO.citaEmergenciaViejaDTO;
 import Entidades.Cita;
@@ -23,9 +24,13 @@ import Exception.NegocioException;
 import Exception.PersistenciaClinicaException;
 import Mappers.CitaEmergenciaMapper;
 import Mappers.CitaMapper;
+import Mappers.MedicoMapper;
 import java.sql.SQLException;
 import java.time.LocalDateTime;
+import java.util.List;
+import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
 
 /**
  *
@@ -41,6 +46,8 @@ public class CitaBO {
 
     private final CitaMapper mapper = new CitaMapper();
     private final CitaEmergenciaMapper emergenciaMapper = new CitaEmergenciaMapper();
+    
+    private final MedicoMapper medicoMapper = new MedicoMapper();
 
     public CitaBO(IConexionBD conexion) {
         this.citaDAO = new CitaDAO(conexion);
@@ -91,6 +98,36 @@ public class CitaBO {
 
         } catch (PersistenciaClinicaException ex) {
             throw new NegocioException("Error técnico al cancelar: " + ex.getMessage());
+        }
+    }
+    
+     public List<CitaViejaDTO> consultarCitasMedico(MedicoDTO medicoDTO) throws NegocioException {
+        try {
+            // 1. Validar datos básicos del médico
+            if (medicoDTO == null || medicoDTO.getIdMedico() == 0) {
+                throw new NegocioException("Datos del médico inválidos");
+            }
+
+            // 2. Convertir DTO a entidad
+            Medico medico = medicoMapper.toEntity(medicoDTO); // Asumiendo que tienes un MédicoMapper
+
+            // 3. Verificar existencia del médico
+            Medico medicoExistente = medicoDAO.consultarMedicoPorID(medico.getIdMedico());
+            if (medicoExistente == null) {
+                throw new NegocioException("Médico no registrado en el sistema");
+            }
+
+            // 4. Obtener citas del médico
+            List<Cita> citas = citaDAO.consultarCitasMedico(medicoExistente);
+
+            // 5. Convertir a DTOs
+            return citas.stream()
+                    .map(mapper::toViejoDTO)
+                    .collect(Collectors.toList());
+
+        } catch (PersistenciaClinicaException ex) {
+            logger.log(Level.SEVERE, "Error al consultar citas del médico", ex);
+            throw new NegocioException("Error al obtener las citas: " + ex.getMessage());
         }
     }
 
