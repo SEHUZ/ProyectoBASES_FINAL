@@ -85,11 +85,6 @@
                   </Group>
               </Group>
           </Group>
-          <Group type="102" alignment="0" attributes="0">
-              <EmptySpace min="-2" pref="27" max="-2" attributes="0"/>
-              <Component id="botonRegistrarMedico" min="-2" max="-2" attributes="0"/>
-              <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
-          </Group>
       </Group>
     </DimensionLayout>
     <DimensionLayout dim="1">
@@ -113,9 +108,7 @@
               <Component id="BotonRegistrarse" min="-2" max="-2" attributes="0"/>
               <EmptySpace min="-2" pref="49" max="-2" attributes="0"/>
               <Component id="BotonSalir" min="-2" max="-2" attributes="0"/>
-              <EmptySpace min="-2" pref="39" max="-2" attributes="0"/>
-              <Component id="botonRegistrarMedico" min="-2" max="-2" attributes="0"/>
-              <EmptySpace min="-2" pref="22" max="-2" attributes="0"/>
+              <EmptySpace min="-2" pref="84" max="-2" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>
@@ -183,14 +176,6 @@
       </Events>
     </Component>
     <Component class="javax.swing.JPasswordField" name="JFieldContrasenia">
-    </Component>
-    <Component class="javax.swing.JButton" name="botonRegistrarMedico">
-      <Properties>
-        <Property name="text" type="java.lang.String" value="Registrar un medico"/>
-      </Properties>
-      <Events>
-        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="botonRegistrarMedicoActionPerformed"/>
-      </Events>
     </Component>
   </SubComponents>
 </Form>

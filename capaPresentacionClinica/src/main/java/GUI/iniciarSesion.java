@@ -13,6 +13,8 @@ import Exception.NegocioException;
 import Exception.PersistenciaClinicaException;
 import configuracion.DependencyInjector;
 import java.text.Normalizer;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 
 /**
@@ -22,7 +24,6 @@ import javax.swing.JOptionPane;
 public class iniciarSesion extends javax.swing.JFrame {
 
     private registrarUsuario ventanaRegistro;
-    private registrarMedico ventanaRegistroMedico;
     private dashBoardMedico ventanaMedico;
     private dashboardPaciente ventanaPaciente;
     private editarPerfilPaciente ventanaEditar;
@@ -58,7 +59,6 @@ public class iniciarSesion extends javax.swing.JFrame {
         jLabel4 = new javax.swing.JLabel();
         BotonSalir = new javax.swing.JButton();
         JFieldContrasenia = new javax.swing.JPasswordField();
-        botonRegistrarMedico = new javax.swing.JButton();
 
         BotonIniciarSesion1.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
         BotonIniciarSesion1.setText("Iniciar Sesion");
@@ -118,13 +118,6 @@ public class iniciarSesion extends javax.swing.JFrame {
             }
         });
 
-        botonRegistrarMedico.setText("Registrar un medico");
-        botonRegistrarMedico.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                botonRegistrarMedicoActionPerformed(evt);
-            }
-        });
-
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -154,10 +147,6 @@ public class iniciarSesion extends javax.swing.JFrame {
                                 .addComponent(BotonIniciarSesion, javax.swing.GroupLayout.PREFERRED_SIZE, 141, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addGap(65, 65, 65)))
                         .addGap(179, 179, 179))))
-            .addGroup(layout.createSequentialGroup()
-                .addGap(27, 27, 27)
-                .addComponent(botonRegistrarMedico)
-                .addGap(0, 0, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -180,9 +169,7 @@ public class iniciarSesion extends javax.swing.JFrame {
                 .addComponent(BotonRegistrarse)
                 .addGap(49, 49, 49)
                 .addComponent(BotonSalir)
-                .addGap(39, 39, 39)
-                .addComponent(botonRegistrarMedico)
-                .addGap(22, 22, 22))
+                .addGap(84, 84, 84))
         );
 
         pack();
@@ -192,10 +179,6 @@ public class iniciarSesion extends javax.swing.JFrame {
         this.ventanaRegistro = ventanaRegistro;
     }
 
-    public void setVentanaRegistroMedico(registrarMedico ventanaRegistroMedico) {
-        this.ventanaRegistroMedico = ventanaRegistroMedico;
-    }
-
     public void setVentanaMedico(dashBoardMedico ventanaMedico) {
         this.ventanaMedico = ventanaMedico;
     }
@@ -203,7 +186,7 @@ public class iniciarSesion extends javax.swing.JFrame {
     public void setVentanaPaciente(dashboardPaciente ventanaPaciente) {
         this.ventanaPaciente = ventanaPaciente;
     }
-    
+
     public void setVentanaEditarPerfil(editarPerfilPaciente ventanaEditar) {
         this.ventanaEditar = ventanaEditar;
     }
@@ -217,7 +200,11 @@ public class iniciarSesion extends javax.swing.JFrame {
     }//GEN-LAST:event_BotonIniciarSesion1ActionPerformed
 
     private void BotonIniciarSesionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BotonIniciarSesionActionPerformed
-        iniciarSesionUsuario();
+        try {
+            iniciarSesionUsuario();
+        } catch (NegocioException ex) {
+            Logger.getLogger(iniciarSesion.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }//GEN-LAST:event_BotonIniciarSesionActionPerformed
 
     private void BotonRegistrarse1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BotonRegistrarse1ActionPerformed
@@ -231,10 +218,6 @@ public class iniciarSesion extends javax.swing.JFrame {
     private void fieldUsuarioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_fieldUsuarioActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_fieldUsuarioActionPerformed
-
-    private void botonRegistrarMedicoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonRegistrarMedicoActionPerformed
-        abrirPantallaRegistroMedico();
-    }//GEN-LAST:event_botonRegistrarMedicoActionPerformed
 
     /**
      * @param args the command line arguments
@@ -278,7 +261,6 @@ public class iniciarSesion extends javax.swing.JFrame {
     private javax.swing.JButton BotonRegistrarse1;
     private javax.swing.JButton BotonSalir;
     private javax.swing.JPasswordField JFieldContrasenia;
-    private javax.swing.JButton botonRegistrarMedico;
     private javax.swing.JTextField fieldUsuario;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
@@ -286,7 +268,7 @@ public class iniciarSesion extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel4;
     // End of variables declaration//GEN-END:variables
 
-    public void iniciarSesionUsuario() {
+    public void iniciarSesionUsuario() throws NegocioException {
         String user = fieldUsuario.getText();
         String contrasenia = JFieldContrasenia.getText();
 
@@ -296,48 +278,39 @@ public class iniciarSesion extends javax.swing.JFrame {
         }
 
         try {
-            String rolRaw = usuarioBO.login(user, contrasenia);
-
-            if (rolRaw != null) {
-                String rol = Normalizer.normalize(rolRaw, Normalizer.Form.NFD)
-                        .replaceAll("\\p{M}", "")
-                        .toLowerCase();
-
-                switch (rol) {
-                    case "paciente":
-                        PacienteViejoDTO paciente = pacienteBO.buscarPacientePorUsuario(user);
-                        JOptionPane.showMessageDialog(this, "Inicio de sesión exitoso.");
-                        if (ventanaPaciente == null) {
-                            ventanaPaciente = new dashboardPaciente(paciente);
-                        }
-
+            if (pacienteBO.buscarPacientePorUsuario(user) != null) {
+                if (usuarioBO.loginPaciente(user, contrasenia)) {
+                    PacienteViejoDTO paciente = pacienteBO.buscarPacientePorUsuario(user);
+                    JOptionPane.showMessageDialog(this, "Inicio de sesión exitoso.");
+                    if (ventanaPaciente == null) {
                         ventanaPaciente = new dashboardPaciente(paciente);
-                        ventanaPaciente.setVentanaInicio(this);
-                        ventanaPaciente.setLocationRelativeTo(null);
-                        ventanaPaciente.setVisible(true);
-                        this.dispose();
-                        limpiarCampos();
+                    }
 
-                        break;
-                    case "medico":
-                        MedicoDTO medico = medicoBO.buscarMedicoPorUsuario(user);
-                        JOptionPane.showMessageDialog(this, "Inicio de sesión exitoso.");
-                        if (ventanaMedico == null) {
-                            ventanaMedico = new dashBoardMedico(medico);
-                        }
-
+                    ventanaPaciente = new dashboardPaciente(paciente);
+                    ventanaPaciente.setVentanaInicio(this);
+                    ventanaPaciente.setLocationRelativeTo(null);
+                    ventanaPaciente.setVisible(true);
+                    this.dispose();
+                    limpiarCampos();
+                } else {
+                    JOptionPane.showMessageDialog(this, "Usuario o contraseña incorrectos.");
+                }
+            } else if (medicoBO.buscarMedicoPorUsuario(user) != null) {
+                if (usuarioBO.loginMedico(user, contrasenia)) {
+                    MedicoDTO medico = medicoBO.buscarMedicoPorUsuario(user);
+                    JOptionPane.showMessageDialog(this, "Inicio de sesión exitoso.");
+                    if (ventanaMedico == null) {
                         ventanaMedico = new dashBoardMedico(medico);
-                        ventanaMedico.setVentanaInicio(this);
-                        ventanaMedico.setLocationRelativeTo(null);
-                        ventanaMedico.setVisible(true);
-                        this.dispose();
-                        limpiarCampos();
+                    }
 
-                        break;
-                    default:
-                        JOptionPane.showMessageDialog(this, "Rol no reconocido.");
-                        break;
-
+                    ventanaMedico = new dashBoardMedico(medico);
+                    ventanaMedico.setVentanaInicio(this);
+                    ventanaMedico.setLocationRelativeTo(null);
+                    ventanaMedico.setVisible(true);
+                    this.dispose();
+                    limpiarCampos();
+                } else {
+                    JOptionPane.showMessageDialog(this, "Usuario o contraseña incorrectos.");
                 }
             } else {
                 JOptionPane.showMessageDialog(this, "Usuario o contraseña incorrectos.");
@@ -371,17 +344,6 @@ public class iniciarSesion extends javax.swing.JFrame {
         } else {
             System.out.println("El usuario canceló.");
         }
-    }
-
-    public void abrirPantallaRegistroMedico() {
-        if (ventanaRegistroMedico == null) {
-            ventanaRegistroMedico = new registrarMedico();
-        }
-
-        ventanaRegistroMedico.setVentanaInicio(this);
-        ventanaRegistroMedico.setLocationRelativeTo(null);
-        ventanaRegistroMedico.setVisible(true);
-        this.dispose();
     }
 
     public void limpiarCampos() {
