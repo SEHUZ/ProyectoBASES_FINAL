@@ -46,8 +46,11 @@ public class DependencyInjector {
         return citaBO;
     }
     
-    public static ConsultaBO crearConsultaBO() {
+     public static ConsultaBO crearConsultaBO() {
+        // Crear la conexión
         IConexionBD conexion = new ConexionBD();
+
+        // Crear el BO, que automáticamente creará el DAO con la conexión
         ConsultaBO consultaBO = new ConsultaBO(conexion);
 
         return consultaBO;

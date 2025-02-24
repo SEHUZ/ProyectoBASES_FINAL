@@ -5,6 +5,7 @@
 package DTO;
 
 import Entidades.Cita;
+import Entidades.Consulta;
 import java.time.LocalDateTime;
 
 /**
@@ -68,6 +69,6 @@ public class ConsultaNuevaDTO {
     public void setTratamiento(String tratamiento) {
         this.tratamiento = tratamiento;
     }
-    
+     
     
 }
