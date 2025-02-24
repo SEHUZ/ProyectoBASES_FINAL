@@ -12,20 +12,14 @@ import java.util.ArrayList;
 import java.util.List;
 import Conexion.IConexionBD;
 import Entidades.Cita;
-import static Entidades.Cita.TipoCita.EMERGENCIA;
 import Entidades.CitaEmergencia;
-import Entidades.CitaNormal;
 import Entidades.Paciente;
 import Entidades.Medico;
 import Entidades.EstadosCita;
 import Exception.PersistenciaClinicaException;
 import java.sql.CallableStatement;
-import java.sql.Statement;
 import java.sql.Timestamp;
 import java.sql.Types;
-import java.time.LocalDate;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 public class CitaDAO implements ICitaDAO {
 
@@ -272,33 +266,49 @@ public class CitaDAO implements ICitaDAO {
     }
 
     @Override
-    public CitaEmergencia agendarCitaEmergencia(CitaEmergencia emergencia) throws PersistenciaClinicaException {
-        String sql = "{call AgendarCitaEmergencia(?, ?, ?, ?, ?)}"; // 2 entradas, 3 salidas
+    public Cita agendarCitaEmergencia(Cita cita) throws PersistenciaClinicaException, SQLException {
+    String sql = "{CALL AgendarCitaEmergencia(?, ?, ?, ?)}";
 
-        try (Connection conn = conexion.crearConexion(); CallableStatement cstmt = conn.prepareCall(sql)) {
+    try (Connection conn = conexion.crearConexion();
+         CallableStatement cstmt = conn.prepareCall(sql)) {
 
-            // Parámetros de entrada
-            cstmt.setInt(1, emergencia.getCita().getPaciente().getIdPaciente());
-            cstmt.setInt(2, emergencia.getCita().getMedico().getIdMedico());
+        // 1. Parámetro IN
+        cstmt.setInt(1, cita.getPaciente().getIdPaciente());  // p_idPaciente
 
-            // Registrar parámetros de salida
-            cstmt.registerOutParameter(3, Types.INTEGER); // idCita
-            cstmt.registerOutParameter(4, Types.VARCHAR); // folio
-            cstmt.registerOutParameter(5, Types.TIMESTAMP); // fechaExpiracion
+        // 2. Registrar parámetros OUT
+        cstmt.registerOutParameter(2, Types.VARCHAR);   // p_folio
+        cstmt.registerOutParameter(3, Types.INTEGER);   // p_idCita
+        cstmt.registerOutParameter(4, Types.TIMESTAMP); // p_fechaExpiracion
 
-            cstmt.execute();
+        // 3. Ejecutar el SP
+        cstmt.execute();
 
-            // Mapear resultados a la entidad
-            emergencia.getCita().setIdCita(cstmt.getInt(3));
-            emergencia.setFolio(cstmt.getString(4));
-            emergencia.setFechaExpiracion(
-                    cstmt.getTimestamp(5).toLocalDateTime()
-            );
+        // 4. Obtener los valores OUT
+        String folio = cstmt.getString(2);
+        int idCita = cstmt.getInt(3);
+        Timestamp fechaExpiracion = cstmt.getTimestamp(4);
 
-            return emergencia;
+        // 5. Asignar valores a la entidad Cita
+        cita.setIdCita(idCita);
+        cita.setTipoCita(Cita.TipoCita.EMERGENCIA);
 
-        } catch (SQLException ex) {
-            throw new PersistenciaClinicaException("Error al agendar emergencia: " + ex.getMessage());
+        // 6. Crear el objeto CitaEmergencia y asignarlo a la cita
+        CitaEmergencia emergencia = new CitaEmergencia();
+        emergencia.setFolio(folio);
+        
+        if (fechaExpiracion != null) {
+            emergencia.setFechaExpiracion(fechaExpiracion.toLocalDateTime());
         }
+        
+        // En tu entidad, si quieres enlazar bidireccionalmente:
+        // emergencia.setCita(cita);
+
+        cita.setEmergencia(emergencia);
+
+        return cita;
+
+    } catch (SQLException e) {
+        throw new PersistenciaClinicaException("Error al agendar cita de emergencia: " + e.getMessage());
     }
+}
 }

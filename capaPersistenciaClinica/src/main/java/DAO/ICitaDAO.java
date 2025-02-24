@@ -34,7 +34,7 @@ public interface ICitaDAO {
     
     public boolean insertarEstadoCita(int idCita, String estado) throws PersistenciaClinicaException;
     
-    public CitaEmergencia agendarCitaEmergencia(CitaEmergencia emergencia) throws PersistenciaClinicaException;
+    public Cita agendarCitaEmergencia(Cita cita) throws PersistenciaClinicaException, SQLException;
     
     
 }
