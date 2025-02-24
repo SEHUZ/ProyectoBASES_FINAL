@@ -9,6 +9,7 @@ package DAO;
  * @author Jose
  */
 import Entidades.Cita;
+import Entidades.CitaEmergencia;
 import Entidades.EstadosCita;
 import Entidades.Medico;
 import Exception.PersistenciaClinicaException;
@@ -33,7 +34,7 @@ public interface ICitaDAO {
     
     public boolean insertarEstadoCita(int idCita, String estado) throws PersistenciaClinicaException;
     
-    public Cita agendarCitaEmergencia(Cita cita) throws PersistenciaClinicaException, SQLException;
+    public CitaEmergencia agendarCitaEmergencia(CitaEmergencia emergencia) throws PersistenciaClinicaException;
     
     
 }

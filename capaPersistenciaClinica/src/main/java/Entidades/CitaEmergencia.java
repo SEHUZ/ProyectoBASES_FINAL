@@ -5,6 +5,7 @@
 package Entidades;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 /**
  *
@@ -14,16 +15,16 @@ public class CitaEmergencia {
     private int idCitaEmergencia;
     private Cita cita;
     private String folio;
-    private LocalDate fechaExpiracion;
+    private LocalDateTime fechaExpiracion;
 
-    public CitaEmergencia(int idCitaEmergencia, Cita cita, String folio, LocalDate fechaExpiracion) {
+    public CitaEmergencia(int idCitaEmergencia, Cita cita, String folio, LocalDateTime fechaExpiracion) {
         this.idCitaEmergencia = idCitaEmergencia;
         this.cita = cita;
         this.folio = folio;
         this.fechaExpiracion = fechaExpiracion;
     }
 
-    public CitaEmergencia(Cita cita, String folio, LocalDate fechaExpiracion) {
+    public CitaEmergencia(Cita cita, String folio, LocalDateTime fechaExpiracion) {
         this.cita = cita;
         this.folio = folio;
         this.fechaExpiracion = fechaExpiracion;
@@ -56,11 +57,11 @@ public class CitaEmergencia {
         this.folio = folio;
     }
 
-    public LocalDate getFechaExpiracion() {
+    public LocalDateTime getFechaExpiracion() {
         return fechaExpiracion;
     }
 
-    public void setFechaExpiracion(LocalDate fechaExpiracion) {
+    public void setFechaExpiracion(LocalDateTime fechaExpiracion) {
         this.fechaExpiracion = fechaExpiracion;
     }
 

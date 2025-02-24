@@ -23,6 +23,9 @@ import java.sql.CallableStatement;
 import java.sql.Statement;
 import java.sql.Timestamp;
 import java.sql.Types;
+import java.time.LocalDate;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class CitaDAO implements ICitaDAO {
 
@@ -267,31 +270,35 @@ public class CitaDAO implements ICitaDAO {
             return false; // Retorna false en caso de error
         }
     }
-    
+
     @Override
-    public Cita agendarCitaEmergencia(Cita cita) throws PersistenciaClinicaException, SQLException {
-        String sql = "{call AgendarCitaEmergencia(?, ?, ?, ?)}";
+    public CitaEmergencia agendarCitaEmergencia(CitaEmergencia emergencia) throws PersistenciaClinicaException {
+        String sql = "{call AgendarCitaEmergencia(?, ?, ?, ?, ?)}"; // 2 entradas, 3 salidas
 
-        try (Connection conn = conexion.crearConexion();
-             CallableStatement cstmt = conn.prepareCall(sql)) {
+        try (Connection conn = conexion.crearConexion(); CallableStatement cstmt = conn.prepareCall(sql)) {
 
-            // Parámetros IN
-            cstmt.setInt(1, cita.getPaciente().getIdPaciente());
-            cstmt.setString(2, cita.getMedico().getEspecialidad()); // Asegúrate de que la especialidad está en el DTO
-            cstmt.registerOutParameter(3, Types.INTEGER);
-            cstmt.registerOutParameter(4, Types.VARCHAR);
+            // Parámetros de entrada
+            cstmt.setInt(1, emergencia.getCita().getPaciente().getIdPaciente());
+            cstmt.setInt(2, emergencia.getCita().getMedico().getIdMedico());
+
+            // Registrar parámetros de salida
+            cstmt.registerOutParameter(3, Types.INTEGER); // idCita
+            cstmt.registerOutParameter(4, Types.VARCHAR); // folio
+            cstmt.registerOutParameter(5, Types.TIMESTAMP); // fechaExpiracion
 
             cstmt.execute();
 
-            // Obtener el ID de la cita y el folio
-            int idCita = cstmt.getInt(3);
-            String folio = cstmt.getString(4);
+            // Mapear resultados a la entidad
+            emergencia.getCita().setIdCita(cstmt.getInt(3));
+            emergencia.setFolio(cstmt.getString(4));
+            emergencia.setFechaExpiracion(
+                    cstmt.getTimestamp(5).toLocalDateTime()
+            );
 
-            // Recuperar la cita completa con el médico
-            Cita citaCompleta = consultarCitaPorID(idCita); // Método que carga la relación con Médico
-            citaCompleta.getEmergencia().setFolio(folio);
+            return emergencia;
 
-            return citaCompleta;
+        } catch (SQLException ex) {
+            throw new PersistenciaClinicaException("Error al agendar emergencia: " + ex.getMessage());
         }
     }
-    }
+}

@@ -23,7 +23,7 @@ public class Cita {
     private List<Auditoria> auditorias;
     private CitaEmergencia emergencia;
     private CitaNormal normal;
-    private List<Consulta> consultas;
+    private Consulta consulta;
     
     public enum TipoCita {
         EMERGENCIA, PROGRAMADA
@@ -36,8 +36,6 @@ public class Cita {
         this.estado = estado;
         this.fechaHora = fechaHora;
         this.tipoCita = tipoCita;
-        this.consultas = new ArrayList<>();
-        this.auditorias = new ArrayList<>();
     }
 
     public Cita(Paciente paciente, Medico medico, EstadosCita estado, LocalDateTime fechaHora, TipoCita tipoCita) {
@@ -48,7 +46,7 @@ public class Cita {
         this.tipoCita = tipoCita;
     }
 
-    public Cita(int idCita, Paciente paciente, Medico medico, EstadosCita estado, LocalDateTime fechaHora, TipoCita tipoCita, List<Auditoria> auditorias, CitaNormal normal, List<Consulta> consultas) {
+    public Cita(int idCita, Paciente paciente, Medico medico, EstadosCita estado, LocalDateTime fechaHora, TipoCita tipoCita, List<Auditoria> auditorias, CitaNormal normal, Consulta consulta) {
         this.idCita = idCita;
         this.paciente = paciente;
         this.medico = medico;
@@ -57,10 +55,10 @@ public class Cita {
         this.tipoCita = tipoCita;
         this.auditorias = auditorias;
         this.normal = normal;
-        this.consultas = consultas;
+        this.consulta = consulta;
     }
 
-    public Cita(int idCita, Paciente paciente, Medico medico, EstadosCita estado, LocalDateTime fechaHora, TipoCita tipoCita, List<Auditoria> auditorias, CitaEmergencia emergencia, List<Consulta> consultas) {
+    public Cita(int idCita, Paciente paciente, Medico medico, EstadosCita estado, LocalDateTime fechaHora, TipoCita tipoCita, List<Auditoria> auditorias, CitaEmergencia emergencia, Consulta consulta) {
         this.idCita = idCita;
         this.paciente = paciente;
         this.medico = medico;
@@ -69,7 +67,7 @@ public class Cita {
         this.tipoCita = tipoCita;
         this.auditorias = auditorias;
         this.emergencia = emergencia;
-        this.consultas = consultas;
+        this.consulta = consulta;
     }
     
     
@@ -154,13 +152,15 @@ public class Cita {
         this.normal = normal;
     }
 
-    public List<Consulta> getConsultas() {
-        return consultas;
+    public Consulta getConsulta() {
+        return consulta;
     }
 
-    public void setConsultas(List<Consulta> consultas) {
-        this.consultas = consultas;
+    public void setConsulta(Consulta consulta) {
+        this.consulta = consulta;
     }
+
+    
     
     
 
