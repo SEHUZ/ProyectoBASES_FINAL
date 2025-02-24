@@ -15,7 +15,8 @@ import javax.swing.JOptionPane;
 public class dashboardPaciente extends javax.swing.JFrame {
 
     private PacienteViejoDTO paciente;
-
+    
+    private agendarCita agendarcita;
     private iniciarSesion ventanaInicio;
     private editarPerfilPaciente ventanaEditarPerfil;
 
@@ -40,6 +41,9 @@ public class dashboardPaciente extends javax.swing.JFrame {
 
     public void setVentanaEditarPerfil(editarPerfilPaciente ventanaEditarPerfil) {
         this.ventanaEditarPerfil = ventanaEditarPerfil;
+    }
+    public void setAgendarCita(agendarCita agendarcita) {
+        this.agendarcita = agendarcita;
     }
 
     /**
@@ -223,7 +227,10 @@ public class dashboardPaciente extends javax.swing.JFrame {
     }//GEN-LAST:event_BotonConsultaEmergenciaActionPerformed
 
     private void botonAgendarCitaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonAgendarCitaActionPerformed
-        // TODO add your handling code here:
+       
+
+
+// TODO add your handling code here:
     }//GEN-LAST:event_botonAgendarCitaActionPerformed
 
     private void botonHistorialConsultasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonHistorialConsultasActionPerformed
@@ -334,5 +341,7 @@ public class dashboardPaciente extends javax.swing.JFrame {
             System.out.println("El usuario canceló.");
         }
     }
+    
+    
 
 }
