@@ -14,11 +14,9 @@ import DAO.PacienteDAO;
 import DTO.CitaNuevaDTO;
 import DTO.CitaViejaDTO;
 import DTO.MedicoDTO;
-import DTO.citaEmergenciaNuevaDTO;
-import DTO.citaEmergenciaViejaDTO;
+import DTO.PacienteNuevoDTO;
 import Entidades.Cita;
 import Entidades.CitaEmergencia;
-import Entidades.EstadosCita;
 import Entidades.Medico;
 import Entidades.Paciente;
 import Exception.NegocioException;
@@ -26,9 +24,7 @@ import Exception.PersistenciaClinicaException;
 import Mappers.CitaEmergenciaMapper;
 import Mappers.CitaMapper;
 import Mappers.MedicoMapper;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
+import Mappers.PacienteMapper;
 import java.sql.SQLException;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -50,6 +46,7 @@ public class CitaBO {
 
     private final CitaMapper mapper = new CitaMapper();
     private final CitaEmergenciaMapper emergenciaMapper = new CitaEmergenciaMapper();
+    private final PacienteMapper pacienteMapper = new PacienteMapper();
 
     private final MedicoMapper medicoMapper = new MedicoMapper();
 
@@ -178,6 +175,25 @@ public class CitaBO {
         Cita citaencontrada = citaDAO.consultarCitaPorID(1);
         CitaViejaDTO citaviejaDTOnueva = mapper.toViejoDTO(citaencontrada);
         return citaviejaDTOnueva;
+    }
+    
+    
+    public List<CitaViejaDTO> consultarCitasProximasPaciente(PacienteNuevoDTO pacientenuevoDTO) throws NegocioException {
+        try {
+            // Convertir DTO a entidad
+            Paciente paciente = pacienteMapper.toEntityNuevo(pacientenuevoDTO);
+
+            // Llamar al DAO
+            List<Cita> citas = citaDAO.consultarCitasProximasPorPaciente(paciente);
+
+            // Convertir a DTO
+            return citas.stream()
+                    .map(mapper::toViejoDTO)
+                    .collect(Collectors.toList());
+
+        } catch (PersistenciaClinicaException ex) {
+            throw new NegocioException("Error al obtener citas próximas: " + ex.getMessage());
+        }
     }
 
 //    // Método 1: Actualizar estado de una cita
