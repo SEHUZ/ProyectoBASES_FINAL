@@ -272,27 +272,21 @@ public class CitaDAO implements ICitaDAO {
 
         try (Connection conn = conexion.crearConexion(); CallableStatement cstmt = conn.prepareCall(sql)) {
 
-            // 1. Parámetro IN
             cstmt.setInt(1, cita.getPaciente().getIdPaciente());  // p_idPaciente
 
-            // 2. Registrar parámetros OUT
             cstmt.registerOutParameter(2, Types.VARCHAR);   // p_folio
             cstmt.registerOutParameter(3, Types.INTEGER);   // p_idCita
             cstmt.registerOutParameter(4, Types.TIMESTAMP); // p_fechaExpiracion
 
-            // 3. Ejecutar el SP
             cstmt.execute();
 
-            // 4. Obtener los valores OUT
             String folio = cstmt.getString(2);
             int idCita = cstmt.getInt(3);
             Timestamp fechaExpiracion = cstmt.getTimestamp(4);
 
-            // 5. Asignar valores a la entidad Cita
             cita.setIdCita(idCita);
             cita.setTipoCita(Cita.TipoCita.EMERGENCIA);
 
-            // 6. Crear el objeto CitaEmergencia y asignarlo a la cita
             CitaEmergencia emergencia = new CitaEmergencia();
             emergencia.setFolio(folio);
 
@@ -300,8 +294,6 @@ public class CitaDAO implements ICitaDAO {
                 emergencia.setFechaExpiracion(fechaExpiracion.toLocalDateTime());
             }
 
-            // En tu entidad, si quieres enlazar bidireccionalmente:
-            // emergencia.setCita(cita);
             cita.setEmergencia(emergencia);
 
             return cita;
@@ -362,7 +354,6 @@ public class CitaDAO implements ICitaDAO {
             }
 
         } catch (SQLException ex) {
-            // Manejar error específico de "paciente no existe"
             if (ex.getErrorCode() == 1644) { // Código de error para SIGNAL SQLSTATE '45000'
                 throw new PersistenciaClinicaException("El paciente no existe");
             }
