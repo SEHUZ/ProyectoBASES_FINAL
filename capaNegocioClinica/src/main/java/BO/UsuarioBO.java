@@ -35,17 +35,26 @@ public class UsuarioBO {
         this.usuarioDAO = new UsuarioDAO(conexion);
     }
     
-    public String login(String user, String contrasenia) throws NegocioException {
+    public boolean loginPaciente(String user, String contrasenia) throws NegocioException {
         try {
-            String rol = usuarioDAO.login(user, contrasenia);
-            if(rol == null) {
-                return null;
-            }
+            boolean autenticado = usuarioDAO.loginPaciente(user, contrasenia);
             
-            return rol;
+            return autenticado;
         } catch (PersistenciaClinicaException ex) {
-            logger.log(Level.SEVERE, "Error al recuperar el rol de usuario", ex);
-            throw new NegocioException("Error al recuperar el rol de usuario: " + ex.getMessage());
+            logger.log(Level.SEVERE, "Error al autenticar el usuario", ex);
+            throw new NegocioException("Error al autenticar el usuario: " + ex.getMessage());
+        }
+        
+    }
+    
+    public boolean loginMedico(String user, String contrasenia) throws NegocioException {
+        try {
+            boolean autenticado = usuarioDAO.loginMedico(user, contrasenia);
+            
+            return autenticado;
+        } catch (PersistenciaClinicaException ex) {
+            logger.log(Level.SEVERE, "Error al autenticar el medico", ex);
+            throw new NegocioException("Error al autenticar el medico: " + ex.getMessage());
         }
         
     }
