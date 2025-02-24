@@ -19,6 +19,7 @@ public class dashboardPaciente extends javax.swing.JFrame {
     private agendarCita agendarcita;
     private iniciarSesion ventanaInicio;
     private editarPerfilPaciente ventanaEditarPerfil;
+    private agendarCita ventanaAgendarCita;
 
     /**
      * Creates new form dashboardPaciente
@@ -46,6 +47,8 @@ public class dashboardPaciente extends javax.swing.JFrame {
         this.agendarcita = agendarcita;
     }
 
+    
+    
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -227,10 +230,7 @@ public class dashboardPaciente extends javax.swing.JFrame {
     }//GEN-LAST:event_BotonConsultaEmergenciaActionPerformed
 
     private void botonAgendarCitaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonAgendarCitaActionPerformed
-       
-
-
-// TODO add your handling code here:
+       abrirVentanaCitas(paciente);
     }//GEN-LAST:event_botonAgendarCitaActionPerformed
 
     private void botonHistorialConsultasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonHistorialConsultasActionPerformed
@@ -323,6 +323,18 @@ public class dashboardPaciente extends javax.swing.JFrame {
         this.dispose();
     }
 
+    public void abrirVentanaCitas(PacienteViejoDTO paciente) {
+        if (ventanaAgendarCita == null) {
+            ventanaAgendarCita = new agendarCita(paciente);
+        }
+        
+        ventanaAgendarCita = new agendarCita(paciente);
+        ventanaAgendarCita.setVentanaPaciente(this);
+        ventanaAgendarCita.setLocationRelativeTo(null);
+        ventanaAgendarCita.setVisible(true);
+        this.dispose();
+    }
+    
     public void cerrarSesion() {
         int respuesta = JOptionPane.showConfirmDialog(
                 this,

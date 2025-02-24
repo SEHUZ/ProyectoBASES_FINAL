@@ -45,6 +45,13 @@ public class agendarCita extends javax.swing.JFrame {
     private final PacienteMapper pacienteMAPPER = new PacienteMapper();
     private final MedicoMapper mapper = new MedicoMapper();
 
+    private dashboardPaciente ventanaPaciente;
+    
+    public agendarCita(PacienteViejoDTO paciente) {
+        this.paciente = paciente;
+        initComponents();
+    }
+    
     public agendarCita() {
         initComponents();
     }
@@ -53,6 +60,10 @@ public class agendarCita extends javax.swing.JFrame {
         this.paciente = paciente;
     }
 
+    public void setVentanaPaciente(dashboardPaciente ventanaPaciente) {
+        this.ventanaPaciente = ventanaPaciente;
+    }
+    
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -230,15 +241,13 @@ public class agendarCita extends javax.swing.JFrame {
         try {
             agendarCita();
 // TODO add your handling code here:
-        } catch (NegocioException ex) {
-            Logger.getLogger(agendarCita.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (SQLException ex) {
+        } catch (NegocioException | SQLException ex) {
             Logger.getLogger(agendarCita.class.getName()).log(Level.SEVERE, null, ex);
         }
     }//GEN-LAST:event_botonAgendarCitaActionPerformed
 
     private void botonVolverActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonVolverActionPerformed
-        // TODO add your handling code here:
+        volverDashboardPaciente();
     }//GEN-LAST:event_botonVolverActionPerformed
 
     private void fieldHoraActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_fieldHoraActionPerformed
@@ -358,7 +367,6 @@ public class agendarCita extends javax.swing.JFrame {
         }
     }
 
-
     private void agendarCita() throws NegocioException, SQLException {
         // Obtener médico seleccionado
         LocalDateTime fechaHoraCita = obtenerFechaHoraSeleccionada();
@@ -432,5 +440,16 @@ public class agendarCita extends javax.swing.JFrame {
         } catch (ArrayIndexOutOfBoundsException | NumberFormatException e) {
             throw new NegocioException("Formato de hora inválido. Use HH:mm");
         }
+    }
+    
+    public void volverDashboardPaciente() {
+        if (ventanaPaciente == null) {
+            ventanaPaciente = new dashboardPaciente();
+        }
+
+        ventanaPaciente.setAgendarCita(this);
+        ventanaPaciente.setLocationRelativeTo(null);
+        ventanaPaciente.setVisible(true);
+        this.dispose();
     }
 }
