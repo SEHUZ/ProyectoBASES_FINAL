@@ -11,9 +11,7 @@ import java.time.LocalDate;
  *
  * @author sonic
  */
-public class citaEmergenciaNuevaDTO {
-    
-    
-    
+public class citaEmergenciaViejaDTO {
+
     
 }

@@ -46,7 +46,7 @@ public class CitaMapper {
         dto.setAuditorias(cita.getAuditorias());
         dto.setEmergencia(cita.getEmergencia());
         dto.setNormal(cita.getNormal());
-        dto.setConsultas(cita.getConsultas());
+        dto.setConsulta(cita.getConsulta());
         
         return dto;
     }

@@ -30,9 +30,9 @@ public class CitaViejaDTO {
     private List<Auditoria> auditorias;
     private CitaEmergencia emergencia;
     private CitaNormal normal;
-    private List<Consulta> consultas;
+    private Consulta consulta;
 
-    public CitaViejaDTO(int idCita, Paciente paciente, Medico medico, EstadosCita estado, LocalDateTime fechaHora, Cita.TipoCita tipoCita, List<Auditoria> auditorias, CitaEmergencia emergencia, CitaNormal normal, List<Consulta> consultas) {
+    public CitaViejaDTO(int idCita, Paciente paciente, Medico medico, EstadosCita estado, LocalDateTime fechaHora, Cita.TipoCita tipoCita, List<Auditoria> auditorias, CitaEmergencia emergencia, CitaNormal normal, Consulta consulta) {
         this.idCita = idCita;
         this.paciente = paciente;
         this.medico = medico;
@@ -42,10 +42,10 @@ public class CitaViejaDTO {
         this.auditorias = auditorias;
         this.emergencia = emergencia;
         this.normal = normal;
-        this.consultas = consultas;
+        this.consulta = consulta;
     }
 
-    public CitaViejaDTO(Paciente paciente, Medico medico, EstadosCita estado, LocalDateTime fechaHora, Cita.TipoCita tipoCita, List<Auditoria> auditorias, CitaEmergencia emergencia, CitaNormal normal, List<Consulta> consultas) {
+    public CitaViejaDTO(Paciente paciente, Medico medico, EstadosCita estado, LocalDateTime fechaHora, Cita.TipoCita tipoCita, List<Auditoria> auditorias, CitaEmergencia emergencia, CitaNormal normal, Consulta consulta) {
         this.paciente = paciente;
         this.medico = medico;
         this.estado = estado;
@@ -54,7 +54,7 @@ public class CitaViejaDTO {
         this.auditorias = auditorias;
         this.emergencia = emergencia;
         this.normal = normal;
-        this.consultas = consultas;
+        this.consulta = consulta;
     }
 
     public int getIdCita() {
@@ -129,12 +129,12 @@ public class CitaViejaDTO {
         this.normal = normal;
     }
 
-    public List<Consulta> getConsultas() {
-        return consultas;
+    public Consulta getConsulta() {
+        return consulta;
     }
 
-    public void setConsultas(List<Consulta> consultas) {
-        this.consultas = consultas;
+    public void setConsulta(Consulta consultas) {
+        this.consulta = consultas;
     }
 
     public CitaViejaDTO() {
@@ -144,7 +144,7 @@ public class CitaViejaDTO {
 
     @Override
     public String toString() {
-        return "CitaViejaDTO{" + "idCita=" + idCita + ", paciente=" + paciente + ", medico=" + medico + ", estado=" + estado + ", fechaHora=" + fechaHora + ", tipoCita=" + tipoCita + ", auditorias=" + auditorias + ", emergencia=" + emergencia + ", normal=" + normal + ", consultas=" + consultas + '}';
+        return "CitaViejaDTO{" + "idCita=" + idCita + ", paciente=" + paciente + ", medico=" + medico + ", estado=" + estado + ", fechaHora=" + fechaHora + ", tipoCita=" + tipoCita + ", auditorias=" + auditorias + ", emergencia=" + emergencia + ", normal=" + normal + ", consultas=" + consulta + '}';
     }
     
 }

@@ -29,10 +29,10 @@ public class CitaNuevaDTO {
     private List<Auditoria> auditorias;
     private CitaEmergencia emergencia;
     private CitaNormal normal;
-    private List<Consulta> consultas;
+    private Consulta consulta;
       
 
-    public CitaNuevaDTO(Paciente paciente, Medico medico, EstadosCita estado, LocalDateTime fechaHora, TipoCita tipoCita, List<Auditoria> auditorias, CitaEmergencia emergencia, CitaNormal normal, List<Consulta> consultas) {
+    public CitaNuevaDTO(Paciente paciente, Medico medico, EstadosCita estado, LocalDateTime fechaHora, TipoCita tipoCita, List<Auditoria> auditorias, CitaEmergencia emergencia, CitaNormal normal, Consulta consulta) {
         this.paciente = paciente;
         this.medico = medico;
         this.estado = estado;
@@ -41,10 +41,10 @@ public class CitaNuevaDTO {
         this.auditorias = auditorias;
         this.emergencia = emergencia;
         this.normal = normal;
-        this.consultas = consultas;
+        this.consulta = consulta;
     }
 
-    public CitaNuevaDTO(Paciente paciente, Medico medico, EstadosCita estado, LocalDateTime fechaHora, TipoCita tipoCita, List<Auditoria> auditorias, CitaNormal normal, List<Consulta> consultas) {
+    public CitaNuevaDTO(Paciente paciente, Medico medico, EstadosCita estado, LocalDateTime fechaHora, TipoCita tipoCita, List<Auditoria> auditorias, CitaNormal normal, Consulta consulta) {
         this.paciente = paciente;
         this.medico = medico;
         this.estado = estado;
@@ -52,10 +52,10 @@ public class CitaNuevaDTO {
         this.tipoCita = tipoCita;
         this.auditorias = auditorias;
         this.normal = normal;
-        this.consultas = consultas;
+        this.consulta = consulta;
     }
 
-    public CitaNuevaDTO(Paciente paciente, Medico medico, EstadosCita estado, LocalDateTime fechaHora, TipoCita tipoCita, List<Auditoria> auditorias, CitaEmergencia emergencia, List<Consulta> consultas) {
+    public CitaNuevaDTO(Paciente paciente, Medico medico, EstadosCita estado, LocalDateTime fechaHora, TipoCita tipoCita, List<Auditoria> auditorias, CitaEmergencia emergencia, Consulta consulta) {
         this.paciente = paciente;
         this.medico = medico;
         this.estado = estado;
@@ -63,30 +63,30 @@ public class CitaNuevaDTO {
         this.tipoCita = tipoCita;
         this.auditorias = auditorias;
         this.emergencia = emergencia;
-        this.consultas = consultas;
+        this.consulta = consulta;
     }
 
-    public CitaNuevaDTO(Paciente paciente, Medico medico, EstadosCita estado, LocalDateTime fechaHora, TipoCita tipoCita, CitaEmergencia emergencia, List<Consulta> consultas) {
+    public CitaNuevaDTO(Paciente paciente, Medico medico, EstadosCita estado, LocalDateTime fechaHora, TipoCita tipoCita, CitaEmergencia emergencia, Consulta consulta) {
         this.paciente = paciente;
         this.medico = medico;
         this.estado = estado;
         this.fechaHora = fechaHora;
         this.tipoCita = tipoCita;
         this.emergencia = emergencia;
-        this.consultas = consultas;
+        this.consulta = consulta;
     }
     
     
     
 
-    public CitaNuevaDTO(Paciente paciente, Medico medico, EstadosCita estado, LocalDateTime fechaHora, TipoCita tipoCita, CitaNormal normal, List<Consulta> consultas) {
+    public CitaNuevaDTO(Paciente paciente, Medico medico, EstadosCita estado, LocalDateTime fechaHora, TipoCita tipoCita, CitaNormal normal, Consulta consulta) {
         this.paciente = paciente;
         this.medico = medico;
         this.estado = estado;
         this.fechaHora = fechaHora;
         this.tipoCita = tipoCita;
         this.normal = normal;
-        this.consultas = consultas;
+        this.consulta = consulta;
     }
     
 
@@ -157,13 +157,28 @@ public class CitaNuevaDTO {
         this.normal = normal;
     }
 
-    public List<Consulta> getConsultas() {
-        return consultas;
+    public Consulta getConsultas() {
+        return consulta;
     }
 
-    public void setConsultas(List<Consulta> consultas) {
-        this.consultas = consultas;
+    public void setConsultas(Consulta consulta) {
+        this.consulta = consulta;
     }
+
+    public Consulta getConsulta() {
+        return consulta;
+    }
+
+    public void setConsulta(Consulta consulta) {
+        this.consulta = consulta;
+    }
+
+    @Override
+    public String toString() {
+        return "CitaNuevaDTO{" + "paciente=" + paciente + ", medico=" + medico + ", estado=" + estado + ", fechaHora=" + fechaHora + ", tipoCita=" + tipoCita + ", auditorias=" + auditorias + ", emergencia=" + emergencia + ", normal=" + normal + ", consulta=" + consulta + '}';
+    }
+    
+    
     
     
 
