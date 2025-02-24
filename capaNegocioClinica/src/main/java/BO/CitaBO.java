@@ -132,43 +132,41 @@ public class CitaBO {
         }
     }
     
-    public CitaViejaDTO agendarCitaEmergencia(CitaNuevaDTO citanuevaDTO) throws NegocioException, PersistenciaClinicaException {
+    public CitaViejaDTO agendarCitaEmergencia(CitaNuevaDTO citanuevaDTO) throws NegocioException, PersistenciaClinicaException, SQLException {
         try {
-            // 1. Convertir el DTO a la entidad de dominio
-            Cita cita = new Cita();
-            cita.setPaciente(citanuevaDTO.getPaciente());
-            cita.setMedico(citanuevaDTO.getMedico());
-            cita.setEstado(citanuevaDTO.getEstado());
-            cita.setFechaHora(citanuevaDTO.getFechaHora());
-            cita.setTipoCita(citanuevaDTO.getTipoCita()); 
-            // Ojo: si es emergencia, setTipoCita(Cita.TipoCita.EMERGENCIA)
-
-            // Para emergencias, crea también el objeto CitaEmergencia
-            // (aunque la SP genera folio y fechaExpiración, puedes setear datos iniciales si hace falta)
+            // Verificacion de la hora y fecha seleccionadas
+            if (citanuevaDTO.getFechaHora() == null || citanuevaDTO.getFechaHora().isBefore(LocalDateTime.now())) {
+                throw new NegocioException("Fecha y hora inválidas");
+            }
+            
+            // Verificacion del tipo de cita
             if (citanuevaDTO.getTipoCita() == Cita.TipoCita.EMERGENCIA) {
                 CitaEmergencia emergencia = new CitaEmergencia();
-                // Si el DTO trae algo que quieras conservar
-                // emergencia.setFolio(citaNuevaDTO.getEmergencia().getFolio()); // Normalmente se genera en SP
+            }
+
+            Cita cita = mapper.toEntityNuevo(citanuevaDTO);
+
+            //Validar la existencia del paciente
+            if (pacienteDAO.consultarPacientePorID(cita.getPaciente().getIdPaciente()) == null) {
+                throw new NegocioException ("Paciente no registrado");
+                
+            }
+
+            if (citanuevaDTO.getTipoCita() == Cita.TipoCita.EMERGENCIA) {
+                CitaEmergencia emergencia = new CitaEmergencia();
+
                 cita.setEmergencia(emergencia);
             }
 
-            // 2. Invocar el DAO para agendar la cita de emergencia
-            //    Este método ya vimos que retorna la entidad 'Cita' con id, folio, expiración, etc.
             Cita citaAgendada = citaDAO.agendarCitaEmergencia(cita);
 
-            // 3. Convertir la entidad resultante en un CitaViejaDTO
-            
-            CitaViejaDTO citaviejaDTO = mapper.toViejoDTO(cita);
-
-
-            // 4. Retornar el DTO final
-            return citaviejaDTO;
+            return mapper.toViejoDTO(citaAgendada);
 
         } catch (SQLException e) {
-            // En caso de error, encapsulamos la excepción en nuestra excepción de negocio
             throw new NegocioException("Error al agendar la cita de emergencia: " + e.getMessage(), e);
         }
     }
+    
     
     
     public CitaViejaDTO consultarCitaPorsuID(int idCita) throws NegocioException, PersistenciaClinicaException {
