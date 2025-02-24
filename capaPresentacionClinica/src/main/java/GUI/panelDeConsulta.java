@@ -4,7 +4,7 @@
  */
 package GUI;
 
-import BO.ConsultaBO;
+//import BO.ConsultaBO;
 import DTO.CitaNuevaDTO;
 import DTO.CitaViejaDTO;
 import DTO.ConsultaNuevaDTO;
@@ -21,15 +21,15 @@ import javax.swing.JOptionPane;
  */
 public class panelDeConsulta extends javax.swing.JFrame {
     
-    private ConsultaBO consultaBO;
-    private CitaViejaDTO citaActual;
-    private dashBoardMedico dashboard;
-    
-    public panelDeConsulta(CitaViejaDTO cita) {
-        initComponents();
-        this.consultaBO = DependencyInjector.crearConsultaBO();
-        this.citaActual = cita;
-    }
+//    private ConsultaBO consultaBO;
+//    private CitaViejaDTO citaActual;
+//    private dashBoardMedico dashboard;
+//    
+//    public panelDeConsulta(CitaViejaDTO cita) {
+//        initComponents();
+//        this.consultaBO = DependencyInjector.crearConsultaBO();
+//        this.citaActual = cita;
+//    }
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -196,42 +196,42 @@ public class panelDeConsulta extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     // End of variables declaration//GEN-END:variables
-    private void terminarConsulta() throws NegocioException, SQLException, PersistenciaClinicaException {
-        try {
-            // Validar campos requeridos
-            if (fieldNombre.getText().isBlank() || fieldNombre1.getText().isBlank()) {
-                JOptionPane.showMessageDialog(this, "Diagnóstico y tratamiento son requeridos", "Error", JOptionPane.ERROR_MESSAGE);
-                return;
-            }
-
-            // Crear DTO
-            ConsultaNuevaDTO consultaDTO = new ConsultaNuevaDTO();
-            consultaDTO.setDiagnostico(fieldNombre.getText());
-            consultaDTO.setTratamiento(fieldNombre1.getText());
-            consultaDTO.setFechaHora(LocalDateTime.now());
-            
-            // Asignar cita
-            CitaViejaDTO citaDTO = new CitaViejaDTO();
-            citaDTO.setIdCita(citaActual.getIdCita());
-            
-            
-
-            // Registrar consulta
-            boolean resultado = consultaBO.registrarConsulta(consultaDTO);
-
-            if (resultado) {
-                JOptionPane.showMessageDialog(this, "Consulta registrada exitosamente");
-                this.dispose();
-                if (dashboard != null) {
-
-                    dashboard.setVisible(true);
-                }
-            }
-        } catch (NegocioException | SQLException e) {
-            JOptionPane.showMessageDialog(this, e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
-        }
-    }                                  
-
-
+//    private void terminarConsulta() throws NegocioException, SQLException, PersistenciaClinicaException {
+//        try {
+//            // Validar campos requeridos
+//            if (fieldNombre.getText().isBlank() || fieldNombre1.getText().isBlank()) {
+//                JOptionPane.showMessageDialog(this, "Diagnóstico y tratamiento son requeridos", "Error", JOptionPane.ERROR_MESSAGE);
+//                return;
+//            }
+//
+//            // Crear DTO
+//            ConsultaNuevaDTO consultaDTO = new ConsultaNuevaDTO();
+//            consultaDTO.setDiagnostico(fieldNombre.getText());
+//            consultaDTO.setTratamiento(fieldNombre1.getText());
+//            consultaDTO.setFechaHora(LocalDateTime.now());
+//            
+//            // Asignar cita
+//            CitaViejaDTO citaDTO = new CitaViejaDTO();
+//            citaDTO.setIdCita(citaActual.getIdCita());
+//            
+//            
+//
+//            // Registrar consulta
+//            boolean resultado = consultaBO.registrarConsulta(consultaDTO);
+//
+//            if (resultado) {
+//                JOptionPane.showMessageDialog(this, "Consulta registrada exitosamente");
+//                this.dispose();
+//                if (dashboard != null) {
+//
+//                    dashboard.setVisible(true);
+//                }
+//            }
+//        } catch (NegocioException | SQLException e) {
+//            JOptionPane.showMessageDialog(this, e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+//        }
+//    }                                  
+//
+//
 
 }
