@@ -44,53 +44,36 @@ public class MedicoBO {
         this.medicoDAO = new MedicoDAO(conexion);
     }
 
-    public boolean registrarMedico(MedicoNuevoDTO medicoNuevoDTO) throws NegocioException, SQLException, PersistenciaClinicaException {
-        // Verificar que el medico no sea nulo.
-        if (medicoNuevoDTO == null) {
-            throw new NegocioException("El paciente debe tener todos sus datos.");
-        }
-
-        // Verificar que ninguno de los datos ingresados sea nulo.
-        if (medicoNuevoDTO.getNombres() == null || medicoNuevoDTO.getApellidoPaterno() == null
-                || medicoNuevoDTO.getUsuario().getUser() == null || medicoNuevoDTO.getUsuario().getContrasenia() == null
-                || medicoNuevoDTO.getUsuario().getRol() == null || medicoNuevoDTO.getUsuario() == null
-                || medicoNuevoDTO.getEspecialidad() == null || medicoNuevoDTO.getCedula() == null) {
-            throw new NegocioException("Los datos del medico no pueden estar vacios.");
-        }
-
-        // Verificar que no existan espacios en blanco.
-        if (medicoNuevoDTO.getNombres().trim().isEmpty() || medicoNuevoDTO.getApellidoPaterno().trim().isEmpty()
-                || medicoNuevoDTO.getUsuario().getUser().trim().isEmpty() || medicoNuevoDTO.getUsuario().getContrasenia().trim().isEmpty()
-                || medicoNuevoDTO.getUsuario().getRol().trim().isEmpty() || medicoNuevoDTO.getEspecialidad().trim().isEmpty()
-                || medicoNuevoDTO.getCedula().trim().isEmpty()) {
-            throw new NegocioException("Los datos del medico no pueden estar vacios o con espacios en blanco.");
-        }
-
-        // Verificar si el nombre de usuario ya ha sido registrado.
-        if (medicoDAO.consultarMedicoPorUsuario(medicoNuevoDTO.getUsuario().getUser()) != null) {
-            throw new NegocioException("El nombre de usuario ingresado ya esta registrado.");
-        }
-
-        // Encriptar la contraseña
-        String contraseña = contraseñaHash(medicoNuevoDTO.getUsuario().getContrasenia());
-        medicoNuevoDTO.getUsuario().setContrasenia(contraseña);
-
-        // Se convierte el medicoNuevoDTO a entidad Medico
-        Medico medicoEntity = mapper.toEntity(medicoNuevoDTO);
-
+    public boolean actualizarEstadoMedico(MedicoDTO medicoDTO) throws NegocioException {
         try {
-            // Se manda al metodo registrarPaciente de PacienteDAO
-            Medico pacienteRegistrado = medicoDAO.registrarMedico(medicoEntity);
-            return pacienteRegistrado != null;
-        } catch (PersistenciaClinicaException | SQLException e) {
-            logger.log(Level.SEVERE, "Error en el registro del medico.", e);
-            throw new NegocioException("Error en el registro del medico.");
+            // Convertimos el DTO a entidad para trabajar con el DAO
+            Medico medico = mapper.toEntityDTO(medicoDTO);
+            boolean actualizado = medicoDAO.ActualizarEstado(medico);
+            // Se actualiza el DTO con el nuevo estado
+            medicoDTO.setActivo(medico.isActivo());
+            return actualizado;
+        } catch (PersistenciaClinicaException ex) {
+            throw new NegocioException("Error al actualizar estado del médico: " + ex.getMessage());
         }
     }
 
     public MedicoDTO buscarMedicoPorUsuario(String user) throws NegocioException {
         try {
             Medico medico = medicoDAO.consultarMedicoPorUsuario(user);
+            if (medico == null) {
+                return null;
+            }
+
+            return mapper.toDTO(medico);
+        } catch (PersistenciaClinicaException ex) {
+            logger.log(Level.SEVERE, "Error al recuperar los datos del medico", ex);
+            throw new NegocioException("Error al recuperar los datos del medico: " + ex.getMessage());
+        }
+    }
+    
+    public MedicoDTO buscarMedicoParaAlta(String user) throws NegocioException {
+        try {
+            Medico medico = medicoDAO.consultarMedicoParaAlta(user);
             if (medico == null) {
                 return null;
             }
@@ -109,7 +92,7 @@ public class MedicoBO {
 
         try {
             System.out.println("MedicoDTO recibido: " + medicoDTO);
-            Medico medico = mapper.toEntity(medicoDTO);
+            Medico medico = mapper.toEntityDTO(medicoDTO);
             System.out.println("Medico convertido a entidad: " + medico);
 
             if (medico == null || medico.getIdMedico() <= 0) {
@@ -126,19 +109,6 @@ public class MedicoBO {
 
         } catch (PersistenciaClinicaException ex) {
             throw new NegocioException("Error al obtener horarios: " + ex.getMessage());
-        }
-    }
-
-    public boolean actualizarEstadoMedico(MedicoDTO medicoDTO) throws NegocioException {
-        try {
-            // Convertimos el DTO a dominio para trabajar con el DAO
-            Medico medico = mapper.toEntity(medicoDTO);
-            boolean actualizado = medicoDAO.ActualizarEstado(medico);
-            // Se actualiza el DTO con el nuevo estado
-            medicoDTO.setActivo(medico.isActivo());
-            return actualizado;
-        } catch (PersistenciaClinicaException ex) {
-            throw new NegocioException("Error al actualizar estado del médico: " + ex.getMessage());
         }
     }
 

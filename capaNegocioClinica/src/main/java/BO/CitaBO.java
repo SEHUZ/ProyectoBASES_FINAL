@@ -113,7 +113,7 @@ public class CitaBO {
             }
 
             // 2. Convertir DTO a entidad
-            Medico medico = medicoMapper.toEntity(medicoDTO); // Asumiendo que tienes un MédicoMapper
+            Medico medico = medicoMapper.toEntityDTO(medicoDTO); // Asumiendo que tienes un MédicoMapper
 
             // 3. Verificar existencia del médico
             Medico medicoExistente = medicoDAO.consultarMedicoPorID(medico.getIdMedico());

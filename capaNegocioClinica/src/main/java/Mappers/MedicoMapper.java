@@ -30,7 +30,7 @@ public class MedicoMapper {
         );
     }
 
-    public Medico toEntity(MedicoNuevoDTO medicoNuevoDTO) {
+    public Medico toEntityNuevo(MedicoNuevoDTO medicoNuevoDTO) {
         if (medicoNuevoDTO == null) {
             return null;
         }
@@ -44,25 +44,8 @@ public class MedicoMapper {
                 medicoNuevoDTO.isActivo()
         );
     }
-
-    public Medico toEntityNuevo(MedicoNuevoDTO mediconuevoDTO) {
-        if (mediconuevoDTO == null) {
-            return null;
-        }
-        return new Medico(
-                mediconuevoDTO.getUsuario(),
-                mediconuevoDTO.getApellidoMaterno(),
-                mediconuevoDTO.getApellidoMaterno(),
-                mediconuevoDTO.getCedula(),
-                mediconuevoDTO.getEspecialidad(),
-                mediconuevoDTO.getNombres(),
-                mediconuevoDTO.isActivo()
-        );
-    }
         
-        
-
-    public Medico toEntity(MedicoDTO medicoDTO) {
+    public Medico toEntityDTO(MedicoDTO medicoDTO) {
         if (medicoDTO == null) {
             return null;
         }
