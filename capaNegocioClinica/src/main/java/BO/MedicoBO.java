@@ -127,6 +127,21 @@ public class MedicoBO {
             throw new NegocioException("Error al consultar médicos por especialidad: " + ex.getMessage());
         }
     }
+    
+    public MedicoDTO consultarUnMedicoPorEspecialidad(String Especialidad) throws NegocioException {
+        try {
+            // Se obtiene el medico
+            Medico medico = medicoDAO.consultarUnMedicoPorEspecialidad(Especialidad);
+            // Se convierte el medico a medicoDTO
+            MedicoDTO medicoEncontrado = mapper.toDTO(medico);
+            
+            return medicoEncontrado;
+            
+        } catch (PersistenciaClinicaException ex) {
+            logger.log(Level.SEVERE, "Error al consultar médicos por especialidad", ex);
+            throw new NegocioException("Error al consultar médicos por especialidad: " + ex.getMessage());
+        }
+    }
 
     public MedicoDTO consultarMedicoPorID(int idMedico) throws NegocioException {
         try {

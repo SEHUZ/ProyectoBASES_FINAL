@@ -61,7 +61,7 @@ public class CitaBO {
             // Validación básica de fecha
             if (citaNuevaDTO.getFechaHora() == null || citaNuevaDTO.getFechaHora().isBefore(LocalDateTime.now())) {
                 throw new NegocioException("Fecha y hora inválidas");
-            }
+           }
 
             Cita cita = mapper.toEntityNuevo(citaNuevaDTO);
 
@@ -135,18 +135,12 @@ public class CitaBO {
     public CitaViejaDTO agendarCitaEmergencia(CitaNuevaDTO citanuevaDTO) throws NegocioException, PersistenciaClinicaException, SQLException {
         try {
             // Verificacion de la hora y fecha seleccionadas
-            if (citanuevaDTO.getFechaHora() == null || citanuevaDTO.getFechaHora().isBefore(LocalDateTime.now())) {
-                throw new NegocioException("Fecha y hora inválidas");
-            }
-            
-            // Verificacion del tipo de cita
-            if (citanuevaDTO.getTipoCita() == Cita.TipoCita.EMERGENCIA) {
-                CitaEmergencia emergencia = new CitaEmergencia();
-            }
+            //if (citanuevaDTO.getFechaHora() == null || citanuevaDTO.getFechaHora().isBefore(LocalDateTime.now())) {
+              //  throw new NegocioException("Fecha y hora inválidas");
+            //}
 
             Cita cita = mapper.toEntityNuevo(citanuevaDTO);
 
-            //Validar la existencia del paciente
             if (pacienteDAO.consultarPacientePorID(cita.getPaciente().getIdPaciente()) == null) {
                 throw new NegocioException ("Paciente no registrado");
                 
