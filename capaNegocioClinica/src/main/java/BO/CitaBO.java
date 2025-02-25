@@ -61,7 +61,7 @@ public class CitaBO {
             // Validación básica de fecha
             if (citaNuevaDTO.getFechaHora() == null || citaNuevaDTO.getFechaHora().isBefore(LocalDateTime.now())) {
                 throw new NegocioException("Fecha y hora inválidas");
-           }
+            }
 
             Cita cita = mapper.toEntityNuevo(citaNuevaDTO);
 
@@ -131,19 +131,14 @@ public class CitaBO {
             throw new NegocioException("Error al obtener las citas: " + ex.getMessage());
         }
     }
-    
+
     public CitaViejaDTO agendarCitaEmergencia(CitaNuevaDTO citanuevaDTO) throws NegocioException, PersistenciaClinicaException, SQLException {
         try {
-            // Verificacion de la hora y fecha seleccionadas
-            //if (citanuevaDTO.getFechaHora() == null || citanuevaDTO.getFechaHora().isBefore(LocalDateTime.now())) {
-              //  throw new NegocioException("Fecha y hora inválidas");
-            //}
-
             Cita cita = mapper.toEntityNuevo(citanuevaDTO);
 
             if (pacienteDAO.consultarPacientePorID(cita.getPaciente().getIdPaciente()) == null) {
-                throw new NegocioException ("Paciente no registrado");
-                
+                throw new NegocioException("Paciente no registrado");
+
             }
 
             if (citanuevaDTO.getTipoCita() == Cita.TipoCita.EMERGENCIA) {
@@ -160,16 +155,13 @@ public class CitaBO {
             throw new NegocioException("Error al agendar la cita de emergencia: " + e.getMessage(), e);
         }
     }
-    
-    
-    
+
     public CitaViejaDTO consultarCitaPorsuID(int idCita) throws NegocioException, PersistenciaClinicaException {
         Cita citaencontrada = citaDAO.consultarCitaPorID(1);
         CitaViejaDTO citaviejaDTOnueva = mapper.toViejoDTO(citaencontrada);
         return citaviejaDTOnueva;
     }
-    
-    
+
     public List<CitaViejaDTO> consultarCitasProximasPaciente(PacienteNuevoDTO pacientenuevoDTO) throws NegocioException {
         try {
             // Convertir DTO a entidad

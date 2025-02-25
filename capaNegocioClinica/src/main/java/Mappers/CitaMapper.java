@@ -16,21 +16,20 @@ import Entidades.Paciente;
  * @author sonic
  */
 public class CitaMapper {
-    
+
     public Cita toEntityNuevo(CitaNuevaDTO dto) {
         if (dto == null) {
             return null;
         }
         return new Cita(
-            dto.getPaciente(),
-            dto.getMedico(),
-            dto.getEstado(),
-            dto.getFechaHora(),
-            dto.getTipoCita()
-               
+                dto.getPaciente(),
+                dto.getMedico(),
+                dto.getEstado(),
+                dto.getFechaHora(),
+                dto.getTipoCita()
         );
     }
-    
+
     // Convertir de Paciente a PacienteViejoDTO
     public CitaViejaDTO toViejoDTO(Cita cita) {
         if (cita == null) {
@@ -47,7 +46,7 @@ public class CitaMapper {
         dto.setEmergencia(cita.getEmergencia());
         dto.setNormal(cita.getNormal());
         dto.setConsulta(cita.getConsulta());
-        
+
         return dto;
     }
 
@@ -57,15 +56,13 @@ public class CitaMapper {
             return null;
         }
         return new Cita(
-            dto.getIdCita(),
-            dto.getPaciente(),
-            dto.getMedico(),
-            dto.getEstado(),
-            dto.getFechaHora(),
-            dto.getTipoCita()
-                
-
+                dto.getIdCita(),
+                dto.getPaciente(),
+                dto.getMedico(),
+                dto.getEstado(),
+                dto.getFechaHora(),
+                dto.getTipoCita()
         );
     }
-    
+
 }
