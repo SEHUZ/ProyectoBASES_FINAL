@@ -316,6 +316,11 @@ public class agendarCita extends javax.swing.JFrame {
 
         try {
             List<MedicoDTO> medicos = medicoBO.consultarMedicoPorEspecialidad(especialidad);
+            if (medicos.isEmpty()) {
+                JOptionPane.showMessageDialog(this, "La especialidad ingresada no existe");
+                return;
+            }
+
             jComboBox1.removeAllItems();
             for (MedicoDTO medico : medicos) {
                 jComboBox1.addItem(medico.getIdMedico() + " " + medico.getNombres() + " " + medico.getApellidoPaterno());
@@ -369,9 +374,19 @@ public class agendarCita extends javax.swing.JFrame {
     }
 
     private void agendarCita() throws NegocioException, SQLException {
-        // Obtener médico seleccionado
+        // Obtener médico seleccionado   
+        if (fieldHora.getText().isBlank() || fieldEspecialidad.getText().isBlank()) {
+            JOptionPane.showMessageDialog(this, "Llene los campos requeridos.");
+            return; // Salir sin actualizar
+        }
+
         LocalDateTime fechaHoraCita = obtenerFechaHoraSeleccionada();
 
+        if (fechaHoraCita == null) {
+            JOptionPane.showMessageDialog(this, "Verifique correctamente fecha y hora seleccionados. Formato para hora: HH:mm");
+            return; // Salir sin actualizar
+        }
+        
         String seleccionado = (String) jComboBox1.getSelectedItem();
         String[] partes = seleccionado.split(" ", 2); // Dividir solo en dos partes: ID y resto
         int idMedico = Integer.parseInt(partes[0]); // Convertir la primera parte a entero
@@ -379,11 +394,6 @@ public class agendarCita extends javax.swing.JFrame {
 
         if (medicoSELECCIONADO == null) {
             JOptionPane.showMessageDialog(this, "Seleccione un médico");
-            return;
-        }
-
-        if (fechaHoraCita == null) {
-            JOptionPane.showMessageDialog(this, "Seleccione una fecha y hora");
             return;
         }
 
@@ -398,17 +408,17 @@ public class agendarCita extends javax.swing.JFrame {
             CitaViejaDTO citaAgendada = citaBO.agendarCita(citaDTO);
 
             JOptionPane.showMessageDialog(this, "Cita agendada con éxito");
-            
+
         } catch (NegocioException ex) {
             JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
         }
     }
 
-    private LocalDateTime obtenerFechaHoraSeleccionada() throws NegocioException {
+    private LocalDateTime obtenerFechaHoraSeleccionada() {
         // 1. Obtener fecha del JCalendar (JDateChooser)
         Date fechaSeleccionada = jCalendar1.getDate();
         if (fechaSeleccionada == null) {
-            throw new NegocioException("Seleccione una fecha");
+            return null;
         }
 
         // 2. Convertir Date a LocalDate
@@ -419,7 +429,7 @@ public class agendarCita extends javax.swing.JFrame {
         // 3. Obtener hora del ComboBox/TextField
         String horaStr = fieldHora.getText().trim();
         if (!horaStr.matches("^([0-1]?\\d|2[0-3]):[0-5]\\d$")) { // Formato HH:mm
-            throw new NegocioException("Formato de hora inválido. Use HH:mm (ej: 09:30)");
+            return null;
         }
 
         // 4. Parsear la hora
@@ -430,7 +440,7 @@ public class agendarCita extends javax.swing.JFrame {
 
             // Validar valores numéricos
             if (horas < 0 || horas > 23 || minutos < 0 || minutos > 59) {
-                throw new NegocioException("Hora inválida: " + horaStr);
+                return null;
             }
 
             LocalTime hora = LocalTime.of(horas, minutos);
@@ -439,8 +449,10 @@ public class agendarCita extends javax.swing.JFrame {
             return LocalDateTime.of(fecha, hora);
 
         } catch (ArrayIndexOutOfBoundsException | NumberFormatException e) {
-            throw new NegocioException("Formato de hora inválido. Use HH:mm");
+            JOptionPane.showMessageDialog(this, "Error inesperado al validar el horario/hora seleccionados", "Error", JOptionPane.ERROR_MESSAGE);
         }
+        
+        return null;
     }
 
     public void volverDashboardPaciente() {

@@ -33,15 +33,19 @@ public class agendarCitaEmergencia extends javax.swing.JFrame {
     private final PacienteMapper pacienteMAPPER = new PacienteMapper();
     private final MedicoMapper mapper = new MedicoMapper();
 
-    /**
-     * Creates new form agendarCitaEmergencia
-     */
+    private dashboardPaciente ventanaPaciente;
+
+    public agendarCitaEmergencia(PacienteViejoDTO paciente) {
+        this.paciente = paciente;
+        initComponents();
+    }
+
     public agendarCitaEmergencia() {
         initComponents();
     }
 
-    public void setPaciente(PacienteViejoDTO paciente) {
-        this.paciente = paciente;
+    public void setVentanaPaciente(dashboardPaciente ventanaPaciente) {
+        this.ventanaPaciente = ventanaPaciente;
     }
 
     /**
@@ -138,7 +142,7 @@ public class agendarCitaEmergencia extends javax.swing.JFrame {
     private void botonAgendarCitaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonAgendarCitaActionPerformed
         try {
             agendarCitaDeEmergencia();
-            
+
             // TODO add your handling code here:
         } catch (NegocioException ex) {
             Logger.getLogger(agendarCitaEmergencia.class.getName()).log(Level.SEVERE, null, ex);
@@ -150,7 +154,7 @@ public class agendarCitaEmergencia extends javax.swing.JFrame {
     }//GEN-LAST:event_botonAgendarCitaActionPerformed
 
     private void botonVolverActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonVolverActionPerformed
-        // TODO add your handling code here:
+        volverDashboardPaciente();
     }//GEN-LAST:event_botonVolverActionPerformed
 
     /**
@@ -231,6 +235,17 @@ private void agendarCitaDeEmergencia() throws NegocioException, SQLException, Pe
             JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
         }
 
+    }
+
+    public void volverDashboardPaciente() {
+        if (ventanaPaciente == null) {
+            ventanaPaciente = new dashboardPaciente();
+        }
+
+        ventanaPaciente.setAgendarCitaEmergencia(this);
+        ventanaPaciente.setLocationRelativeTo(null);
+        ventanaPaciente.setVisible(true);
+        this.dispose();
     }
 
 }

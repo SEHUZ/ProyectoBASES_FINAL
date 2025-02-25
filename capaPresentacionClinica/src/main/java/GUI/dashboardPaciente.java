@@ -16,14 +16,16 @@ public class dashboardPaciente extends javax.swing.JFrame {
 
     private PacienteViejoDTO paciente;
 
-    private agendarCita agendarcita;
+    private agendarCitaEmergencia agendarCitaEmergencia;
+    private agendarCita agendarCita;
     private iniciarSesion ventanaInicio;
     private editarPerfilPaciente ventanaEditarPerfil;
 
+    private agendarCitaEmergencia ventanaAgendarCitaEmergencia;
     private agendarCita ventanaAgendarCita;
     private listaCitasProximas ventanaCitasProximas;
     private historialConsultas ventanaHistorialConsultas;
-    
+
     /**
      * Creates new form dashboardPaciente
      *
@@ -47,8 +49,12 @@ public class dashboardPaciente extends javax.swing.JFrame {
         this.ventanaEditarPerfil = ventanaEditarPerfil;
     }
 
+    public void setAgendarCitaEmergencia(agendarCitaEmergencia ventanaAgendarCitaEmergencia) {
+        this.ventanaAgendarCitaEmergencia = ventanaAgendarCitaEmergencia;
+    }
+
     public void setAgendarCita(agendarCita agendarcita) {
-        this.agendarcita = agendarcita;
+        this.agendarCita = agendarcita;
     }
 
     public void setVentanaCitasProximas(listaCitasProximas ventanaCitasProximas) {
@@ -58,7 +64,7 @@ public class dashboardPaciente extends javax.swing.JFrame {
     public void setVentanaHistorialConsultas(historialConsultas ventanaHistorialConsultas) {
         this.ventanaHistorialConsultas = ventanaHistorialConsultas;
     }
-    
+
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -236,7 +242,7 @@ public class dashboardPaciente extends javax.swing.JFrame {
     }//GEN-LAST:event_botonCerrarSesionActionPerformed
 
     private void BotonConsultaEmergenciaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BotonConsultaEmergenciaActionPerformed
-        // TODO add your handling code here:
+        abrirVentanaCitaEmergencia(paciente);
     }//GEN-LAST:event_BotonConsultaEmergenciaActionPerformed
 
     private void botonAgendarCitaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonAgendarCitaActionPerformed
@@ -330,6 +336,18 @@ public class dashboardPaciente extends javax.swing.JFrame {
         ventanaEditarPerfil.setVentanaPaciente(this);
         ventanaEditarPerfil.setLocationRelativeTo(null);
         ventanaEditarPerfil.setVisible(true);
+        this.dispose();
+    }
+
+    public void abrirVentanaCitaEmergencia(PacienteViejoDTO paciente) {
+        if (ventanaAgendarCitaEmergencia == null) {
+            ventanaAgendarCitaEmergencia = new agendarCitaEmergencia(paciente);
+        }
+
+        ventanaAgendarCitaEmergencia = new agendarCitaEmergencia(paciente);
+        ventanaAgendarCitaEmergencia.setVentanaPaciente(this);
+        ventanaAgendarCitaEmergencia.setLocationRelativeTo(null);
+        ventanaAgendarCitaEmergencia.setVisible(true);
         this.dispose();
     }
 
