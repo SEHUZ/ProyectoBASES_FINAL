@@ -14,6 +14,7 @@ import java.util.List;
  * @author sonic
  */
 public class Cita {
+
     private int idCita;
     private Paciente paciente;
     private Medico medico;
@@ -24,7 +25,7 @@ public class Cita {
     private CitaEmergencia emergencia;
     private CitaNormal normal;
     private Consulta consulta;
-    
+
     public enum TipoCita {
         EMERGENCIA, PROGRAMADA
     }
@@ -69,10 +70,6 @@ public class Cita {
         this.emergencia = emergencia;
         this.consulta = consulta;
     }
-    
-    
-    
-    
 
     public TipoCita getTipoCita() {
         return tipoCita;
@@ -81,9 +78,6 @@ public class Cita {
     public void setTipoCita(TipoCita tipoCita) {
         this.tipoCita = tipoCita;
     }
-
-   
-    
 
     public int getIdCita() {
         return idCita;
@@ -160,15 +154,9 @@ public class Cita {
         this.consulta = consulta;
     }
 
-    
-    
-    
-
     @Override
     public String toString() {
         return "Cita{" + "idCita=" + idCita + ", paciente=" + paciente + ", medico=" + medico + ", estado=" + estado + ", fechaHora=" + fechaHora + '}';
     }
-    
-    
-    
+
 }

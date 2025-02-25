@@ -38,24 +38,19 @@ public class CitaDAO implements ICitaDAO {
 
         try (Connection conn = conexion.crearConexion(); CallableStatement cstmt = conn.prepareCall(sql)) {
 
-            
-            cstmt.setInt(1, cita.getPaciente().getIdPaciente());     
-            cstmt.setInt(2, cita.getMedico().getIdMedico());          
-            cstmt.setTimestamp(3, Timestamp.valueOf(cita.getFechaHora())); 
-            cstmt.setString(4, cita.getTipoCita().name());             
+            cstmt.setInt(1, cita.getPaciente().getIdPaciente());
+            cstmt.setInt(2, cita.getMedico().getIdMedico());
+            cstmt.setTimestamp(3, Timestamp.valueOf(cita.getFechaHora()));
+            cstmt.setString(4, cita.getTipoCita().name());
 
-            
-            cstmt.registerOutParameter(5, Types.INTEGER);  
-            cstmt.registerOutParameter(6, Types.VARCHAR);   
+            cstmt.registerOutParameter(5, Types.INTEGER);
+            cstmt.registerOutParameter(6, Types.VARCHAR);
 
-            
             cstmt.execute();
 
-            
             int idCita = cstmt.getInt(5);
             String folio = cstmt.getString(6);
 
-            
             cita.setIdCita(idCita);
 
             if (cita.getTipoCita() == Cita.TipoCita.EMERGENCIA) {
@@ -268,24 +263,27 @@ public class CitaDAO implements ICitaDAO {
 
     @Override
     public Cita agendarCitaEmergencia(Cita cita) throws PersistenciaClinicaException, SQLException {
-        String procedimientoEmergencia = "{CALL AgendarCitaEmergencia(?, ?, ?, ?)}";
+        String procedimientoEmergencia = "{CALL AgendarCitaEmergencia(?, ?, ?, ?, ?)}";
 
         try (Connection conn = conexion.crearConexion(); CallableStatement cstmt = conn.prepareCall(procedimientoEmergencia)) {
 
-            cstmt.setInt(1, cita.getPaciente().getIdPaciente()); 
+            cstmt.setInt(1, cita.getPaciente().getIdPaciente());
 
-            cstmt.registerOutParameter(2, Types.VARCHAR);   
+            cstmt.registerOutParameter(2, Types.VARCHAR);  
             cstmt.registerOutParameter(3, Types.INTEGER);  
             cstmt.registerOutParameter(4, Types.TIMESTAMP); 
+            cstmt.registerOutParameter(5, Types.TIMESTAMP);
 
             cstmt.execute();
 
             String folio = cstmt.getString(2);
             int idCita = cstmt.getInt(3);
             Timestamp fechaExpiracion = cstmt.getTimestamp(4);
-
+            Timestamp fechaHoraCita = cstmt.getTimestamp(5);  
+            // Asignar valores a la cita
             cita.setIdCita(idCita);
             cita.setTipoCita(Cita.TipoCita.EMERGENCIA);
+            cita.setFechaHora(fechaHoraCita.toLocalDateTime()); 
 
             CitaEmergencia emergencia = new CitaEmergencia();
             emergencia.setFolio(folio);
@@ -342,7 +340,7 @@ public class CitaDAO implements ICitaDAO {
                     if (tipoCita == Cita.TipoCita.EMERGENCIA) {
                         CitaEmergencia emergencia = new CitaEmergencia();
                         emergencia.setFolio(rs.getString("folioEmergencia"));
-                        emergencia.setFechaExpiracion(rs.getTimestamp("fechaExpiracionEmergencia") != null ? rs.getTimestamp("fechaExpiracionEmergencia").toLocalDateTime(): null);
+                        emergencia.setFechaExpiracion(rs.getTimestamp("fechaExpiracionEmergencia") != null ? rs.getTimestamp("fechaExpiracionEmergencia").toLocalDateTime() : null);
                         cita.setEmergencia(emergencia);
                     } else if (tipoCita == Cita.TipoCita.PROGRAMADA) {
                         CitaNormal normal = new CitaNormal();
