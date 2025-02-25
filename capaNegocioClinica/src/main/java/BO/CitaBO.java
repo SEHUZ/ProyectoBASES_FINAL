@@ -156,11 +156,9 @@ public class CitaBO {
         }
     }
 
-    public CitaViejaDTO consultarCitaPorsuID(int idCita) throws NegocioException, PersistenciaClinicaException {
-        Cita citaencontrada = citaDAO.consultarCitaPorID(1);
-        CitaViejaDTO citaviejaDTOnueva = mapper.toViejoDTO(citaencontrada);
-        return citaviejaDTOnueva;
-    }
+    //public CitaViejaDTO consultarCitaPorsuID(int idCita) throws NegocioException, PersistenciaClinicaException {
+        
+    //}
 
     public List<CitaViejaDTO> consultarCitasProximasPaciente(PacienteNuevoDTO pacientenuevoDTO) throws NegocioException {
         try {

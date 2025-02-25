@@ -14,18 +14,18 @@ import DTO.ConsultaNuevaDTO;
 import DTO.ConsultaViejaDTO;
 import DTO.MedicoNuevoDTO;
 import Entidades.Cita;
+import Entidades.CitaEmergencia;
 import Entidades.Consulta;
 import Exception.NegocioException;
 import Exception.PersistenciaClinicaException;
-import Mappers.CitaMapper;
-import Mappers.ConsultaMapper;
-import Mappers.HorarioMapper;
-import Mappers.MedicoMapper;
+import java.sql.CallableStatement;
+import java.sql.Connection;
 import java.sql.SQLException;
+import java.sql.Timestamp;
+import java.sql.Types;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Logger;
+import Mappers.ConsultaMapper;
 
 /**
  *
@@ -33,80 +33,46 @@ import java.util.logging.Logger;
  */
 public class ConsultaBO {
 
-   
-   //private final IConsultaDAO consultaDAO;
+   private final ICitaDAO citaDAO;
+   private final IConsultaDAO consultaDAO;
+   private final ConsultaMapper consultaMapper = new ConsultaMapper();
 
-    // Se pasa el parámetro correctamente y se inicializa la propiedad
-   //// public ConsultaBO(IConsultaDAO consultaDAO) {
-       // this.consultaDAO = consultaDAO;  // Inicializas la propiedad correctamente
-   // }
-        private final IConsultaDAO consultaDAO;
-
-    // Modificamos el constructor para recibir IConexionBD en lugar de IConsultaDAO
-    public ConsultaBO(IConexionBD conexionBD) {
-        // Creamos la instancia de ConsultaDAO dentro del BO, utilizando la conexión proporcionada
-        this.consultaDAO = new ConsultaDAO(conexionBD);
+    public ConsultaBO(IConexionBD conexion) {
+        this.citaDAO = new CitaDAO(conexion);
+        this.consultaDAO = new ConsultaDAO(conexion);  
     }
 
 
-    public Consulta registrarConsulta(Consulta consulta) throws PersistenciaClinicaException {
-        try {
-            return consultaDAO.insertarConsulta(consulta);
-        } catch (SQLException e) {
-            throw new PersistenciaClinicaException("Error al registrar consulta", e);
-        }
-    }
     
-    public List<Consulta> obtenerConsultasPorPaciente(int idPaciente) throws PersistenciaClinicaException {
+    public ConsultaViejaDTO insertarConsulta(ConsultaNuevaDTO consultanuevaDTO) throws SQLException, NegocioException, PersistenciaClinicaException {
         try {
-            return consultaDAO.obtenerConsultasPorPaciente(idPaciente);
-        } catch (SQLException e) {
-            throw new PersistenciaClinicaException("Error al obtener consultas del paciente", e);
-        }
-    }
-    
-    public boolean actualizarConsulta(Consulta consulta) throws PersistenciaClinicaException {
-        try {
-            return consultaDAO.actualizarConsulta(consulta);
-        } catch (SQLException e) {
-            throw new PersistenciaClinicaException("Error al actualizar consulta", e);
-        }
-    }
-    
-    public boolean cancelarConsulta(int idConsulta) throws PersistenciaClinicaException {
-        try {
-            return consultaDAO.cancelarConsulta(idConsulta);
-        } catch (SQLException e) {
-            throw new PersistenciaClinicaException("Error al cancelar consulta", e);
-        }
-    }
-    
-    public Consulta obtenerConsultaPorId(int idConsulta) throws PersistenciaClinicaException {
-        try {
-            return consultaDAO.obtenerConsultaPorId(idConsulta);
-        } catch (SQLException e) {
-            throw new PersistenciaClinicaException("Error al obtener consulta por ID", e);
-        }
-    }
-    
-    public List<Consulta> obtenerConsultasPorEspecialidadYFechas(int idPaciente, String especialidad, LocalDateTime fechaInicio, LocalDateTime fechaFin) throws PersistenciaClinicaException {
-        try {
-            return consultaDAO.obtenerConsultasPorEspecialidadYFechas(idPaciente, especialidad, fechaInicio, fechaFin);
-        } catch (SQLException e) {
-            throw new PersistenciaClinicaException("Error al obtener consultas por especialidad y fechas", e);
-        }
-    }
-    
-    public boolean existeConsultaParaCita(int idCita) throws PersistenciaClinicaException {
-        try {
-            return consultaDAO.existeConsultaParaCita(idCita);
-        } catch (Exception e) {
-            throw new PersistenciaClinicaException("Error al verificar existencia de consulta", e);
-        }
+            if (consultanuevaDTO.getFechaHora() == null || consultanuevaDTO.getFechaHora().isBefore(LocalDateTime.now())) {
+                throw new NegocioException("La fecha y hora de la consulta son inválidas.");
+            }
+            
+            if (consultanuevaDTO == null) {
+                throw new NegocioException("Los datos de la cita son requeridos");
+            }
+
+            Consulta consulta = consultaMapper.toEntityNuevo(consultanuevaDTO);
+            
+            if (consulta.getCita() == null || consulta.getCita().getIdCita() <= 0) {
+                throw new NegocioException("La cita asociada a la consulta es inválida.");
+            }
+            
+            if (citaDAO.consultarCitaPorID(consulta.getCita().getIdCita()) == null){
+                throw new NegocioException("La cita asociada no existe");
+            }
+            
+
+            Consulta consultaInsertada = consultaDAO.insertarConsulta(consulta);
+            ConsultaViejaDTO consultaViejaDTO = consultaMapper.toViejoDTO(consultaInsertada);
+
+            return consultaViejaDTO;
+
+        }catch (SQLException e) {
+            throw new NegocioException("Error al insertar consulta: " + e.getMessage(), e);
     }
 }
-
-
-
-
+}
 
