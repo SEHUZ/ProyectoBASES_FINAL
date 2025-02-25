@@ -6,6 +6,7 @@ package DAO;
 import Conexion.IConexionBD;
 import Entidades.Cita;
 import Entidades.Consulta;
+import Entidades.Medico;
 import Exception.PersistenciaClinicaException;
 import java.sql.*;
 import java.util.ArrayList;
@@ -211,8 +212,50 @@ public class ConsultaDAO implements IConsultaDAO {
 
         return false; // Por defecto, no existe consulta
     }
+     
+    @Override
+    public List<Consulta> obtenerHistorialConsultasPaciente (int idPaciente) throws PersistenciaClinicaException {
+        List<Consulta> consultas = new ArrayList<>();
+        String procedimientoHistorial = "{CALL ObtenerHistorialConsultasPorPaciente(?)}";
+        
+        try (Connection con = conexion.crearConexion(); CallableStatement cs = con.prepareCall(procedimientoHistorial)) {
 
-   
+            // Establecer parámetro
+            cs.setInt(1, idPaciente);
+
+            try (ResultSet rs = cs.executeQuery()) {
+            while (rs.next()) {
+                // Mapeo de la consulta
+                Consulta consulta = new Consulta();
+                consulta.setIdConsulta(rs.getInt("idConsulta"));
+                consulta.setDiagnostico(rs.getString("diagnostico"));
+                consulta.setEstado(rs.getString("estado"));
+                consulta.setFechaHora(rs.getTimestamp("fechaHoraConsulta").toLocalDateTime());
+                consulta.setTratamiento(rs.getString("tratamiento"));
+                
+                Cita cita = new Cita();
+                cita.setFechaHora(rs.getTimestamp("fechaHoraCita").toLocalDateTime());
+                
+                Medico medico = new Medico();
+                medico.setNombres(rs.getString("nombreMedico"));
+                medico.setApellidoPaterno(rs.getString("apellidoMedico"));
+                medico.setEspecialidad(rs.getString("especialidad"));
+                
+                cita.setMedico(medico);
+                consulta.setCita(cita);
+                
+                consultas.add(consulta);
+            }
+        }
+        
+    } catch (SQLException e) {
+        // Manejo específico para paciente no encontrado
+        if (e.getSQLState().equals("45000")) {
+            throw new PersistenciaClinicaException("Error: " + e.getMessage(), e);
+        }
+        throw new PersistenciaClinicaException("Error al obtener historial de consultas", e);
+    }
     
-    
+    return consultas;
+}
 }
