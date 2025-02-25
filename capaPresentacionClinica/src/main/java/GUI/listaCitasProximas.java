@@ -10,6 +10,8 @@ package GUI;
  */
 public class listaCitasProximas extends javax.swing.JFrame {
 
+    private dashboardPaciente ventanaPaciente;
+    
     /**
      * Creates new form listaCitasProximas
      */
@@ -17,6 +19,10 @@ public class listaCitasProximas extends javax.swing.JFrame {
         initComponents();
     }
 
+    public void setVentanaPaciente(dashboardPaciente ventanaPaciente) {
+        this.ventanaPaciente = ventanaPaciente;
+    }
+    
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -111,7 +117,7 @@ public class listaCitasProximas extends javax.swing.JFrame {
     }//GEN-LAST:event_botonCancelarCitaActionPerformed
 
     private void botonVolverActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonVolverActionPerformed
-        // TODO add your handling code here:
+        volverDashboardPaciente();
     }//GEN-LAST:event_botonVolverActionPerformed
 
     private void botonVerDetallesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonVerDetallesActionPerformed
@@ -161,4 +167,16 @@ public class listaCitasProximas extends javax.swing.JFrame {
     private javax.swing.JScrollBar jScrollBar1;
     private javax.swing.JComboBox<String> listaCitasProximas;
     // End of variables declaration//GEN-END:variables
+
+    public void volverDashboardPaciente() {
+        if (ventanaPaciente == null) {
+            ventanaPaciente = new dashboardPaciente();
+        }
+
+        ventanaPaciente.setVentanaCitasProximas(this);
+        ventanaPaciente.setLocationRelativeTo(null);
+        ventanaPaciente.setVisible(true);
+        this.dispose();
+    }
+    
 }

@@ -15,12 +15,15 @@ import javax.swing.JOptionPane;
 public class dashboardPaciente extends javax.swing.JFrame {
 
     private PacienteViejoDTO paciente;
-    
+
     private agendarCita agendarcita;
     private iniciarSesion ventanaInicio;
     private editarPerfilPaciente ventanaEditarPerfil;
-    private agendarCita ventanaAgendarCita;
 
+    private agendarCita ventanaAgendarCita;
+    private listaCitasProximas ventanaCitasProximas;
+    private historialConsultas ventanaHistorialConsultas;
+    
     /**
      * Creates new form dashboardPaciente
      *
@@ -43,11 +46,18 @@ public class dashboardPaciente extends javax.swing.JFrame {
     public void setVentanaEditarPerfil(editarPerfilPaciente ventanaEditarPerfil) {
         this.ventanaEditarPerfil = ventanaEditarPerfil;
     }
+
     public void setAgendarCita(agendarCita agendarcita) {
         this.agendarcita = agendarcita;
     }
 
-    
+    public void setVentanaCitasProximas(listaCitasProximas ventanaCitasProximas) {
+        this.ventanaCitasProximas = ventanaCitasProximas;
+    }
+
+    public void setVentanaHistorialConsultas(historialConsultas ventanaHistorialConsultas) {
+        this.ventanaHistorialConsultas = ventanaHistorialConsultas;
+    }
     
     /**
      * This method is called from within the constructor to initialize the form.
@@ -218,7 +228,7 @@ public class dashboardPaciente extends javax.swing.JFrame {
     }//GEN-LAST:event_BotonEditarPerfilActionPerformed
 
     private void botonCitasProximasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonCitasProximasActionPerformed
-        // citas proximas
+        abrirVentanaCitasProximas();
     }//GEN-LAST:event_botonCitasProximasActionPerformed
 
     private void botonCerrarSesionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonCerrarSesionActionPerformed
@@ -230,11 +240,11 @@ public class dashboardPaciente extends javax.swing.JFrame {
     }//GEN-LAST:event_BotonConsultaEmergenciaActionPerformed
 
     private void botonAgendarCitaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonAgendarCitaActionPerformed
-       abrirVentanaCitas(paciente);
+        abrirVentanaCitas(paciente);
     }//GEN-LAST:event_botonAgendarCitaActionPerformed
 
     private void botonHistorialConsultasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonHistorialConsultasActionPerformed
-        // TODO add your handling code here:
+        abrirVentanaHistorialConsultas();
     }//GEN-LAST:event_botonHistorialConsultasActionPerformed
 
     /**
@@ -315,7 +325,7 @@ public class dashboardPaciente extends javax.swing.JFrame {
         if (ventanaEditarPerfil == null) {
             ventanaEditarPerfil = new editarPerfilPaciente(paciente);
         }
-        
+
         ventanaEditarPerfil = new editarPerfilPaciente(paciente);
         ventanaEditarPerfil.setVentanaPaciente(this);
         ventanaEditarPerfil.setLocationRelativeTo(null);
@@ -327,14 +337,38 @@ public class dashboardPaciente extends javax.swing.JFrame {
         if (ventanaAgendarCita == null) {
             ventanaAgendarCita = new agendarCita(paciente);
         }
-        
+
         ventanaAgendarCita = new agendarCita(paciente);
         ventanaAgendarCita.setVentanaPaciente(this);
         ventanaAgendarCita.setLocationRelativeTo(null);
         ventanaAgendarCita.setVisible(true);
         this.dispose();
     }
-    
+
+    public void abrirVentanaCitasProximas() {
+        if (ventanaCitasProximas == null) {
+            ventanaCitasProximas = new listaCitasProximas();
+        }
+
+        ventanaCitasProximas = new listaCitasProximas();
+        ventanaCitasProximas.setVentanaPaciente(this);
+        ventanaCitasProximas.setLocationRelativeTo(null);
+        ventanaCitasProximas.setVisible(true);
+        this.dispose();
+    }
+
+    public void abrirVentanaHistorialConsultas() {
+        if (ventanaHistorialConsultas == null) {
+            ventanaHistorialConsultas = new historialConsultas();
+        }
+
+        ventanaHistorialConsultas = new historialConsultas();
+        ventanaHistorialConsultas.setVentanaPaciente(this);
+        ventanaHistorialConsultas.setLocationRelativeTo(null);
+        ventanaHistorialConsultas.setVisible(true);
+        this.dispose();
+    }
+
     public void cerrarSesion() {
         int respuesta = JOptionPane.showConfirmDialog(
                 this,
@@ -353,7 +387,5 @@ public class dashboardPaciente extends javax.swing.JFrame {
             System.out.println("El usuario canceló.");
         }
     }
-    
-    
 
 }
