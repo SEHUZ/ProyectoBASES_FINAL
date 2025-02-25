@@ -7,6 +7,7 @@ package GUI;
 import BO.MedicoBO;
 import DTO.HorarioMedicoNuevoDTO;
 import DTO.MedicoDTO;
+import DTO.PacienteViejoDTO;
 import Exception.NegocioException;
 import configuracion.DependencyInjector;
 import java.time.format.DateTimeFormatter;
@@ -24,6 +25,7 @@ public class dashBoardMedico extends javax.swing.JFrame {
     private MedicoDTO medico;
     private MedicoBO medicoBO = DependencyInjector.crearMedicoBO();
     private iniciarSesion ventanaInicio;
+    private agendaDeCitas ventanaAgendaDeCitas;
 
     public dashBoardMedico(MedicoDTO medico) {
         this.medico = medico;
@@ -43,6 +45,12 @@ public class dashBoardMedico extends javax.swing.JFrame {
         this.ventanaInicio = ventanaInicio;
     }
 
+    public void setVentanaAgendaDeCitas(agendaDeCitas ventanaAgendaDeCitas) {
+        this.ventanaAgendaDeCitas = ventanaAgendaDeCitas;
+    }
+    
+    
+
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -54,7 +62,7 @@ public class dashBoardMedico extends javax.swing.JFrame {
 
         BotonBajaTemporal = new javax.swing.JButton();
         botonCerrarSesion = new javax.swing.JButton();
-        botonHistorialConsultas = new javax.swing.JButton();
+        botonAgendadeCitas = new javax.swing.JButton();
         lblEspecialidad = new javax.swing.JLabel();
         lblCedula = new javax.swing.JLabel();
         lblRol = new javax.swing.JLabel();
@@ -82,10 +90,10 @@ public class dashBoardMedico extends javax.swing.JFrame {
             }
         });
 
-        botonHistorialConsultas.setText("Ver agenda de citas");
-        botonHistorialConsultas.addActionListener(new java.awt.event.ActionListener() {
+        botonAgendadeCitas.setText("Ver agenda de citas");
+        botonAgendadeCitas.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                botonHistorialConsultasActionPerformed(evt);
+                botonAgendadeCitasActionPerformed(evt);
             }
         });
 
@@ -140,7 +148,7 @@ public class dashBoardMedico extends javax.swing.JFrame {
                         .addGap(0, 199, Short.MAX_VALUE))))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(botonHistorialConsultas, javax.swing.GroupLayout.PREFERRED_SIZE, 166, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(botonAgendadeCitas, javax.swing.GroupLayout.PREFERRED_SIZE, 166, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(231, 231, 231))
             .addGroup(layout.createSequentialGroup()
                 .addGap(236, 236, 236)
@@ -171,7 +179,7 @@ public class dashBoardMedico extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 332, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(32, 32, 32)
-                .addComponent(botonHistorialConsultas, javax.swing.GroupLayout.PREFERRED_SIZE, 42, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(botonAgendadeCitas, javax.swing.GroupLayout.PREFERRED_SIZE, 42, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(77, Short.MAX_VALUE))
         );
 
@@ -182,9 +190,9 @@ public class dashBoardMedico extends javax.swing.JFrame {
         darBajaMedico(medico);
     }//GEN-LAST:event_BotonBajaTemporalActionPerformed
 
-    private void botonHistorialConsultasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonHistorialConsultasActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_botonHistorialConsultasActionPerformed
+    private void botonAgendadeCitasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonAgendadeCitasActionPerformed
+        abrirVentanaAgendaDeCitas(medico);
+    }//GEN-LAST:event_botonAgendadeCitasActionPerformed
 
     private void botonCerrarSesionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonCerrarSesionActionPerformed
         cerrarSesion();
@@ -227,8 +235,8 @@ public class dashBoardMedico extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton BotonBajaTemporal;
+    private javax.swing.JButton botonAgendadeCitas;
     private javax.swing.JButton botonCerrarSesion;
-    private javax.swing.JButton botonHistorialConsultas;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTextArea jTextAreaHorarios;
@@ -342,5 +350,18 @@ public class dashBoardMedico extends javax.swing.JFrame {
         } catch (Exception e) {
             JOptionPane.showMessageDialog(this, "Error inesperado al mostrar horarios", "Error", JOptionPane.ERROR_MESSAGE);
         }
+    }
+    
+    
+    public void abrirVentanaAgendaDeCitas(MedicoDTO medico) {
+        if (ventanaAgendaDeCitas == null) {
+            ventanaAgendaDeCitas = new agendaDeCitas(medico);
+        }
+
+        ventanaAgendaDeCitas = new agendaDeCitas(medico);
+        ventanaAgendaDeCitas.setVentanaMedico(this);
+        ventanaAgendaDeCitas.setLocationRelativeTo(null);
+        ventanaAgendaDeCitas.setVisible(true);
+        this.dispose();
     }
 }

@@ -5,14 +5,18 @@
 package GUI;
 
 //import BO.ConsultaBO;
+import BO.ConsultaBO;
 import DTO.CitaNuevaDTO;
 import DTO.CitaViejaDTO;
 import DTO.ConsultaNuevaDTO;
+import DTO.ConsultaViejaDTO;
 import Exception.NegocioException;
 import Exception.PersistenciaClinicaException;
 import configuracion.DependencyInjector;
 import java.sql.SQLException;
 import java.time.LocalDateTime;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 
 /**
@@ -21,15 +25,31 @@ import javax.swing.JOptionPane;
  */
 public class panelDeConsulta extends javax.swing.JFrame {
     
-//    private ConsultaBO consultaBO;
-//    private CitaViejaDTO citaActual;
-//    private dashBoardMedico dashboard;
-//    
-//    public panelDeConsulta(CitaViejaDTO cita) {
-//        initComponents();
-//        this.consultaBO = DependencyInjector.crearConsultaBO();
-//        this.citaActual = cita;
-//    }
+    private ConsultaBO consultaBO;
+    private CitaViejaDTO citaActual;
+    private agendaDeCitas ventanaAgendaDeCitas;
+    
+    private dashBoardMedico ventanaMedico;
+    
+    public panelDeConsulta(CitaViejaDTO cita) {
+        initComponents();
+        this.consultaBO = DependencyInjector.crearConsultaBO();
+        this.citaActual = cita;
+    }
+    
+    public panelDeConsulta() {
+        initComponents();
+    }
+
+    public void setVentanaMedico(dashBoardMedico ventanaMedico) {
+        this.ventanaMedico = ventanaMedico;
+    }
+
+    public void setVentanaAgendaDeCitas(agendaDeCitas ventanaAgendaDeCitas) {
+        this.ventanaAgendaDeCitas = ventanaAgendaDeCitas;
+    }
+    
+    
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -145,7 +165,17 @@ public class panelDeConsulta extends javax.swing.JFrame {
     }//GEN-LAST:event_fieldNombre1ActionPerformed
 
     private void botonTerminarConsultaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonTerminarConsultaActionPerformed
-        // TODO add your handling code here:
+        try {
+            terminarConsulta();
+            
+// TODO add your handling code here:
+        } catch (NegocioException ex) {
+            Logger.getLogger(panelDeConsulta.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (SQLException ex) {
+            Logger.getLogger(panelDeConsulta.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (PersistenciaClinicaException ex) {
+            Logger.getLogger(panelDeConsulta.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }//GEN-LAST:event_botonTerminarConsultaActionPerformed
 
     private void botonVolverActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonVolverActionPerformed
@@ -196,42 +226,30 @@ public class panelDeConsulta extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     // End of variables declaration//GEN-END:variables
-//    private void terminarConsulta() throws NegocioException, SQLException, PersistenciaClinicaException {
-//        try {
-//            // Validar campos requeridos
-//            if (fieldNombre.getText().isBlank() || fieldNombre1.getText().isBlank()) {
-//                JOptionPane.showMessageDialog(this, "Diagnóstico y tratamiento son requeridos", "Error", JOptionPane.ERROR_MESSAGE);
-//                return;
-//            }
-//
-//            // Crear DTO
-//            ConsultaNuevaDTO consultaDTO = new ConsultaNuevaDTO();
-//            consultaDTO.setDiagnostico(fieldNombre.getText());
-//            consultaDTO.setTratamiento(fieldNombre1.getText());
-//            consultaDTO.setFechaHora(LocalDateTime.now());
-//            
-//            // Asignar cita
-//            CitaViejaDTO citaDTO = new CitaViejaDTO();
-//            citaDTO.setIdCita(citaActual.getIdCita());
-//            
-//            
-//
-//            // Registrar consulta
-//            boolean resultado = consultaBO.registrarConsulta(consultaDTO);
-//
-//            if (resultado) {
-//                JOptionPane.showMessageDialog(this, "Consulta registrada exitosamente");
-//                this.dispose();
-//                if (dashboard != null) {
-//
-//                    dashboard.setVisible(true);
-//                }
-//            }
-//        } catch (NegocioException | SQLException e) {
-//            JOptionPane.showMessageDialog(this, e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
-//        }
-//    }                                  
-//
-//
+    private void terminarConsulta() throws NegocioException, SQLException, PersistenciaClinicaException {
+        try {
+            if (fieldNombre.getText().isBlank() || fieldNombre1.getText().isBlank()) {
+                JOptionPane.showMessageDialog(this, "Diagnóstico y tratamiento son requeridos", "Error", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
 
+            ConsultaNuevaDTO consultaDTO = new ConsultaNuevaDTO();
+            consultaDTO.setDiagnostico(fieldNombre.getText());
+            consultaDTO.setTratamiento(fieldNombre1.getText());
+            consultaDTO.setFechaHora(LocalDateTime.now());
+
+            CitaViejaDTO citaDTO = new CitaViejaDTO();
+            citaDTO.setIdCita(citaActual.getIdCita());
+            
+
+            ConsultaViejaDTO resultado = consultaBO.insertarConsulta(consultaDTO);
+
+            if (resultado != null) {
+                JOptionPane.showMessageDialog(this, "Consulta registrada exitosamente");
+                this.dispose();
+            }
+        } catch (NegocioException | SQLException e) {
+            JOptionPane.showMessageDialog(this, e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+        }                                
+}
 }

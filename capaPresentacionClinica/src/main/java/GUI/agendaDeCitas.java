@@ -9,34 +9,72 @@ import BO.ConsultaBO;
 import BO.MedicoBO;
 import BO.PacienteBO;
 import DTO.CitaViejaDTO;
+import DTO.ConsultaNuevaDTO;
+import DTO.ConsultaViejaDTO;
 import DTO.MedicoDTO;
+import Entidades.Cita;
+import Exception.NegocioException;
+import Exception.PersistenciaClinicaException;
+import Mappers.CitaMapper;
+import Mappers.MedicoMapper;
 import configuracion.DependencyInjector;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+import java.sql.SQLException;
+import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.JOptionPane;
 
 /**
  *
  * @author sonic
  */
 public class agendaDeCitas extends javax.swing.JFrame {
-    
-    private static agendaDeCitas instance;
 
     /**
      * Creates new form agendaDeCitas
      */
-    
-//    private MedicoBO medicoBO = DependencyInjector.crearMedicoBO();
-//    private CitaBO citaBO = DependencyInjector.crearCitaBO();
-//    private PacienteBO pacienteBO = DependencyInjector.crearPacienteBO();
-//    private ConsultaBO consultaBO = DependencyInjector.crearConsultaBO();
-//
-//    public agendaDeCitas(MedicoDTO medico) {
-//        initComponents();
-//        cargarCitas();
-//
-//       
-//    }
+    private MedicoDTO medico;
+    private MedicoBO medicoBO = DependencyInjector.crearMedicoBO();
+    private CitaBO citaBO = DependencyInjector.crearCitaBO();
+    private PacienteBO pacienteBO = DependencyInjector.crearPacienteBO();
+    private ConsultaBO consultaBO = DependencyInjector.crearConsultaBO();
+    private dashBoardMedico VentanaMedico;
+    private final CitaMapper citaMapper = new CitaMapper();
+
+    private panelDeConsulta ventanaAgendarConsulta;
+
+    public agendaDeCitas(MedicoDTO medico) {
+        this.medico = medico;
+        initComponents();
+
+        this.addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowOpened(WindowEvent e) {
+                try {
+                    cargarCitas();
+                } catch (NegocioException | PersistenciaClinicaException ex) {
+                    JOptionPane.showMessageDialog(agendaDeCitas.this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+                }
+            }
+        });
+
+    }
+
+    public void setVentanaAgendarConsulta(panelDeConsulta ventanaAgendarConsulta) {
+        this.ventanaAgendarConsulta = ventanaAgendarConsulta;
+    }
+
+    public void setVentanaMedico(dashBoardMedico VentanaMedico) {
+        this.VentanaMedico = VentanaMedico;
+    }
+
+    public agendaDeCitas() {
+        initComponents();
+    }
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -80,8 +118,6 @@ public class agendaDeCitas extends javax.swing.JFrame {
                 botonHistorialPacienteActionPerformed(evt);
             }
         });
-
-        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -129,7 +165,17 @@ public class agendaDeCitas extends javax.swing.JFrame {
     }//GEN-LAST:event_botonVolverActionPerformed
 
     private void botonIniciarConsultaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonIniciarConsultaActionPerformed
-        // TODO add your handling code here:
+        try {
+            iniciarConsulta();
+        } catch (NegocioException ex) {
+            Logger.getLogger(agendaDeCitas.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (PersistenciaClinicaException ex) {
+            Logger.getLogger(agendaDeCitas.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (SQLException ex) {
+            Logger.getLogger(agendaDeCitas.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+
     }//GEN-LAST:event_botonIniciarConsultaActionPerformed
 
     private void botonHistorialPacienteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonHistorialPacienteActionPerformed
@@ -139,37 +185,37 @@ public class agendaDeCitas extends javax.swing.JFrame {
     /**
      * @param args the command line arguments
      */
-////    public static void main(String args[]) {
-//        /* Set the Nimbus look and feel */
-//        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-//        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-//         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-//         */
-//        try {
-//            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-//                if ("Nimbus".equals(info.getName())) {
-//                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-//                    break;
-//                }
-//            }
-//        } catch (ClassNotFoundException ex) {
-//            java.util.logging.Logger.getLogger(agendaDeCitas.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-//        } catch (InstantiationException ex) {
-//            java.util.logging.Logger.getLogger(agendaDeCitas.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-//        } catch (IllegalAccessException ex) {
-//            java.util.logging.Logger.getLogger(agendaDeCitas.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-//        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-//            java.util.logging.Logger.getLogger(agendaDeCitas.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-//        }
-//        //</editor-fold>
-//
-//        /* Create and display the form */
-//        java.awt.EventQueue.invokeLater(new Runnable() {
-//            public void run() {
-//                new agendaDeCitas().setVisible(true);
-//            }
-//        });
-//    }
+    public static void main(String args[]) {
+        /* Set the Nimbus look and feel */
+        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
+        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
+         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
+         */
+        try {
+            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
+                if ("Nimbus".equals(info.getName())) {
+                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
+                    break;
+                }
+            }
+        } catch (ClassNotFoundException ex) {
+            java.util.logging.Logger.getLogger(agendaDeCitas.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        } catch (InstantiationException ex) {
+            java.util.logging.Logger.getLogger(agendaDeCitas.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        } catch (IllegalAccessException ex) {
+            java.util.logging.Logger.getLogger(agendaDeCitas.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
+            java.util.logging.Logger.getLogger(agendaDeCitas.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        }
+        //</editor-fold>
+
+        /* Create and display the form */
+        java.awt.EventQueue.invokeLater(new Runnable() {
+            public void run() {
+                new agendaDeCitas().setVisible(true);
+            }
+        });
+    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton botonHistorialPaciente;
@@ -179,93 +225,44 @@ public class agendaDeCitas extends javax.swing.JFrame {
     private javax.swing.JComboBox<String> jComboBox1;
     private javax.swing.JLabel jLabel1;
     // End of variables declaration//GEN-END:variables
-//    private void cargarCitas() {
-//        try {
-//            // Obtener citas del médico
-//            List <CitaViejaDTO> citas = citaBO.consultarCitasMedico(medicoActual);
-//            jComboBox1.removeAllItems();
-//            for (citaViejaDTO) cita : citas) {
-//                jComboBox1.addItem();
-//        }
-//            
-//            // Formatear y agregar citas
-//            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
-//            for (CitaViejaDTO cita : citas) {
-//                String entrada = String.format("[%s] %s - %s %s | Estado: %s",
-//                        cita.getFechaHora().format(formatter),
-//                        cita.getPaciente().getNombres(),
-//                        cita.getPaciente().getApellidoPaterno(),
-//                        cita.getPaciente().getApellidoMaterno(),
-//                        cita.getEstado().getDescripcion());
-//                list1.add(entrada);
-//            }
-//            
-//        } catch (NegocioException ex) {
-//            JOptionPane.showMessageDialog(this, 
-//                    "Error al cargar citas: " + ex.getMessage(),
-//                    "Error", 
-//                    JOptionPane.ERROR_MESSAGE);
-//        }
-//    }
-    
-    
-    
-//    private void cargarMedicosPorEspecialidad() throws NegocioException {
-//
-//        try {
-//            List<MedicoDTO> medicos = medicoBO.consultarMedicoPorEspecialidad(especialidad);
-//            jComboBox1.removeAllItems();
-//            for (MedicoDTO medico : medicos) {
-//                jComboBox1.addItem(medico.getIdMedico() + " " + medico.getNombres() + " " + medico.getApellidoPaterno());
-//            }
-//        } catch (NegocioException ex) {
-//            JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
-//        }
-//        String seleccionado = (String) jComboBox1.getSelectedItem();
+    private void cargarCitas() throws NegocioException, PersistenciaClinicaException {
+        try {
+        List<CitaViejaDTO> citas = citaBO.consultarCitasMedico(medico);
+        if (citas.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "El médico no tiene ninguna cita");
+            return;
+        }
+
+        jComboBox1.removeAllItems();
+        for (CitaViejaDTO cita : citas) {
+            // Filtrar citas cuyo estado no sea "Cancelada"
+            if (!"Cancelada".equalsIgnoreCase(cita.getEstado().getDescripcion())) {
+                jComboBox1.addItem(cita.getIdCita() + " " + cita.getPaciente().getNombres() + " " + cita.getPaciente().getApellidoPaterno() + " " + cita.getFechaHora());
+            }
+        }
+    } catch (NegocioException ex) {
+        JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+    }
+}
+
+    private void iniciarConsulta() throws NegocioException, PersistenciaClinicaException, SQLException {
+        String seleccionado = (String) jComboBox1.getSelectedItem();
+        if (seleccionado == null || seleccionado.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Debe seleccionar una cita para iniciar la consulta.");
+            return;
+        }
+
 //        String[] partes = seleccionado.split(" ", 2); // Dividir solo en dos partes: ID y resto
-//        int idMedico = Integer.parseInt(partes[0]); // Convertir la primera parte a entero
-//        MedicoDTO medicoSELECCIONADO = medicoBO.consultarMedicoPorID(idMedico);
+//        int idCita = Integer.parseInt(partes[0]); // Convertir la primera parte a entero
+//        CitaViejaDTO citaSeleccionada = citaBO.consultarCitaPorsuID(idCita);
 //
-//        try {
-//            List<HorarioMedicoNuevoDTO> horarios = medicoBO.obtenerHorariosMedico(medicoSELECCIONADO);
+//        panelDeConsulta panelConsulta = new panelDeConsulta(citaSeleccionada);
+//        panelConsulta.setVentanaMedico(this.VentanaMedico); 
+//        panelConsulta.setVentanaAgendaDeCitas(this);
 //
-//            if (horarios.isEmpty()) {
-//                jTextAreaHorarios.setText("El médico no tiene horarios registrados");
-//                return;
-//            }
+//        panelConsulta.setVisible(true);
 //
-//            // Crear formateador para la hora
-//            DateTimeFormatter formateadorHora = DateTimeFormatter.ofPattern("HH:mm");
-//
-//            // Construir el texto con formato
-//            StringBuilder horariosTexto = new StringBuilder();
-//            horariosTexto.append("Horarios del Dr. ")
-//                    .append(medicoSELECCIONADO.getNombres())
-//                    .append(" ")
-//                    .append(medicoSELECCIONADO.getApellidoPaterno())
-//                    .append("\n\n");
-//
-//            for (HorarioMedicoNuevoDTO horario : horarios) {
-//                horariosTexto.append("• ")
-//                        .append(horario.getDiaSemana())
-//                        .append(": ")
-//                        .append(horario.getHoraEntrada().format(formateadorHora))
-//                        .append(" - ")
-//                        .append(horario.getHoraSalida().format(formateadorHora))
-//                        .append("\n");
-//            }
-//
-//            // Mostrar en el JTextArea
-//            jTextAreaHorarios.setText(horariosTexto.toString());
-//            jTextAreaHorarios.setCaretPosition(0); // Mover scroll al inicio
-//
-//        } catch (NegocioException ex) {
-//            JOptionPane.showMessageDialog(this, "Error al cargar horarios: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
-//        } catch (Exception e) {
-//            JOptionPane.showMessageDialog(this, "Error inesperado al mostrar horarios", "Error", JOptionPane.ERROR_MESSAGE);
-//        }
-//    }
+//        this.dispose();
 
-
-
+    }
 }
