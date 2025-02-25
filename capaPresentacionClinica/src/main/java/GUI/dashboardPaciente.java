@@ -234,7 +234,7 @@ public class dashboardPaciente extends javax.swing.JFrame {
     }//GEN-LAST:event_BotonEditarPerfilActionPerformed
 
     private void botonCitasProximasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonCitasProximasActionPerformed
-        abrirVentanaCitasProximas();
+        abrirVentanaCitasProximas(paciente);
     }//GEN-LAST:event_botonCitasProximasActionPerformed
 
     private void botonCerrarSesionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonCerrarSesionActionPerformed
@@ -363,12 +363,12 @@ public class dashboardPaciente extends javax.swing.JFrame {
         this.dispose();
     }
 
-    public void abrirVentanaCitasProximas() {
+    public void abrirVentanaCitasProximas(PacienteViejoDTO paciente) {
         if (ventanaCitasProximas == null) {
-            ventanaCitasProximas = new listaCitasProximas();
+            ventanaCitasProximas = new listaCitasProximas(paciente);
         }
 
-        ventanaCitasProximas = new listaCitasProximas();
+        ventanaCitasProximas = new listaCitasProximas(paciente);
         ventanaCitasProximas.setVentanaPaciente(this);
         ventanaCitasProximas.setLocationRelativeTo(null);
         ventanaCitasProximas.setVisible(true);

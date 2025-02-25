@@ -4,17 +4,25 @@
  */
 package GUI;
 
+import DTO.PacienteViejoDTO;
+
 /**
  *
  * @author sonic
  */
 public class listaCitasProximas extends javax.swing.JFrame {
 
+    private PacienteViejoDTO paciente;
     private dashboardPaciente ventanaPaciente;
     
     /**
      * Creates new form listaCitasProximas
      */
+    public listaCitasProximas(PacienteViejoDTO paciente) {
+        this.paciente = paciente;
+        initComponents();
+    }
+    
     public listaCitasProximas() {
         initComponents();
     }
@@ -68,7 +76,11 @@ public class listaCitasProximas extends javax.swing.JFrame {
             }
         });
 
-        listaCitasProximas.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        listaCitasProximas.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                listaCitasProximasActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -123,6 +135,10 @@ public class listaCitasProximas extends javax.swing.JFrame {
     private void botonVerDetallesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonVerDetallesActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_botonVerDetallesActionPerformed
+
+    private void listaCitasProximasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_listaCitasProximasActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_listaCitasProximasActionPerformed
 
     /**
      * @param args the command line arguments
