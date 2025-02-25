@@ -85,24 +85,6 @@ public class ConsultaDAO implements IConsultaDAO {
         return consultas;
     }
     
-    @Override
-    // Método para actualizar una consulta
-    public boolean actualizarConsulta(Consulta consulta) throws SQLException, PersistenciaClinicaException {
-        String query = "UPDATE Consultas SET diagnostico = ?, estado = ?, fechaHora = ?, tratamiento = ? WHERE idConsulta = ?";
-
-        try (PreparedStatement pst = conexion.crearConexion().prepareStatement(query)) {
-            pst.setString(1, consulta.getDiagnostico());
-            pst.setString(2, consulta.getEstado());
-            pst.setTimestamp(3, Timestamp.valueOf(consulta.getFechaHora()));
-            pst.setString(4, consulta.getTratamiento());
-            pst.setInt(5, consulta.getIdConsulta());
-
-            int rowsAffected = pst.executeUpdate();
-            return rowsAffected > 0;
-        } catch (SQLException e) {
-            throw new PersistenciaClinicaException("Error al actualizar consulta", e);
-        }
-    }
 
     @Override
     // Método para cancelar una consulta (actualizando el estado)
@@ -119,34 +101,42 @@ public class ConsultaDAO implements IConsultaDAO {
     }
 
     // Método para obtener una consulta por ID
+   @Override
     public Consulta obtenerConsultaPorId(int idConsulta) throws SQLException, PersistenciaClinicaException {
-        String sql = "SELECT * FROM Consultas WHERE idConsulta = ?";
-        try (Connection conn = conexion.crearConexion();  // Usamos el método crearConexion
-             PreparedStatement ps = conn.prepareStatement(sql)) {
+    String sql = "SELECT * FROM Consultas WHERE idConsulta = ?";
+    try (Connection conn = conexion.crearConexion(); PreparedStatement ps = conn.prepareStatement(sql)) {
 
-            ps.setInt(1, idConsulta);
-            try (ResultSet rs = ps.executeQuery()) {
-                if (rs.next()) {
-                    Consulta consulta = new Consulta();
-                    consulta.setIdConsulta(rs.getInt("idConsulta"));
-                    consulta.setFechaHora(rs.getTimestamp("fechaHora").toLocalDateTime());
-                    consulta.setDiagnostico(rs.getString("diagnostico"));
-                    consulta.setTratamiento(rs.getString("tratamiento"));
-
-                    // Asociamos la cita usando el método consultarCitaPorID de CitaDAO
-                    CitaDAO citaDAO = new CitaDAO(conexion);  // Usamos la conexión que ya existe
-                    int idCita = rs.getInt("idCita");
-                    Cita cita = citaDAO.consultarCitaPorID(idCita);
-                    consulta.setCita(cita);  // Asignamos la cita a la consulta
-
-                    return consulta;
+        ps.setInt(1, idConsulta);
+        try (ResultSet rs = ps.executeQuery()) {
+            if (rs.next()) {
+                Consulta consulta = new Consulta();
+                consulta.setIdConsulta(rs.getInt("idConsulta"));
+                
+                // Verificamos si el valor de "fechaHora" es nulo
+                Timestamp ts = rs.getTimestamp("fechaHora");
+                if (ts != null) {
+                    consulta.setFechaHora(ts.toLocalDateTime());
+                } else {
+                    consulta.setFechaHora(null);
                 }
+                
+                consulta.setDiagnostico(rs.getString("diagnostico"));
+                consulta.setTratamiento(rs.getString("tratamiento"));
+
+                // Asociamos la cita usando el método consultarCitaPorID de CitaDAO
+                CitaDAO citaDAO = new CitaDAO(conexion);  // Usamos la conexión que ya existe
+                int idCita = rs.getInt("idCita");
+                Cita cita = citaDAO.consultarCitaPorID(idCita);
+                consulta.setCita(cita);  // Asignamos la cita a la consulta
+
+                return consulta;
             }
-        } catch (SQLException e) {
-            throw new PersistenciaClinicaException("Error al obtener consulta por ID", e);
         }
-        return null;  // Si no se encuentra la consulta
+    } catch (SQLException e) {
+        throw new PersistenciaClinicaException("Error al obtener consulta por ID", e);
     }
+    return null;  // Si no se encuentra la consulta
+}
     
     @Override
     public List<Consulta> obtenerConsultasPorEspecialidadYFechas(int idPaciente, String especialidad, LocalDateTime fechaInicio, LocalDateTime fechaFin) throws SQLException, PersistenciaClinicaException {

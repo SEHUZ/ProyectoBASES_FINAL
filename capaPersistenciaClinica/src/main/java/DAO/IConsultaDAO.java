@@ -24,8 +24,6 @@ public interface IConsultaDAO {
     // Método para obtener todas las consultas de un paciente específico
     List<Consulta> obtenerConsultasPorPaciente(int idPaciente) throws SQLException, PersistenciaClinicaException;
 
-    // Método para actualizar una consulta
-    boolean actualizarConsulta(Consulta consulta) throws SQLException, PersistenciaClinicaException;
 
     // Método para cancelar una consulta
     boolean cancelarConsulta(int idConsulta) throws SQLException, PersistenciaClinicaException;

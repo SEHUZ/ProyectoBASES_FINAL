@@ -186,64 +186,75 @@ public class CitaDAO implements ICitaDAO {
 
     @Override
     public Cita consultarCitaPorID(int idCita) throws PersistenciaClinicaException {
-        String consultaCita = "SELECT c.*, e.descripcion AS estado, ce.folio, "
-                + "m.nombres AS medico_nombres, m.apellidoPaterno AS medico_apellido, "
-                + "p.nombres AS paciente_nombres "
-                + "FROM Citas c "
-                + "JOIN EstadosCita e ON c.idEstado = e.idEstado "
-                + "JOIN Medicos m ON c.idMedico = m.idMedico "
-                + "JOIN Pacientes p ON c.idPaciente = p.idPaciente "
-                + "LEFT JOIN CitasEmergencias ce ON c.idCita = ce.idCita "
-                + "WHERE c.idCita = ?";
+        final String PROCEDIMIENTO = "{CALL ObtenerCitaPorID(?)}";
+        Cita cita = null;
 
-        try (Connection conn = conexion.crearConexion(); PreparedStatement ps = conn.prepareStatement(consultaCita)) {
+        try (Connection conn = conexion.crearConexion();
+             CallableStatement cs = conn.prepareCall(PROCEDIMIENTO)) {
 
-            ps.setInt(1, idCita);
+            cs.setInt(1, idCita);
 
-            try (ResultSet rs = ps.executeQuery()) {
+            try (ResultSet rs = cs.executeQuery()) {
                 if (rs.next()) {
-                    Cita cita = new Cita();
-                    cita.setIdCita(rs.getInt("idCita"));
-                    cita.setFechaHora(rs.getTimestamp("fechaHora").toLocalDateTime());
-
-                    String tipoStr = rs.getString("tipoCita");
-                    cita.setTipoCita(Cita.TipoCita.valueOf(tipoStr.toUpperCase()));
-
-                    // Mapear Estado
-                    EstadosCita estado = new EstadosCita();
-                    estado.setDescripcion(rs.getString("estado"));
-                    cita.setEstado(estado);
-
-                    // Mapear Médico
-                    Medico medico = new Medico();
-                    medico.setNombres(rs.getString("medico_nombres"));
-                    medico.setApellidoPaterno(rs.getString("medico_apellido"));
-                    cita.setMedico(medico);
-
-                    // Mapear Paciente
-                    Paciente paciente = new Paciente();
-                    paciente.setNombres(rs.getString("paciente_nombres"));
-                    cita.setPaciente(paciente);
-
-                    // Mapear Emergencia si existe
-                    String folio = rs.getString("folio");
-                    if (folio != null) {
-                        CitaEmergencia emergencia = new CitaEmergencia();
-                        emergencia.setFolio(folio);
-                        cita.setEmergencia(emergencia);
-                    }
-
-                    return cita;
-
-                } else {
-                    throw new PersistenciaClinicaException("Cita no encontrada con ID: " + idCita);
+                    cita = mapear(rs);
                 }
             }
 
         } catch (SQLException ex) {
-            throw new PersistenciaClinicaException("Error al consultar cita: " + ex.getMessage());
+            if (ex.getErrorCode() == 1644) { // Código para SIGNAL SQLSTATE '45000'
+            throw new PersistenciaClinicaException("Cita no encontrada: " + ex.getMessage());
         }
+        throw new PersistenciaClinicaException(
+            "Error técnico al consultar cita ID " + idCita + ": " + ex.getMessage()
+        );
+        }
+
+        if (cita == null) {
+            throw new PersistenciaClinicaException("Cita no encontrada con ID: " + idCita);
+        }
+
+        return cita;
     }
+
+    private Cita mapear(ResultSet rs) throws SQLException {
+        Cita cita = new Cita();
+        
+        cita.setIdCita(rs.getInt("idCita"));
+        cita.setFechaHora(rs.getTimestamp("fechaHora").toLocalDateTime());
+        
+        EstadosCita estado = new EstadosCita();
+        estado.setIdEstado(rs.getInt("idEstado"));
+        estado.setDescripcion(rs.getString("estadoCita"));
+        cita.setEstado(estado);
+
+        Paciente paciente = new Paciente();
+        paciente.setIdPaciente(rs.getInt("idPaciente"));
+        paciente.setNombres(rs.getString("nombrePaciente"));
+        paciente.setApellidoPaterno(rs.getString("apellidoPaternoPaciente"));
+        paciente.setApellidoMaterno(rs.getString("apellidoMaternoPaciente"));
+        cita.setPaciente(paciente);
+
+        Medico medico = new Medico();
+        medico.setIdMedico(rs.getInt("idMedico"));
+        medico.setNombres(rs.getString("nombreMedico"));
+        medico.setApellidoPaterno(rs.getString("apellidoPaternoMedico"));
+        medico.setApellidoMaterno(rs.getString("apellidoMaternoMedico"));
+        cita.setMedico(medico);
+
+        if (rs.getString("tipoCitaNormal") == null) {
+            CitaEmergencia emergencia = new CitaEmergencia();
+            emergencia.setFolio(rs.getString("folioEmergencia"));
+            emergencia.setFechaExpiracion(rs.getTimestamp("fechaExpiracion") != null 
+                ? rs.getTimestamp("fechaExpiracion").toLocalDateTime() 
+                : null);
+            cita.setEmergencia(emergencia);
+        } else {
+            cita.setNormal(new CitaNormal());
+        }
+
+        return cita;
+    }
+        
 
     @Override
     public boolean insertarEstadoCita(int idCita, String estado) throws PersistenciaClinicaException {
@@ -269,9 +280,9 @@ public class CitaDAO implements ICitaDAO {
 
             cstmt.setInt(1, cita.getPaciente().getIdPaciente());
 
-            cstmt.registerOutParameter(2, Types.VARCHAR);  
-            cstmt.registerOutParameter(3, Types.INTEGER);  
-            cstmt.registerOutParameter(4, Types.TIMESTAMP); 
+            cstmt.registerOutParameter(2, Types.VARCHAR);
+            cstmt.registerOutParameter(3, Types.INTEGER);
+            cstmt.registerOutParameter(4, Types.TIMESTAMP);
             cstmt.registerOutParameter(5, Types.TIMESTAMP);
 
             cstmt.execute();
@@ -279,11 +290,11 @@ public class CitaDAO implements ICitaDAO {
             String folio = cstmt.getString(2);
             int idCita = cstmt.getInt(3);
             Timestamp fechaExpiracion = cstmt.getTimestamp(4);
-            Timestamp fechaHoraCita = cstmt.getTimestamp(5);  
+            Timestamp fechaHoraCita = cstmt.getTimestamp(5);
             // Asignar valores a la cita
             cita.setIdCita(idCita);
             cita.setTipoCita(Cita.TipoCita.EMERGENCIA);
-            cita.setFechaHora(fechaHoraCita.toLocalDateTime()); 
+            cita.setFechaHora(fechaHoraCita.toLocalDateTime());
 
             CitaEmergencia emergencia = new CitaEmergencia();
             emergencia.setFolio(folio);
