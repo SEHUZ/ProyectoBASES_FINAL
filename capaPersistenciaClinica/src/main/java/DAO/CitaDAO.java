@@ -38,24 +38,24 @@ public class CitaDAO implements ICitaDAO {
 
         try (Connection conn = conexion.crearConexion(); CallableStatement cstmt = conn.prepareCall(sql)) {
 
-            // 1. Parámetros IN (índices 1-4)
-            cstmt.setInt(1, cita.getPaciente().getIdPaciente());       // p_idPaciente
-            cstmt.setInt(2, cita.getMedico().getIdMedico());           // p_idMedico
-            cstmt.setTimestamp(3, Timestamp.valueOf(cita.getFechaHora())); // p_fechaHora
-            cstmt.setString(4, cita.getTipoCita().name());             // p_tipo
+            
+            cstmt.setInt(1, cita.getPaciente().getIdPaciente());     
+            cstmt.setInt(2, cita.getMedico().getIdMedico());          
+            cstmt.setTimestamp(3, Timestamp.valueOf(cita.getFechaHora())); 
+            cstmt.setString(4, cita.getTipoCita().name());             
 
-            // 2. Registrar parámetros OUT (índices 5 y 6)
-            cstmt.registerOutParameter(5, Types.INTEGER);    // p_idCita
-            cstmt.registerOutParameter(6, Types.VARCHAR);    // p_folio
+            
+            cstmt.registerOutParameter(5, Types.INTEGER);  
+            cstmt.registerOutParameter(6, Types.VARCHAR);   
 
-            // Ejecutar el procedimiento
+            
             cstmt.execute();
 
-            // 3. Obtener valores de los parámetros OUT
+            
             int idCita = cstmt.getInt(5);
             String folio = cstmt.getString(6);
 
-            // Asignar valores a la entidad Cita
+            
             cita.setIdCita(idCita);
 
             if (cita.getTipoCita() == Cita.TipoCita.EMERGENCIA) {
@@ -169,11 +169,11 @@ public class CitaDAO implements ICitaDAO {
 
     @Override
     public boolean cancelarCita(int idCita) throws PersistenciaClinicaException {
-        String sql = "UPDATE Citas SET idEstado = "
+        String updateSQL = "UPDATE Citas SET idEstado = "
                 + "(SELECT idEstado FROM EstadosCita WHERE descripcion = 'Cancelada') "
                 + "WHERE idCita = ?";
 
-        try (Connection conn = conexion.crearConexion(); PreparedStatement ps = conn.prepareStatement(sql)) {
+        try (Connection conn = conexion.crearConexion(); PreparedStatement ps = conn.prepareStatement(updateSQL)) {
 
             ps.setInt(1, idCita);
             int affectedRows = ps.executeUpdate();
@@ -191,7 +191,7 @@ public class CitaDAO implements ICitaDAO {
 
     @Override
     public Cita consultarCitaPorID(int idCita) throws PersistenciaClinicaException {
-        String sql = "SELECT c.*, e.descripcion AS estado, ce.folio, "
+        String consultaCita = "SELECT c.*, e.descripcion AS estado, ce.folio, "
                 + "m.nombres AS medico_nombres, m.apellidoPaterno AS medico_apellido, "
                 + "p.nombres AS paciente_nombres "
                 + "FROM Citas c "
@@ -201,7 +201,7 @@ public class CitaDAO implements ICitaDAO {
                 + "LEFT JOIN CitasEmergencias ce ON c.idCita = ce.idCita "
                 + "WHERE c.idCita = ?";
 
-        try (Connection conn = conexion.crearConexion(); PreparedStatement ps = conn.prepareStatement(sql)) {
+        try (Connection conn = conexion.crearConexion(); PreparedStatement ps = conn.prepareStatement(consultaCita)) {
 
             ps.setInt(1, idCita);
 
@@ -252,9 +252,9 @@ public class CitaDAO implements ICitaDAO {
 
     @Override
     public boolean insertarEstadoCita(int idCita, String estado) throws PersistenciaClinicaException {
-        String sql = "UPDATE citas SET estado = ? WHERE idCita = ?";
+        String UpdateSQL = "UPDATE citas SET estado = ? WHERE idCita = ?";
 
-        try (Connection conn = conexion.crearConexion(); PreparedStatement ps = conn.prepareStatement(sql)) {
+        try (Connection conn = conexion.crearConexion(); PreparedStatement ps = conn.prepareStatement(UpdateSQL)) {
             ps.setString(1, estado);
             ps.setInt(2, idCita);
 
@@ -268,15 +268,15 @@ public class CitaDAO implements ICitaDAO {
 
     @Override
     public Cita agendarCitaEmergencia(Cita cita) throws PersistenciaClinicaException, SQLException {
-        String sql = "{CALL AgendarCitaEmergencia(?, ?, ?, ?)}";
+        String procedimientoEmergencia = "{CALL AgendarCitaEmergencia(?, ?, ?, ?)}";
 
-        try (Connection conn = conexion.crearConexion(); CallableStatement cstmt = conn.prepareCall(sql)) {
+        try (Connection conn = conexion.crearConexion(); CallableStatement cstmt = conn.prepareCall(procedimientoEmergencia)) {
 
-            cstmt.setInt(1, cita.getPaciente().getIdPaciente());  // p_idPaciente
+            cstmt.setInt(1, cita.getPaciente().getIdPaciente()); 
 
-            cstmt.registerOutParameter(2, Types.VARCHAR);   // p_folio
-            cstmt.registerOutParameter(3, Types.INTEGER);   // p_idCita
-            cstmt.registerOutParameter(4, Types.TIMESTAMP); // p_fechaExpiracion
+            cstmt.registerOutParameter(2, Types.VARCHAR);   
+            cstmt.registerOutParameter(3, Types.INTEGER);  
+            cstmt.registerOutParameter(4, Types.TIMESTAMP); 
 
             cstmt.execute();
 

@@ -32,5 +32,7 @@ public interface IMedicoDAO {
     
     public Medico registrarMedico(Medico medico) throws PersistenciaClinicaException, SQLException;
     
+    public Medico consultarUnMedicoPorEspecialidad(String Especialidad) throws PersistenciaClinicaException;
+    
     
 }

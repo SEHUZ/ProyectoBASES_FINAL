@@ -211,6 +211,32 @@ public class MedicoDAO implements IMedicoDAO {
             throw new PersistenciaClinicaException("Error al consultar médico por ID: " + ex.getMessage());
         }
     }
+    @Override
+    public Medico consultarUnMedicoPorEspecialidad(String Especialidad) throws PersistenciaClinicaException {
+        Medico medico = null;
+        String consultaSQL = "SELECT m.idMedico, m.idUsuario, m.nombres, m.apellidoPaterno, "
+                + "m.apellidoMaterno, m.cedula, m.especialidad, m.activo "
+                + "FROM Medicos m "
+                + "WHERE m.especialidad = ? AND m.activo = TRUE";
+        try (Connection con = conexion.crearConexion(); PreparedStatement ps = con.prepareStatement(consultaSQL)) {
+            ps.setString(1, Especialidad);
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    medico = new Medico();
+                    medico.setIdMedico(rs.getInt("idMedico"));
+                    medico.setNombres(rs.getString("nombres"));
+                    medico.setApellidoPaterno(rs.getString("apellidoPaterno"));
+                    medico.setApellidoMaterno(rs.getString("apellidoMaterno"));
+                    medico.setCedula(rs.getString("cedula"));
+                    medico.setEspecialidad(rs.getString("especialidad"));
+                    medico.setActivo(rs.getBoolean("activo"));
+                }
+            }
+        } catch (SQLException ex) {
+            throw new PersistenciaClinicaException("Error al consultar medicos por especialidad: " + ex.getMessage(), ex);
+        }
+        return medico;
+    }
 
     @Override
     public Medico consultarMedicoPorUsuario(String user) throws PersistenciaClinicaException {
