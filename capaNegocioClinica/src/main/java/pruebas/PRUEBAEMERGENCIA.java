@@ -18,13 +18,18 @@ import java.sql.SQLException;
 import java.time.LocalDateTime;
 
 /**
- *
+ * Clase de prueba para agendar una cita de emergencia.
+ * Esta clase utiliza el objeto de negocio CitaBO para crear y agendar una cita de emergencia
+ * utilizando datos de prueba.
+ * 
  * @author sonic
  */
 public class PRUEBAEMERGENCIA {
 
     /**
-     * @param args the command line arguments
+     * Método principal que ejecuta la prueba de agendar una cita de emergencia.
+     *
+     * @param args Los argumentos de línea de comandos (no se utilizan en esta prueba).
      */
     public static void main(String[] args) {
         CitaBO citaBO = DependencyInjector.crearCitaBO();

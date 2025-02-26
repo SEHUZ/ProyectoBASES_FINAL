@@ -9,10 +9,21 @@ import DTO.MedicoNuevoDTO;
 import Entidades.Medico;
 
 /**
- *
+ * Clase que se encarga de mapear entre objetos de transferencia de datos (DTO) y entidades
+ * relacionadas con médicos. Proporciona métodos para convertir entre MedicoDTO,
+ * MedicoNuevoDTO y la entidad Medico.
+ * 
  * @author Daniel M
  */
 public class MedicoMapper {
+    
+    /**
+     * Convierte una entidad Medico a un objeto MedicoDTO.
+     *
+     * @param medico Entidad Medico que se desea convertir.
+     * @return Objeto MedicoDTO correspondiente a la entidad, o null si la entidad es null.
+     */
+    
 
     public MedicoDTO toDTO(Medico medico) {
         if (medico == null) {
@@ -29,6 +40,13 @@ public class MedicoMapper {
                 medico.isActivo()
         );
     }
+    
+    /**
+     * Convierte un objeto MedicoNuevoDTO a una entidad Medico.
+     *
+     * @param medicoNuevoDTO Objeto MedicoNuevoDTO que se desea convertir.
+     * @return Entidad Medico correspondiente al DTO, o null si el DTO es null.
+     */
 
     public Medico toEntityNuevo(MedicoNuevoDTO medicoNuevoDTO) {
         if (medicoNuevoDTO == null) {
@@ -44,6 +62,13 @@ public class MedicoMapper {
                 medicoNuevoDTO.isActivo()
         );
     }
+    
+    /**
+     * Convierte un objeto MedicoDTO a una entidad Medico.
+     *
+     * @param medicoDTO Objeto MedicoDTO que se desea convertir.
+     * @return Entidad Medico correspondiente al DTO, o null si el DTO es null.
+     */
         
     public Medico toEntityDTO(MedicoDTO medicoDTO) {
         if (medicoDTO == null) {

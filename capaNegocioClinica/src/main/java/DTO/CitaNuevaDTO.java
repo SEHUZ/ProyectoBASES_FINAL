@@ -17,7 +17,10 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 /**
- *
+ * Clase que representa un objeto de transferencia de datos (DTO) para una nueva cita.
+ * Contiene información sobre el paciente, médico, estado de la cita, fecha y hora,
+ * tipo de cita, auditorías y detalles específicos de la cita (emergencia o normal).
+ * 
  * @author sonic
  */
 public class CitaNuevaDTO {
@@ -30,6 +33,20 @@ public class CitaNuevaDTO {
     private CitaEmergencia emergencia;
     private CitaNormal normal;
     private Consulta consulta;
+    
+    /**
+     * Constructor que inicializa todos los atributos de la cita nueva.
+     *
+     * @param paciente Paciente asociado a la cita.
+     * @param medico Médico asignado a la cita.
+     * @param estado Estado de la cita.
+     * @param fechaHora Fecha y hora de la cita.
+     * @param tipoCita Tipo de cita (emergencia o normal).
+     * @param auditorias Lista de auditorías asociadas a la cita.
+     * @param emergencia Detalles de la cita de emergencia.
+     * @param normal Detalles de la cita normal.
+     * @param consulta Consulta asociada a la cita.
+     */
       
 
     public CitaNuevaDTO(Paciente paciente, Medico medico, EstadosCita estado, LocalDateTime fechaHora, TipoCita tipoCita, List<Auditoria> auditorias, CitaEmergencia emergencia, CitaNormal normal, Consulta consulta) {
@@ -44,6 +61,19 @@ public class CitaNuevaDTO {
         this.consulta = consulta;
     }
 
+    
+    /**
+     * Constructor que inicializa la cita nueva sin detalles de emergencia.
+     *
+     * @param paciente Paciente asociado a la cita.
+     * @param medico Médico asignado a la cita.
+     * @param estado Estado de la cita.
+     * @param fechaHora Fecha y hora de la cita.
+     * @param tipoCita Tipo de cita (emergencia o normal).
+     * @param auditorias Lista de auditorías asociadas a la cita.
+     * @param normal Detalles de la cita normal.
+     * @param consulta Consulta asociada a la cita.
+     */
     public CitaNuevaDTO(Paciente paciente, Medico medico, EstadosCita estado, LocalDateTime fechaHora, TipoCita tipoCita, List<Auditoria> auditorias, CitaNormal normal, Consulta consulta) {
         this.paciente = paciente;
         this.medico = medico;
@@ -55,6 +85,18 @@ public class CitaNuevaDTO {
         this.consulta = consulta;
     }
 
+         /**
+     * Constructor que inicializa la cita nueva sin detalles de cita normal.
+     *
+     * @param paciente Paciente asociado a la cita.
+     * @param medico Médico asignado a la cita.
+     * @param estado Estado de la cita.
+     * @param fechaHora Fecha y hora de la cita.
+     * @param tipoCita Tipo de cita (emergencia o normal).
+     * @param auditorias Lista de auditorías asociadas a la cita.
+     * @param emergencia Detalles de la cita de emergencia.
+     * @param consulta Consulta asociada a la cita.
+     */
     public CitaNuevaDTO(Paciente paciente, Medico medico, EstadosCita estado, LocalDateTime fechaHora, TipoCita tipoCita, List<Auditoria> auditorias, CitaEmergencia emergencia, Consulta consulta) {
         this.paciente = paciente;
         this.medico = medico;
@@ -65,6 +107,18 @@ public class CitaNuevaDTO {
         this.emergencia = emergencia;
         this.consulta = consulta;
     }
+    
+    /**
+     * Constructor que inicializa la cita nueva sin detalles de auditoría y cita normal.
+     *
+     * @param paciente Paciente asociado a la cita.
+     * @param medico Médico asignado a la cita.
+     * @param estado Estado de la cita.
+     * @param fechaHora Fecha y hora de la cita.
+     * @param tipoCita Tipo de cita (emergencia o normal).
+     * @param emergencia Detalles de la cita de emergencia.
+     * @param consulta Consulta asociada a la cita.
+     */
 
     public CitaNuevaDTO(Paciente paciente, Medico medico, EstadosCita estado, LocalDateTime fechaHora, TipoCita tipoCita, CitaEmergencia emergencia, Consulta consulta) {
         this.paciente = paciente;
@@ -78,7 +132,17 @@ public class CitaNuevaDTO {
     
     
     
-
+    /**
+     * Constructor que inicializa la cita nueva sin detalles de auditoría y cita de emergencia.
+     *
+     * @param paciente Paciente asociado a la cita.
+     * @param medico Médico asignado a la cita.
+     * @param estado Estado de la cita.
+     * @param fechaHora Fecha y hora de la cita.
+     * @param tipoCita Tipo de cita (emergencia o normal).
+     * @param normal Detalles de la cita normal.
+     * @param consulta Consulta asociada a la cita.
+     */
     public CitaNuevaDTO(Paciente paciente, Medico medico, EstadosCita estado, LocalDateTime fechaHora, TipoCita tipoCita, CitaNormal normal, Consulta consulta) {
         this.paciente = paciente;
         this.medico = medico;

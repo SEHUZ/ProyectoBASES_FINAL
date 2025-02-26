@@ -7,7 +7,10 @@ package DTO;
 import Entidades.Usuario;
 
 /**
- *
+ * Clase que representa un objeto de transferencia de datos (DTO) para un nuevo médico.
+ * Contiene información sobre el usuario asociado, nombres, apellidos, cédula,
+ * especialidad y estado de actividad del médico.
+ * 
  * @author sonic
  */
 public class MedicoNuevoDTO {
@@ -19,8 +22,23 @@ public class MedicoNuevoDTO {
     private String especialidad;
     private boolean activo;
 
+    /**
+     * Constructor vacío para la clase MedicoNuevoDTO.
+     */
     public MedicoNuevoDTO() {
     }
+    
+    /**
+     * Constructor que inicializa todos los atributos del nuevo médico.
+     *
+     * @param usuario Usuario asociado al médico.
+     * @param nombres Nombres del médico.
+     * @param apellidoPaterno Apellido paterno del médico.
+     * @param apellidoMaterno Apellido materno del médico.
+     * @param cedula Cédula del médico.
+     * @param especialidad Especialidad del médico.
+     * @param activo Estado de actividad del médico (activo/inactivo).
+     */
 
     public MedicoNuevoDTO(Usuario usuario, String nombres, String apellidoPaterno, String apellidoMaterno, String cedula, String especialidad, boolean activo) {
         this.usuario = usuario;

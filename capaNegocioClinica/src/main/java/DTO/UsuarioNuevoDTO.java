@@ -5,7 +5,9 @@
 package DTO;
 
 /**
- *
+ * Clase que representa un objeto de transferencia de datos (DTO) para un nuevo usuario.
+ * Contiene información sobre el nombre de usuario, contraseña y rol del usuario.
+ * 
  * @author sonic
  */
 public class UsuarioNuevoDTO {
@@ -16,6 +18,14 @@ public class UsuarioNuevoDTO {
 
     public UsuarioNuevoDTO() {
     }
+    
+    /**
+     * Constructor que inicializa todos los atributos del nuevo usuario.
+     *
+     * @param User Nombre de usuario.
+     * @param contrasenia Contraseña del usuario.
+     * @param rol Rol del usuario.
+     */
 
     public UsuarioNuevoDTO(String User, String contrasenia, String rol) {
         this.User = User;

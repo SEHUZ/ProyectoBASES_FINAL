@@ -8,7 +8,10 @@ import Entidades.Cita;
 import java.time.LocalDateTime;
 
 /**
- *
+ * Clase que representa un objeto de transferencia de datos (DTO) para una consulta existente.
+ * Contiene información sobre el ID de la consulta, la cita asociada, diagnóstico, estado,
+ * fecha y hora, y tratamiento recomendado.
+ * 
  * @author Jose
  */
 public class ConsultaViejaDTO {
@@ -18,7 +21,17 @@ public class ConsultaViejaDTO {
     private String estado;
     private LocalDateTime fechaHora;
     private String tratamiento;
-
+    
+    /**
+     * Constructor que inicializa todos los atributos de la consulta vieja.
+     *
+     * @param idConsulta Identificador único de la consulta.
+     * @param cita Cita asociada a la consulta.
+     * @param diagnostico Diagnóstico realizado durante la consulta.
+     * @param estado Estado de la consulta.
+     * @param fechaHora Fecha y hora de la consulta.
+     * @param tratamiento Tratamiento recomendado tras la consulta.
+     */
     public ConsultaViejaDTO(int idConsulta, Cita cita, String diagnostico, String estado, LocalDateTime fechaHora, String tratamiento) {
         this.idConsulta = idConsulta;
         this.cita = cita;

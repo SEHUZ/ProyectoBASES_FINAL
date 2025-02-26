@@ -130,6 +130,15 @@ public class PacienteBO {
             throw new NegocioException("Error en el registro del paciente.");
         }
     }
+    /**
+     * Método que actualiza los datos de un paciente existente.
+     *
+     * @param pacienteViejoDTO Objeto que contiene los datos del paciente a actualizar.
+     * @return El paciente actualizado.
+     * @throws NegocioException Si se viola una regla de negocio.
+     * @throws SQLException Si ocurre un error con SQL.
+     * @throws PersistenciaClinicaException Si hay un error en la DAO.
+     */
 
     public Paciente actualizarPaciente(PacienteViejoDTO pacienteViejoDTO) throws NegocioException, SQLException, PersistenciaClinicaException {
         // Verificar que el paciente no sea nulo.
@@ -157,6 +166,13 @@ public class PacienteBO {
             throw new NegocioException("Error al actualizar paciente: " + ex.getMessage());
         }
     }
+    /**
+     * Método que busca un paciente por su nombre de usuario.
+     *
+     * @param user Nombre de usuario del paciente a buscar.
+     * @return Un objeto PacienteViejoDTO con los datos del paciente, o null si no se encuentra.
+     * @throws NegocioException Si ocurre un error en la consulta.
+     */
 
     public PacienteViejoDTO buscarPacientePorUsuario(String user) throws NegocioException {
         try {
@@ -172,6 +188,15 @@ public class PacienteBO {
         }
     }
     
+    /**
+     * Método para buscar un paciente por su ID.
+     *
+     * @param id ID del paciente que se desea buscar.
+     * @return Un objeto PacienteViejoDTO con los datos del paciente, o null si no se encuentra.
+     * @throws NegocioException Si ocurre un error en la consulta.
+     */
+    
+    //Metodo para buscar un paciente por su ID, recibe un int que sera el id del paciente que buscara , regresa un objeto pacienteViejoDTO
     public PacienteViejoDTO buscarPacientePorID(int id) throws NegocioException {
         try {
             Paciente paciente = pacienteDAO.consultarPacientePorID(id);

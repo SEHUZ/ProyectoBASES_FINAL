@@ -9,7 +9,10 @@ import Entidades.Consulta;
 import java.time.LocalDateTime;
 
 /**
- *
+ * Clase que representa un objeto de transferencia de datos (DTO) para una nueva consulta.
+ * Contiene información sobre la cita asociada, diagnóstico, estado, fecha y hora,
+ * y tratamiento recomendado.
+ * 
  * @author sonic
  */
 public class ConsultaNuevaDTO {
@@ -18,6 +21,16 @@ public class ConsultaNuevaDTO {
     private String estado;
     private LocalDateTime fechaHora;
     private String tratamiento;
+    
+    /**
+     * Constructor que inicializa todos los atributos de la nueva consulta.
+     *
+     * @param cita Cita asociada a la consulta.
+     * @param diagnostico Diagnóstico realizado durante la consulta.
+     * @param estado Estado de la consulta.
+     * @param fechaHora Fecha y hora de la consulta.
+     * @param tratamiento Tratamiento recomendado tras la consulta.
+     */
 
     public ConsultaNuevaDTO(Cita cita, String diagnostico, String estado, LocalDateTime fechaHora, String tratamiento) {
         this.cita = cita;

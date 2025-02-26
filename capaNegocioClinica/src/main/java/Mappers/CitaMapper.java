@@ -12,10 +12,19 @@ import Entidades.Cita;
 import Entidades.Paciente;
 
 /**
- *
+ * Clase que se encarga de mapear entre objetos de transferencia de datos (DTO) y entidades.
+ * Proporciona métodos para convertir entre CitaNuevaDTO, CitaViejaDTO y la entidad Cita.
+ * 
  * @author sonic
  */
 public class CitaMapper {
+    
+    /**
+     * Convierte un objeto CitaNuevaDTO a una entidad Cita.
+     *
+     * @param dto Objeto CitaNuevaDTO que se desea convertir.
+     * @return Entidad Cita correspondiente al DTO, o null si el DTO es null.
+     */
 
     public Cita toEntityNuevo(CitaNuevaDTO dto) {
         if (dto == null) {
@@ -29,6 +38,13 @@ public class CitaMapper {
                 dto.getTipoCita()
         );
     }
+    
+    /**
+     * Convierte una entidad Cita a un objeto CitaViejaDTO.
+     *
+     * @param cita Entidad Cita que se desea convertir.
+     * @return Objeto CitaViejaDTO correspondiente a la entidad, o null si la entidad es null.
+     */
 
     // Convertir de Paciente a PacienteViejoDTO
     public CitaViejaDTO toViejoDTO(Cita cita) {
@@ -49,6 +65,13 @@ public class CitaMapper {
 
         return dto;
     }
+    
+    /**
+     * Convierte un objeto CitaViejaDTO a una entidad Cita.
+     *
+     * @param dto Objeto CitaViejaDTO que se desea convertir.
+     * @return Entidad Cita correspondiente al DTO, o null si el DTO es null.
+     */
 
     // Convertir de PacienteViejoDTO a Paciente
     public Cita toEntityViejo(CitaViejaDTO dto) {

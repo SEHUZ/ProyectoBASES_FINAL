@@ -4,6 +4,7 @@
  */
 package BO;
 
+// IMPORTS 
 import Conexion.IConexionBD;
 import DAO.CitaDAO;
 import DAO.ICitaDAO;
@@ -14,7 +15,6 @@ import DAO.PacienteDAO;
 import DTO.CitaNuevaDTO;
 import DTO.CitaViejaDTO;
 import DTO.MedicoDTO;
-import DTO.PacienteNuevoDTO;
 import DTO.PacienteViejoDTO;
 import Entidades.Cita;
 import Entidades.CitaEmergencia;

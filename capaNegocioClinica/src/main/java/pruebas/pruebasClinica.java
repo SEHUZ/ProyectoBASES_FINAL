@@ -13,7 +13,10 @@ import configuracion.DependencyInjector;
 import java.util.logging.Logger;
 
 /**
- *
+ * Clase de prueba para realizar operaciones relacionadas con la clínica.
+ * Esta clase utiliza los objetos de negocio MedicoBO y CitaBO para realizar
+ * pruebas de funcionalidad en el sistema.
+ * 
  * @author Daniel M
  */
 public class pruebasClinica {
@@ -23,7 +26,10 @@ public class pruebasClinica {
     private final CitaMapper mapper = new CitaMapper();
 
     /**
-     * @param args the command line arguments
+     * Método principal que ejecuta las pruebas de la clínica.
+     *
+     * @param args Los argumentos de línea de comandos (no se utilizan en esta prueba).
+     * @throws NegocioException Si ocurre un error relacionado con las reglas de negocio.
      */
     public static void main(String[] args) throws NegocioException {
 

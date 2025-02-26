@@ -15,7 +15,9 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
- *
+ * Clase que representa la lógica de negocio para la gestión de usuarios.
+ * Proporciona métodos para la autenticación de pacientes y médicos.
+ * 
  * @author Daniel M
  */
 public class UsuarioBO {
@@ -34,6 +36,14 @@ public class UsuarioBO {
     public UsuarioBO(IConexionBD conexion) {
         this.usuarioDAO = new UsuarioDAO(conexion);
     }
+    /**
+     * Método que autentica a un paciente utilizando su nombre de usuario y contraseña.
+     *
+     * @param user Nombre de usuario del paciente.
+     * @param contrasenia Contraseña del paciente.
+     * @return True si el paciente fue autenticado correctamente, False en caso contrario.
+     * @throws NegocioException Si ocurre un error en la lógica de negocio.
+     */
     
     public boolean loginPaciente(String user, String contrasenia) throws NegocioException {
         try {
@@ -46,6 +56,14 @@ public class UsuarioBO {
         }
         
     }
+    /**
+     * Método que autentica a un médico utilizando su nombre de usuario y contraseña.
+     *
+     * @param user Nombre de usuario del médico.
+     * @param contrasenia Contraseña del médico.
+     * @return True si el médico fue autenticado correctamente, False en caso contrario.
+     * @throws NegocioException Si ocurre un error en la lógica de negocio.
+     */
     
     public boolean loginMedico(String user, String contrasenia) throws NegocioException {
         try {

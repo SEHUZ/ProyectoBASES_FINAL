@@ -9,7 +9,10 @@ import Entidades.Usuario;
 import java.time.LocalDate;
 
 /**
- *
+ * Clase que representa un objeto de transferencia de datos (DTO) para un nuevo paciente.
+ * Contiene información sobre la dirección, usuario asociado, nombre, apellidos,
+ * fecha de nacimiento, correo electrónico y número de teléfono del paciente.
+ * 
  * @author Daniel M
  */
 public class PacienteNuevoDTO {
@@ -24,9 +27,24 @@ public class PacienteNuevoDTO {
     private String email;
     private String telefono;
     
-
+/**
+     * Constructor vacío para la clase PacienteNuevoDTO.
+     */
     public PacienteNuevoDTO() {
     }
+    
+    /**
+     * Constructor que inicializa todos los atributos del nuevo paciente.
+     *
+     * @param direccion Dirección del paciente.
+     * @param usuario Usuario asociado al paciente.
+     * @param nombre Nombre del paciente.
+     * @param apellidoPaterno Apellido paterno del paciente.
+     * @param apellidoMaterno Apellido materno del paciente.
+     * @param fechaNacimiento Fecha de nacimiento del paciente.
+     * @param email Correo electrónico del paciente.
+     * @param telefono Número de teléfono del paciente.
+     */
 
     public PacienteNuevoDTO(DireccionPaciente direccion, Usuario usuario, String nombre, String apellidoPaterno, String apellidoMaterno, LocalDate fechaNacimiento, String email, String telefono) {
         this.direccion = direccion;
@@ -38,6 +56,18 @@ public class PacienteNuevoDTO {
         this.email = email;
         this.telefono = telefono;
     }
+    
+    /**
+     * Constructor que inicializa los atributos del nuevo paciente sin el usuario.
+     *
+     * @param direccion Dirección del paciente.
+     * @param nombre Nombre del paciente.
+     * @param apellidoPaterno Apellido paterno del paciente.
+     * @param apellidoMaterno Apellido materno del paciente.
+     * @param fechaNacimiento Fecha de nacimiento del paciente.
+     * @param email Correo electrónico del paciente.
+     * @param telefono Número de teléfono del paciente.
+     */
 
     public PacienteNuevoDTO(DireccionPaciente direccion, String nombre, String apellidoPaterno, String apellidoMaterno, LocalDate fechaNacimiento, String email, String telefono) {
         this.direccion = direccion;

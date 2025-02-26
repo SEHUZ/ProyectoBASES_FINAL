@@ -9,7 +9,10 @@ import java.time.DayOfWeek;
 import java.time.LocalTime;
 
 /**
- *
+ * Clase que representa un objeto de transferencia de datos (DTO) para el horario de un médico.
+ * Contiene información sobre el médico, la hora de entrada, la hora de salida y el día de la semana
+ * en el que el médico está disponible.
+ * 
  * @author sonic
  */
 public class HorarioMedicoNuevoDTO {
@@ -17,6 +20,15 @@ public class HorarioMedicoNuevoDTO {
     private LocalTime horaEntrada;
     private LocalTime horaSalida;
     private DayOfWeek diaSemana;
+    
+    /**
+     * Constructor que inicializa todos los atributos del horario del médico.
+     *
+     * @param medico Médico asociado al horario.
+     * @param horaEntrada Hora de entrada del médico.
+     * @param horaSalida Hora de salida del médico.
+     * @param diaSemana Día de la semana en el que el médico está disponible.
+     */
 
     public HorarioMedicoNuevoDTO(Medico medico, LocalTime horaEntrada, LocalTime horaSalida, DayOfWeek diaSemana) {
         this.medico = medico;

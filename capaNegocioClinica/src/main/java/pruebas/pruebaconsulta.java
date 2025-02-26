@@ -33,12 +33,12 @@ public class pruebaconsulta {
             ConsultaNuevaDTO nuevaConsulta = new ConsultaNuevaDTO();
             nuevaConsulta.setDiagnostico("Diagnóstico de prueba");
             nuevaConsulta.setTratamiento("Tratamiento de prueba");
-            // Se asigna una fecha/hora futura para que pase la validación
+            
             nuevaConsulta.setFechaHora(LocalDateTime.now().plusMinutes(20));
             
-            // Crear y asignar la cita asociada (debe existir en la base de datos)
+            // Crear y asignar la cita asociada 
             Cita cita = new Cita();
-            cita.setIdCita(1); // Asegúrate que el id 1 exista en tu BD
+            cita.setIdCita(1);
             nuevaConsulta.setCita(cita);
             
             // Llamar al método para insertar la consulta
