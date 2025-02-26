@@ -43,7 +43,6 @@ public class ConsultaBO {
     private final IConsultaDAO consultaDAO;
     private final ConsultaMapper consultaMapper = new ConsultaMapper();
     private final IPacienteDAO pacienteDAO;
-    
 
     public ConsultaBO(IConexionBD conexion) {
         this.citaDAO = new CitaDAO(conexion);
@@ -80,29 +79,28 @@ public class ConsultaBO {
             throw new NegocioException("Error al insertar consulta: " + e.getMessage(), e);
         }
     }
-    
-    public List<ConsultaViejaDTO> historialConsultasPaciente(ConsultaNuevaDTO consultanuevaDTO) throws NegocioException {
+
+    public List<ConsultaViejaDTO> historialConsultasPaciente(Paciente paciente) throws NegocioException {
         try {
-            
-        if (consultanuevaDTO == null || consultanuevaDTO.getCita().getPaciente().getIdPaciente()== 0) {
-            throw new NegocioException("Datos del paciente inválidos o incompletos");
+
+            if (paciente.getIdPaciente() == 0) {
+                throw new NegocioException("Datos del paciente inválidos o incompletos");
+            }
+
+            if (paciente == null) {
+                throw new NegocioException("Paciente no registrado en el sistema");
+            }
+
+            List<Consulta> consultas = consultaDAO.obtenerHistorialConsultasPaciente(paciente.getIdPaciente());
+
+            // convertir todas las consultas a dto
+            return consultas.stream()
+                    .map(consultaMapper::toViejoDTO)
+                    .collect(Collectors.toList());
+
+        } catch (PersistenciaClinicaException ex) {
+            throw new NegocioException("Error en capa de datos: " + ex.getMessage());
         }
-
-        Paciente pacienteExistente = pacienteDAO.consultarPacientePorID(consultanuevaDTO.getCita().getPaciente().getIdPaciente());
-        if (pacienteExistente == null) {
-            throw new NegocioException("Paciente no registrado en el sistema");
-        }
-
-        List<Consulta> consultas = consultaDAO.obtenerHistorialConsultasPaciente(consultanuevaDTO.getCita().getPaciente().getIdPaciente());
-
-        // convertir todas las consultas a dto
-        return consultas.stream()
-                .map(consultaMapper::toViejoDTO)
-                .collect(Collectors.toList());
-
-    } catch (PersistenciaClinicaException ex) {
-        throw new NegocioException("Error en capa de datos: " + ex.getMessage());
-    }
     }
 
 }

@@ -9,6 +9,7 @@ import DTO.CitaViejaDTO;
 import DTO.PacienteViejoDTO;
 import Entidades.Paciente;
 import Exception.NegocioException;
+import Mappers.PacienteMapper;
 import configuracion.DependencyInjector;
 import java.util.List;
 import java.util.logging.Level;
@@ -34,7 +35,7 @@ public class dashboardPaciente extends javax.swing.JFrame {
     private agendarCita ventanaAgendarCita;
     private listaCitasProximas ventanaCitasProximas;
     private historialConsultas ventanaHistorialConsultas;
-
+    private PacienteMapper mapperPaciente = new PacienteMapper();
     /**
      * Creates new form dashboardPaciente
      *
@@ -396,11 +397,12 @@ public class dashboardPaciente extends javax.swing.JFrame {
     }
 
     public void abrirVentanaHistorialConsultas() {
+        Paciente pacienteNormal = mapperPaciente.toEntityViejo(paciente);
         if (ventanaHistorialConsultas == null) {
-            ventanaHistorialConsultas = new historialConsultas();
+            ventanaHistorialConsultas = new historialConsultas(pacienteNormal);
         }
 
-        ventanaHistorialConsultas = new historialConsultas();
+        ventanaHistorialConsultas = new historialConsultas(pacienteNormal);
         ventanaHistorialConsultas.setVentanaPaciente(this);
         ventanaHistorialConsultas.setLocationRelativeTo(null);
         ventanaHistorialConsultas.setVisible(true);

@@ -4,6 +4,11 @@
  */
 package GUI;
 
+import BO.ConsultaBO;
+import Entidades.Paciente;
+import Exception.NegocioException;
+import javax.swing.JOptionPane;
+
 /**
  *
  * @author sonic
@@ -11,11 +16,13 @@ package GUI;
 public class historialConsultas extends javax.swing.JFrame {
 
     private dashboardPaciente ventanaPaciente;
-    
+    private Paciente paciente;
+    private ConsultaBO consultaBO;
     /**
      * Creates new form historialConsultas
      */
-    public historialConsultas() {
+    public historialConsultas(Paciente paciente) {
+        this.paciente = paciente;
         initComponents();
     }
 
@@ -183,7 +190,8 @@ public class historialConsultas extends javax.swing.JFrame {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new historialConsultas().setVisible(true);
+                Paciente paciente = new Paciente();
+                new historialConsultas(paciente).setVisible(true);
             }
         });
     }
@@ -212,6 +220,17 @@ public class historialConsultas extends javax.swing.JFrame {
         ventanaPaciente.setLocationRelativeTo(null);
         ventanaPaciente.setVisible(true);
         this.dispose();
+    }
+    
+    public void cargarHistorialConsultas() {
+        try {
+        consultaBO.historialConsultasPaciente(paciente);
+        
+        } catch (NegocioException e) {
+            JOptionPane.showMessageDialog(this, "Error a cargar las consultas del paciente: " + e);
+            
+        }
+        
     }
     
 }
