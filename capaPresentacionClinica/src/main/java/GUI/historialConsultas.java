@@ -4,6 +4,7 @@
  */
 package GUI;
 
+import GUI.historialConsultasMedico;
 import BO.CitaBO;
 import BO.ConsultaBO;
 import BO.MedicoBO;
@@ -15,6 +16,7 @@ import Entidades.Medico;
 import Entidades.Paciente;
 import Exception.NegocioException;
 import configuracion.DependencyInjector;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import javax.swing.JOptionPane;
 import javax.swing.JTable;
@@ -39,6 +41,19 @@ public class historialConsultas extends javax.swing.JFrame {
     public historialConsultas(Paciente paciente) {
         this.paciente = paciente;
         initComponents();
+        
+        this.addWindowListener(new java.awt.event.WindowAdapter() {
+            @Override
+            public void windowOpened(java.awt.event.WindowEvent e) {
+                try {
+                    cargarHistorialConsultas();
+                } catch (NegocioException ex) {
+                    JOptionPane.showMessageDialog(historialConsultas.this,
+                            "Error al cargar consultas: " + ex.getMessage(), "Error",
+                            JOptionPane.ERROR_MESSAGE);
+                }
+            }
+        });
     }
 
     public void setVentanaPaciente(dashboardPaciente ventanaPaciente) {
@@ -64,10 +79,10 @@ public class historialConsultas extends javax.swing.JFrame {
         jLabel6 = new javax.swing.JLabel();
         jLabel7 = new javax.swing.JLabel();
         botonVolver = new javax.swing.JButton();
-        jScrollPane2 = new javax.swing.JScrollPane();
+        listConsultas = new java.awt.List();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-        setMaximumSize(new java.awt.Dimension(632, 757));
+        setLocationByPlatform(true);
         setMinimumSize(new java.awt.Dimension(632, 757));
 
         jLabel1.setFont(new java.awt.Font("Segoe UI", 0, 36)); // NOI18N
@@ -104,10 +119,6 @@ public class historialConsultas extends javax.swing.JFrame {
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addGap(0, 0, Short.MAX_VALUE)
-                .addComponent(jLabel1)
-                .addGap(87, 87, 87))
             .addGroup(layout.createSequentialGroup()
                 .addGap(15, 15, 15)
                 .addComponent(botonVolver)
@@ -120,18 +131,20 @@ public class historialConsultas extends javax.swing.JFrame {
                             .addComponent(fechaHasta, javax.swing.GroupLayout.PREFERRED_SIZE, 251, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(jLabel4)
                             .addComponent(fieldEspecialidad, javax.swing.GroupLayout.PREFERRED_SIZE, 251, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel7))
+                            .addComponent(jLabel7)
+                            .addComponent(fechaDesde, javax.swing.GroupLayout.PREFERRED_SIZE, 251, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 549, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(jLabel5)
                             .addComponent(jLabel6)
-                            .addComponent(jLabel3))
-                        .addGap(0, 41, Short.MAX_VALUE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(fechaDesde, javax.swing.GroupLayout.PREFERRED_SIZE, 251, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+                            .addComponent(jLabel3)
+                            .addComponent(listConsultas, javax.swing.GroupLayout.PREFERRED_SIZE, 932, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(0, 51, Short.MAX_VALUE))))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jLabel1)
+                .addGap(268, 268, 268))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -154,9 +167,9 @@ public class historialConsultas extends javax.swing.JFrame {
                 .addComponent(jLabel6)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(fechaHasta, javax.swing.GroupLayout.PREFERRED_SIZE, 42, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(35, 35, 35)
-                .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 239, Short.MAX_VALUE)
-                .addGap(18, 18, 18)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(listConsultas, javax.swing.GroupLayout.DEFAULT_SIZE, 272, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(botonVolver, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(22, 22, 22))
         );
@@ -219,7 +232,7 @@ public class historialConsultas extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
-    private javax.swing.JScrollPane jScrollPane2;
+    private java.awt.List listConsultas;
     // End of variables declaration//GEN-END:variables
 
     public void volverDashboardPaciente() {
@@ -233,37 +246,61 @@ public class historialConsultas extends javax.swing.JFrame {
         this.dispose();
     }
 
-    public void cargarHistorialConsultas() {
+    public void cargarHistorialConsultas() throws NegocioException {
+        try {
+        List<ConsultaViejaDTO> consultas = consultaBO.historialConsultasPaciente(paciente);
+
+        listConsultas.removeAll();
+
+        if (consultas.isEmpty()) {
+            listConsultas.add("-- No hay consultas registradas --");
+            JOptionPane.showMessageDialog(this, 
+                "El paciente no tiene consultas registradas", 
+                "Historial Vacío", 
+                JOptionPane.INFORMATION_MESSAGE);
+            return;
+        }
+        
         
 
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
         
-        try {
-            List<ConsultaViejaDTO> consultasPaciente = consultaBO.historialConsultasPaciente(paciente);
-            String[] nombreColumnas= {"Paciente", "Medico", "Fecha y Hora", "Tratamiento", "Diagnostico"};
-            Object[][] data = new Object[consultasPaciente.size()][5];
+        for (ConsultaViejaDTO consulta : consultas) {
+            String item;
             
-            for (int i = 0; i < consultasPaciente.size(); i++) {
-                ConsultaViejaDTO consulta = consultasPaciente.get(i);
-                Cita cita = citaBO.consultarCitaPorID(consulta.getCita().getIdCita());
-                MedicoDTO medico = medicoBO.consultarMedicoPorID(cita.getMedico().getIdMedico());
-                data[i][1] = paciente.getNombres() + " " + paciente.getApellidoPaterno();
-                data[i][2] = medico.getNombres() + " " + medico.getApellidoPaterno();
-                data[i][3] = consulta.getFechaHora().toString();
-                data[i][4] = consulta.getTratamiento();
-                data[i][5] = consulta.getDiagnostico();
+            if (consulta.getCita().getTipoCita() == Cita.TipoCita.EMERGENCIA) {
+                item = String.format("ID: %d | %s | Dr. %s %s | Diagnóstico: %s | Tratamiento: %s | Folio: %s | Estado: %s",
+                    consulta.getIdConsulta(),
+                    consulta.getFechaHora().format(formatter),
+                    consulta.getCita().getMedico().getNombres(),
+                    consulta.getCita().getMedico().getApellidoPaterno(),
+                    consulta.getDiagnostico(),
+                    consulta.getTratamiento(),
+                    consulta.getCita().getEmergencia().getFolio(),
+                    consulta.getCita().getEstado().getDescripcion());
+            } else {
+                item = String.format("ID: %d | %s | Dr. %s %s | Diagnóstico: %s | Tratamiento: %s",
+                    consulta.getIdConsulta(),
+                    consulta.getFechaHora().format(formatter),
+                    consulta.getCita().getMedico().getNombres(),
+                    consulta.getCita().getMedico().getApellidoPaterno(),
+                    consulta.getDiagnostico(),
+                    consulta.getTratamiento());
             }
             
-            DefaultTableModel modelo = new DefaultTableModel(data, nombreColumnas);
-            JTable tabla = new JTable(modelo);
-            jScrollPane2.add(tabla);
-            
-            jScrollPane2.revalidate();
-            jScrollPane2.repaint();
-            
-        } catch (NegocioException e) {
-            JOptionPane.showMessageDialog(this, "Error a cargar las consultas del paciente: " + e);
+            listConsultas.add(item);
         }
 
+    } catch (NegocioException ex) {
+        JOptionPane.showMessageDialog(this, 
+            "Error al cargar consultas: " + ex.getMessage(), 
+            "Error", 
+            JOptionPane.ERROR_MESSAGE);
+    } catch (Exception e) {
+        JOptionPane.showMessageDialog(this, 
+            "Error inesperado: " + e.getMessage(), 
+            "Error Crítico", 
+            JOptionPane.ERROR_MESSAGE);
     }
-
+}
 }

@@ -92,7 +92,6 @@ public class historialConsultasMedico extends javax.swing.JFrame {
         fieldPACIENTE = new javax.swing.JTextField();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-        setMaximumSize(new java.awt.Dimension(632, 757));
         setMinimumSize(new java.awt.Dimension(632, 757));
         setPreferredSize(new java.awt.Dimension(632, 757));
 
