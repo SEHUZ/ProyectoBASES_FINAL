@@ -135,7 +135,14 @@ public class listaCitasProximas extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void botonCancelarCitaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonCancelarCitaActionPerformed
-        // TODO add your handling code here:
+        try {
+            cancelarCita();
+            
+            
+// TODO add your handling code here:
+        } catch (NegocioException ex) {
+            Logger.getLogger(listaCitasProximas.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }//GEN-LAST:event_botonCancelarCitaActionPerformed
 
     private void botonVolverActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonVolverActionPerformed
@@ -257,6 +264,26 @@ public class listaCitasProximas extends javax.swing.JFrame {
         } catch (NegocioException ex) {
             JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
         }
+    }
+    
+    public void cancelarCita() throws NegocioException {
+    String seleccionada = (String) listaCitasProximas.getSelectedItem();
+    if (seleccionada == null || seleccionada.isEmpty()) {
+        JOptionPane.showMessageDialog(this, "No se ha seleccionado ninguna cita.", "Aviso", JOptionPane.WARNING_MESSAGE);
+        return;
+    }
+    
+    try {
+        String[] partes = seleccionada.split(" ", 2);
+        int idCita = Integer.parseInt(partes[0]);
+        
+        citaBO.cancelarCita(idCita);
+        
+        JOptionPane.showMessageDialog(this, "Cita cancelada con éxito.", "Información", JOptionPane.INFORMATION_MESSAGE);
+        
+    } catch (NegocioException ex) {
+        JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+    }
     }
 
     public void volverDashboardPaciente() {

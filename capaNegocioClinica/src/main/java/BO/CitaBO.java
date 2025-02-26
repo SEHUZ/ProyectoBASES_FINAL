@@ -79,28 +79,32 @@ public class CitaBO {
         }
     }
 
-    public void cancelarCita(int idCita) throws NegocioException {
+    public boolean cancelarCita(int idCita) throws NegocioException {
         try {
-            Cita cita = citaDAO.consultarCitaPorID(idCita);
-
-            // Validar que no esté ya cancelada
-            if (cita.getEstado().getDescripcion().equalsIgnoreCase("Cancelada")) {
-                throw new NegocioException("La cita ya está cancelada");
-            }
-
-            // Validar tiempo mínimo de cancelación (24 horas antes)
-            if (LocalDateTime.now().isAfter(cita.getFechaHora().minusHours(24))) {
-                throw new NegocioException("No se puede cancelar con menos de 24 horas de anticipación");
-            }
-
-            // Ejecutar cancelación
-            if (!citaDAO.cancelarCita(idCita)) {
-                throw new NegocioException("Error al procesar la cancelación");
-            }
-
-        } catch (PersistenciaClinicaException ex) {
-            throw new NegocioException("Error técnico al cancelar: " + ex.getMessage());
+        if (idCita <= 0) {
+            throw new NegocioException("ID de cita inválido");
         }
+        
+        Cita cita = citaDAO.consultarCitaPorID(idCita);
+        
+        if ("Cancelada".equalsIgnoreCase(cita.getEstado().getDescripcion())) {
+            throw new NegocioException("La cita ya está cancelada");
+        }
+
+        if (cita.getFechaHora().isBefore(LocalDateTime.now())) {
+            throw new NegocioException("No se pueden cancelar citas pasadas");
+        }
+
+        boolean resultado = citaDAO.cancelarCita(idCita);
+        
+        if (!resultado) {
+            throw new NegocioException("No se pudo completar la cancelación");
+        }
+
+    } catch (PersistenciaClinicaException ex) {
+        throw new NegocioException("Error en persistencia: " + ex.getMessage());
+    }
+        return false;
     }
 
     public List<CitaViejaDTO> consultarCitasMedico(MedicoDTO medicoDTO) throws NegocioException {
