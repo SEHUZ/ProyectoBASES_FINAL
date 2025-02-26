@@ -15,6 +15,7 @@ import DTO.CitaNuevaDTO;
 import DTO.CitaViejaDTO;
 import DTO.MedicoDTO;
 import DTO.PacienteNuevoDTO;
+import DTO.PacienteViejoDTO;
 import Entidades.Cita;
 import Entidades.CitaEmergencia;
 import Entidades.Medico;
@@ -132,6 +133,17 @@ public class CitaBO {
         }
     }
 
+    public Cita consultarCitaPorID(int idCita) throws NegocioException {
+        try {
+            Cita cita = citaDAO.consultarCitaPorID(idCita);
+
+            return cita;
+        } catch (PersistenciaClinicaException ex) {
+            logger.log(Level.SEVERE, "Error al consultar citas del médico", ex);
+            throw new NegocioException("Error al obtener las citas: " + ex.getMessage());
+        }
+    }
+
     public CitaViejaDTO agendarCitaEmergencia(CitaNuevaDTO citanuevaDTO) throws NegocioException, PersistenciaClinicaException, SQLException {
         try {
             Cita cita = mapper.toEntityNuevo(citanuevaDTO);
@@ -157,16 +169,14 @@ public class CitaBO {
     }
 
     //public CitaViejaDTO consultarCitaPorsuID(int idCita) throws NegocioException, PersistenciaClinicaException {
-        
     //}
-
-    public List<CitaViejaDTO> consultarCitasProximasPaciente(PacienteNuevoDTO pacientenuevoDTO) throws NegocioException {
+    public List<CitaViejaDTO> consultarCitasProximasPaciente(PacienteViejoDTO paciente) throws NegocioException {
         try {
             // Convertir DTO a entidad
-            Paciente paciente = pacienteMapper.toEntityNuevo(pacientenuevoDTO);
+            Paciente entidadPaciente = pacienteMapper.toEntityViejo(paciente);
 
             // Llamar al DAO
-            List<Cita> citas = citaDAO.consultarCitasProximasPorPaciente(paciente);
+            List<Cita> citas = citaDAO.consultarCitasProximasPorPaciente(entidadPaciente);
 
             // Convertir a DTO
             return citas.stream()
