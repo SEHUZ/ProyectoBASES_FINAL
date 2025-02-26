@@ -81,25 +81,20 @@ public class CitaBO {
 
     public boolean cancelarCita(int idCita) throws NegocioException {
         try {
-        // 1. Validación básica del ID
         if (idCita <= 0) {
             throw new NegocioException("ID de cita inválido");
         }
-
-        // 2. Obtener cita actual para verificar estado
+        
         Cita cita = citaDAO.consultarCitaPorID(idCita);
         
-        // 3. Validar que no esté ya cancelada
         if ("Cancelada".equalsIgnoreCase(cita.getEstado().getDescripcion())) {
             throw new NegocioException("La cita ya está cancelada");
         }
 
-        // 4. Validar fecha de la cita (ejemplo: no permitir cancelar citas pasadas)
         if (cita.getFechaHora().isBefore(LocalDateTime.now())) {
             throw new NegocioException("No se pueden cancelar citas pasadas");
         }
 
-        // 5. Ejecutar cancelación
         boolean resultado = citaDAO.cancelarCita(idCita);
         
         if (!resultado) {
