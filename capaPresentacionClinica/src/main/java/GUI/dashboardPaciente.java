@@ -36,6 +36,7 @@ public class dashboardPaciente extends javax.swing.JFrame {
     private listaCitasProximas ventanaCitasProximas;
     private historialConsultas ventanaHistorialConsultas;
     private PacienteMapper mapperPaciente = new PacienteMapper();
+    historialConsultas historialConsultas;
     /**
      * Creates new form dashboardPaciente
      *
@@ -43,6 +44,8 @@ public class dashboardPaciente extends javax.swing.JFrame {
      */
     public dashboardPaciente(PacienteViejoDTO paciente) {
         this.paciente = paciente;
+        Paciente pacienteNormal = mapperPaciente.toEntityViejo(paciente);
+        this.historialConsultas = new historialConsultas(pacienteNormal);
         initComponents();
         cargarDatosPaciente(paciente);
     }
@@ -50,7 +53,7 @@ public class dashboardPaciente extends javax.swing.JFrame {
     public dashboardPaciente() {
         initComponents();
     }
-
+//
     public void setVentanaInicio(iniciarSesion ventanaInicio) {
         this.ventanaInicio = ventanaInicio;
     }
@@ -261,6 +264,7 @@ public class dashboardPaciente extends javax.swing.JFrame {
 
     private void botonHistorialConsultasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonHistorialConsultasActionPerformed
         abrirVentanaHistorialConsultas();
+        historialConsultas.cargarHistorialConsultas();
     }//GEN-LAST:event_botonHistorialConsultasActionPerformed
 
     /**

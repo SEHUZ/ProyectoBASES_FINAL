@@ -4,10 +4,21 @@
  */
 package GUI;
 
+import BO.CitaBO;
 import BO.ConsultaBO;
+import BO.MedicoBO;
+import BO.PacienteBO;
+import DTO.ConsultaViejaDTO;
+import DTO.MedicoDTO;
+import Entidades.Cita;
+import Entidades.Medico;
 import Entidades.Paciente;
 import Exception.NegocioException;
+import configuracion.DependencyInjector;
+import java.util.List;
 import javax.swing.JOptionPane;
+import javax.swing.JTable;
+import javax.swing.table.DefaultTableModel;
 
 /**
  *
@@ -17,7 +28,11 @@ public class historialConsultas extends javax.swing.JFrame {
 
     private dashboardPaciente ventanaPaciente;
     private Paciente paciente;
-    private ConsultaBO consultaBO;
+    private CitaBO citaBO = DependencyInjector.crearCitaBO();
+    private PacienteBO pacienteBO = DependencyInjector.crearPacienteBO();
+    private ConsultaBO consultaBO = DependencyInjector.crearConsultaBO();
+    private MedicoBO medicoBO = DependencyInjector.crearMedicoBO();;
+
     /**
      * Creates new form historialConsultas
      */
@@ -29,7 +44,7 @@ public class historialConsultas extends javax.swing.JFrame {
     public void setVentanaPaciente(dashboardPaciente ventanaPaciente) {
         this.ventanaPaciente = ventanaPaciente;
     }
-    
+
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -49,8 +64,7 @@ public class historialConsultas extends javax.swing.JFrame {
         jLabel6 = new javax.swing.JLabel();
         jLabel7 = new javax.swing.JLabel();
         botonVolver = new javax.swing.JButton();
-        jScrollPane1 = new javax.swing.JScrollPane();
-        jTextArea1 = new javax.swing.JTextArea();
+        jScrollPane2 = new javax.swing.JScrollPane();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setMaximumSize(new java.awt.Dimension(632, 757));
@@ -86,10 +100,6 @@ public class historialConsultas extends javax.swing.JFrame {
             }
         });
 
-        jTextArea1.setColumns(20);
-        jTextArea1.setRows(5);
-        jScrollPane1.setViewportView(jTextArea1);
-
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -110,16 +120,18 @@ public class historialConsultas extends javax.swing.JFrame {
                             .addComponent(fechaHasta, javax.swing.GroupLayout.PREFERRED_SIZE, 251, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(jLabel4)
                             .addComponent(fieldEspecialidad, javax.swing.GroupLayout.PREFERRED_SIZE, 251, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(fechaDesde, javax.swing.GroupLayout.PREFERRED_SIZE, 251, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(jLabel7))
                         .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 540, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 549, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(jLabel5)
                             .addComponent(jLabel6)
                             .addComponent(jLabel3))
-                        .addGap(0, 50, Short.MAX_VALUE))))
+                        .addGap(0, 41, Short.MAX_VALUE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(fechaDesde, javax.swing.GroupLayout.PREFERRED_SIZE, 251, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -142,9 +154,9 @@ public class historialConsultas extends javax.swing.JFrame {
                 .addComponent(jLabel6)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(fechaHasta, javax.swing.GroupLayout.PREFERRED_SIZE, 42, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(36, 36, 36)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 230, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 26, Short.MAX_VALUE)
+                .addGap(35, 35, 35)
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 239, Short.MAX_VALUE)
+                .addGap(18, 18, 18)
                 .addComponent(botonVolver, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(22, 22, 22))
         );
@@ -207,8 +219,7 @@ public class historialConsultas extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
-    private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JTextArea jTextArea1;
+    private javax.swing.JScrollPane jScrollPane2;
     // End of variables declaration//GEN-END:variables
 
     public void volverDashboardPaciente() {
@@ -221,16 +232,38 @@ public class historialConsultas extends javax.swing.JFrame {
         ventanaPaciente.setVisible(true);
         this.dispose();
     }
-    
+
     public void cargarHistorialConsultas() {
-        try {
-        consultaBO.historialConsultasPaciente(paciente);
         
+
+        
+        try {
+            List<ConsultaViejaDTO> consultasPaciente = consultaBO.historialConsultasPaciente(paciente);
+            String[] nombreColumnas= {"Paciente", "Medico", "Fecha y Hora", "Tratamiento", "Diagnostico"};
+            Object[][] data = new Object[consultasPaciente.size()][5];
+            
+            for (int i = 0; i < consultasPaciente.size(); i++) {
+                ConsultaViejaDTO consulta = consultasPaciente.get(i);
+                Cita cita = citaBO.consultarCitaPorID(consulta.getCita().getIdCita());
+                MedicoDTO medico = medicoBO.consultarMedicoPorID(cita.getMedico().getIdMedico());
+                data[i][1] = paciente.getNombres() + " " + paciente.getApellidoPaterno();
+                data[i][2] = medico.getNombres() + " " + medico.getApellidoPaterno();
+                data[i][3] = consulta.getFechaHora().toString();
+                data[i][4] = consulta.getTratamiento();
+                data[i][5] = consulta.getDiagnostico();
+            }
+            
+            DefaultTableModel modelo = new DefaultTableModel(data, nombreColumnas);
+            JTable tabla = new JTable(modelo);
+            jScrollPane2.add(tabla);
+            
+            jScrollPane2.revalidate();
+            jScrollPane2.repaint();
+            
         } catch (NegocioException e) {
             JOptionPane.showMessageDialog(this, "Error a cargar las consultas del paciente: " + e);
-            
         }
-        
+
     }
-    
+
 }

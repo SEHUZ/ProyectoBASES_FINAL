@@ -130,6 +130,7 @@ public class CitaBO {
 
             // 4. Obtener citas del médico
             List<Cita> citas = citaDAO.consultarCitasMedico(medicoExistente);
+            System.out.println(citas);
 
             // 5. Convertir a DTOs
             return citas.stream()
