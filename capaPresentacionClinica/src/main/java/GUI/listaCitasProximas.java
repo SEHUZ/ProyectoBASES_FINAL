@@ -267,7 +267,6 @@ public class listaCitasProximas extends javax.swing.JFrame {
     }
     
     public void cancelarCita() throws NegocioException {
-        // Verificar que se haya seleccionado una cita
     String seleccionada = (String) listaCitasProximas.getSelectedItem();
     if (seleccionada == null || seleccionada.isEmpty()) {
         JOptionPane.showMessageDialog(this, "No se ha seleccionado ninguna cita.", "Aviso", JOptionPane.WARNING_MESSAGE);
@@ -280,11 +279,9 @@ public class listaCitasProximas extends javax.swing.JFrame {
         
         citaBO.cancelarCita(idCita);
         
-        // Mostrar mensaje de éxito
         JOptionPane.showMessageDialog(this, "Cita cancelada con éxito.", "Información", JOptionPane.INFORMATION_MESSAGE);
         
     } catch (NegocioException ex) {
-        // Si ocurre algún error en la lógica de negocio, se muestra el mensaje de error
         JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
     }
     }
