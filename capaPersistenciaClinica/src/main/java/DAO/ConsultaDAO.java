@@ -27,7 +27,7 @@ public class ConsultaDAO implements IConsultaDAO {
     @Override
     public Consulta insertarConsulta(Consulta consulta) throws SQLException, PersistenciaClinicaException {
     String query = "INSERT INTO Consultas (diagnostico, estado, fechaHora, tratamiento, idCita) VALUES (?, ?, ?, ?, ?)";
-
+    consulta.setEstado("Atendida");
     try (PreparedStatement pst = conexion.crearConexion().prepareStatement(query, Statement.RETURN_GENERATED_KEYS)) {
         pst.setString(1, consulta.getDiagnostico());
         pst.setString(2, consulta.getEstado());

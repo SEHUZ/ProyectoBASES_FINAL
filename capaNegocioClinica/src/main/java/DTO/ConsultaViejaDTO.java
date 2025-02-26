@@ -78,4 +78,11 @@ public class ConsultaViejaDTO {
     public void setTratamiento(String tratamiento) {
         this.tratamiento = tratamiento;
     }
+
+    @Override
+    public String toString() {
+        return "ConsultaViejaDTO{" + "idConsulta=" + idConsulta + ", cita=" + cita + ", diagnostico=" + diagnostico + ", estado=" + estado + ", fechaHora=" + fechaHora + ", tratamiento=" + tratamiento + '}';
+    }
+    
+    
 }

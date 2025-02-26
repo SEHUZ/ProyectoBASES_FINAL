@@ -49,9 +49,9 @@
                       <EmptySpace min="-2" pref="78" max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="0" attributes="0">
                           <Component id="jLabel4" alignment="0" min="-2" max="-2" attributes="0"/>
-                          <Component id="fieldNombre1" alignment="0" min="-2" pref="251" max="-2" attributes="0"/>
+                          <Component id="fieldTratamiento" alignment="0" min="-2" pref="251" max="-2" attributes="0"/>
                           <Component id="jLabel3" alignment="0" min="-2" max="-2" attributes="0"/>
-                          <Component id="fieldNombre" alignment="0" min="-2" pref="251" max="-2" attributes="0"/>
+                          <Component id="fieldDiagnostico" alignment="0" min="-2" pref="251" max="-2" attributes="0"/>
                       </Group>
                   </Group>
               </Group>
@@ -67,11 +67,11 @@
               <EmptySpace min="-2" pref="74" max="-2" attributes="0"/>
               <Component id="jLabel3" min="-2" max="-2" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
-              <Component id="fieldNombre" min="-2" pref="42" max="-2" attributes="0"/>
+              <Component id="fieldDiagnostico" min="-2" pref="42" max="-2" attributes="0"/>
               <EmptySpace min="-2" pref="36" max="-2" attributes="0"/>
               <Component id="jLabel4" min="-2" pref="10" max="-2" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
-              <Component id="fieldNombre1" min="-2" pref="42" max="-2" attributes="0"/>
+              <Component id="fieldTratamiento" min="-2" pref="42" max="-2" attributes="0"/>
               <EmptySpace pref="172" max="32767" attributes="0"/>
               <Component id="botonTerminarConsulta" min="-2" pref="69" max="-2" attributes="0"/>
               <EmptySpace min="-2" pref="160" max="-2" attributes="0"/>
@@ -91,9 +91,9 @@
         <Property name="toolTipText" type="java.lang.String" value=""/>
       </Properties>
     </Component>
-    <Component class="javax.swing.JTextField" name="fieldNombre">
+    <Component class="javax.swing.JTextField" name="fieldDiagnostico">
       <Events>
-        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="fieldNombreActionPerformed"/>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="fieldDiagnosticoActionPerformed"/>
       </Events>
     </Component>
     <Component class="javax.swing.JLabel" name="jLabel3">
@@ -101,9 +101,9 @@
         <Property name="text" type="java.lang.String" value="Diagnostico"/>
       </Properties>
     </Component>
-    <Component class="javax.swing.JTextField" name="fieldNombre1">
+    <Component class="javax.swing.JTextField" name="fieldTratamiento">
       <Events>
-        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="fieldNombre1ActionPerformed"/>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="fieldTratamientoActionPerformed"/>
       </Events>
     </Component>
     <Component class="javax.swing.JLabel" name="jLabel4">

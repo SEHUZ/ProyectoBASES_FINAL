@@ -10,8 +10,11 @@ import DTO.CitaNuevaDTO;
 import DTO.CitaViejaDTO;
 import DTO.ConsultaNuevaDTO;
 import DTO.ConsultaViejaDTO;
+import Entidades.Cita;
 import Exception.NegocioException;
 import Exception.PersistenciaClinicaException;
+import Mappers.CitaMapper;
+import Mappers.ConsultaMapper;
 import configuracion.DependencyInjector;
 import java.sql.SQLException;
 import java.time.LocalDateTime;
@@ -26,6 +29,7 @@ import javax.swing.JOptionPane;
 public class panelDeConsulta extends javax.swing.JFrame {
     
     private ConsultaBO consultaBO;
+    private CitaMapper mapperCita = new CitaMapper();
     private CitaViejaDTO citaActual;
     private agendaDeCitas ventanaAgendaDeCitas;
     
@@ -61,32 +65,31 @@ public class panelDeConsulta extends javax.swing.JFrame {
     private void initComponents() {
 
         jLabel1 = new javax.swing.JLabel();
-        fieldNombre = new javax.swing.JTextField();
+        fieldDiagnostico = new javax.swing.JTextField();
         jLabel3 = new javax.swing.JLabel();
-        fieldNombre1 = new javax.swing.JTextField();
+        fieldTratamiento = new javax.swing.JTextField();
         jLabel4 = new javax.swing.JLabel();
         botonTerminarConsulta = new javax.swing.JButton();
         botonVolver = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-        setMaximumSize(new java.awt.Dimension(632, 757));
         setMinimumSize(new java.awt.Dimension(632, 757));
 
         jLabel1.setFont(new java.awt.Font("Segoe UI", 0, 36)); // NOI18N
         jLabel1.setText("PANEL DE CONSULTA");
         jLabel1.setToolTipText("");
 
-        fieldNombre.addActionListener(new java.awt.event.ActionListener() {
+        fieldDiagnostico.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                fieldNombreActionPerformed(evt);
+                fieldDiagnosticoActionPerformed(evt);
             }
         });
 
         jLabel3.setText("Diagnostico");
 
-        fieldNombre1.addActionListener(new java.awt.event.ActionListener() {
+        fieldTratamiento.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                fieldNombre1ActionPerformed(evt);
+                fieldTratamientoActionPerformed(evt);
             }
         });
 
@@ -128,9 +131,9 @@ public class panelDeConsulta extends javax.swing.JFrame {
                         .addGap(78, 78, 78)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jLabel4)
-                            .addComponent(fieldNombre1, javax.swing.GroupLayout.PREFERRED_SIZE, 251, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(fieldTratamiento, javax.swing.GroupLayout.PREFERRED_SIZE, 251, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(jLabel3)
-                            .addComponent(fieldNombre, javax.swing.GroupLayout.PREFERRED_SIZE, 251, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                            .addComponent(fieldDiagnostico, javax.swing.GroupLayout.PREFERRED_SIZE, 251, javax.swing.GroupLayout.PREFERRED_SIZE))))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
@@ -141,11 +144,11 @@ public class panelDeConsulta extends javax.swing.JFrame {
                 .addGap(74, 74, 74)
                 .addComponent(jLabel3)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(fieldNombre, javax.swing.GroupLayout.PREFERRED_SIZE, 42, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(fieldDiagnostico, javax.swing.GroupLayout.PREFERRED_SIZE, 42, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(36, 36, 36)
                 .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(fieldNombre1, javax.swing.GroupLayout.PREFERRED_SIZE, 42, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(fieldTratamiento, javax.swing.GroupLayout.PREFERRED_SIZE, 42, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 172, Short.MAX_VALUE)
                 .addComponent(botonTerminarConsulta, javax.swing.GroupLayout.PREFERRED_SIZE, 69, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(160, 160, 160)
@@ -156,13 +159,13 @@ public class panelDeConsulta extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void fieldNombreActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_fieldNombreActionPerformed
+    private void fieldDiagnosticoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_fieldDiagnosticoActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_fieldNombreActionPerformed
+    }//GEN-LAST:event_fieldDiagnosticoActionPerformed
 
-    private void fieldNombre1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_fieldNombre1ActionPerformed
+    private void fieldTratamientoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_fieldTratamientoActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_fieldNombre1ActionPerformed
+    }//GEN-LAST:event_fieldTratamientoActionPerformed
 
     private void botonTerminarConsultaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonTerminarConsultaActionPerformed
         try {
@@ -220,28 +223,31 @@ public class panelDeConsulta extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton botonTerminarConsulta;
     private javax.swing.JButton botonVolver;
-    private javax.swing.JTextField fieldNombre;
-    private javax.swing.JTextField fieldNombre1;
+    private javax.swing.JTextField fieldDiagnostico;
+    private javax.swing.JTextField fieldTratamiento;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     // End of variables declaration//GEN-END:variables
     private void terminarConsulta() throws NegocioException, SQLException, PersistenciaClinicaException {
         try {
-            if (fieldNombre.getText().isBlank() || fieldNombre1.getText().isBlank()) {
+            if (fieldDiagnostico.getText().isBlank() || fieldTratamiento.getText().isBlank()) {
                 JOptionPane.showMessageDialog(this, "Diagnóstico y tratamiento son requeridos", "Error", JOptionPane.ERROR_MESSAGE);
                 return;
             }
 
             ConsultaNuevaDTO consultaDTO = new ConsultaNuevaDTO();
-            consultaDTO.setDiagnostico(fieldNombre.getText());
-            consultaDTO.setTratamiento(fieldNombre1.getText());
+            consultaDTO.setDiagnostico(fieldDiagnostico.getText());
+            consultaDTO.setTratamiento(fieldTratamiento.getText());
             consultaDTO.setFechaHora(LocalDateTime.now());
-
+            
             CitaViejaDTO citaDTO = new CitaViejaDTO();
             citaDTO.setIdCita(citaActual.getIdCita());
             
-
+            Cita citaNueva = mapperCita.toEntityViejo(citaDTO);
+            consultaDTO.setCita(citaNueva);
+            
+            System.out.println("consultaDTO");
             ConsultaViejaDTO resultado = consultaBO.insertarConsulta(consultaDTO);
 
             if (resultado != null) {

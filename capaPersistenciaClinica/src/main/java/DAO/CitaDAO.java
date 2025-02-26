@@ -187,7 +187,7 @@ public class CitaDAO implements ICitaDAO {
     @Override
     public Cita consultarCitaPorID(int idCita) throws PersistenciaClinicaException {
         Cita cita = null; // Cambiamos a Cita en lugar de List<Cita>
-        String procedimiento = "{CALL ObtenerCitasPorIdCita(?)}";
+        String procedimiento = "{CALL ObtenerCitaPorId(?)}";
 
         try (Connection con = conexion.crearConexion(); CallableStatement cs = con.prepareCall(procedimiento)) {
             cs.setInt(1, idCita);

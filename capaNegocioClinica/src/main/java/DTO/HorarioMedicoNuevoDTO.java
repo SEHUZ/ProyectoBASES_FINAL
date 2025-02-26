@@ -59,6 +59,11 @@ public class HorarioMedicoNuevoDTO {
     public void setDiaSemana(DayOfWeek diaSemana) {
         this.diaSemana = diaSemana;
     }
+
+    @Override
+    public String toString() {
+        return "HorarioMedicoNuevoDTO{" + "medico=" + medico + ", horaEntrada=" + horaEntrada + ", horaSalida=" + horaSalida + ", diaSemana=" + diaSemana + '}';
+    }
     
     
     
