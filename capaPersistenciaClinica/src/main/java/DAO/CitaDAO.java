@@ -186,42 +186,56 @@ public class CitaDAO implements ICitaDAO {
 
     @Override
     public Cita consultarCitaPorID(int idCita) throws PersistenciaClinicaException {
-        final String PROCEDIMIENTO = "{CALL ObtenerCitaPorID(?)}";
-        Cita cita = null;
+        Cita cita = null; // Cambiamos a Cita en lugar de List<Cita>
+        String procedimiento = "{CALL ObtenerCitasPorIdCita(?)}";
 
-        try (Connection conn = conexion.crearConexion();
-             CallableStatement cs = conn.prepareCall(PROCEDIMIENTO)) {
-
+        try (Connection con = conexion.crearConexion(); CallableStatement cs = con.prepareCall(procedimiento)) {
             cs.setInt(1, idCita);
 
             try (ResultSet rs = cs.executeQuery()) {
                 if (rs.next()) {
-                    cita = mapear(rs);
+                    // Datos cita
+                    cita = new Cita();
+                    cita.setIdCita(rs.getInt("idCita"));
+                    cita.setFechaHora(rs.getTimestamp("fechaHora").toLocalDateTime());
+
+                    // Datos paciente
+                    Paciente paciente = new Paciente();
+                    paciente.setIdPaciente(rs.getInt("idPaciente"));
+                    paciente.setNombres(rs.getString("nombrePaciente"));
+                    paciente.setApellidoPaterno(rs.getString("apellidoPaternoPaciente"));
+                    paciente.setApellidoMaterno(rs.getString("apellidoMaternoPaciente"));
+                    cita.setPaciente(paciente);
+
+                    // Datos medico
+                    Medico medicoCita = new Medico();
+                    medicoCita.setIdMedico(rs.getInt("idMedico"));
+                    medicoCita.setNombres(rs.getString("nombreMedico"));
+                    medicoCita.setApellidoPaterno(rs.getString("apellidoPaternoMedico"));
+                    medicoCita.setApellidoMaterno(rs.getString("apellidoMaternoMedico"));
+                    cita.setMedico(medicoCita);
+
+                    // Datos estadoCita
+                    EstadosCita estado = new EstadosCita();
+                    estado.setIdEstado(rs.getInt("idEstado"));
+                    estado.setDescripcion(rs.getString("estadoCita"));
+                    cita.setEstado(estado);
                 }
             }
 
         } catch (SQLException ex) {
-            if (ex.getErrorCode() == 1644) { // Código para SIGNAL SQLSTATE '45000'
-            throw new PersistenciaClinicaException("Cita no encontrada: " + ex.getMessage());
-        }
-        throw new PersistenciaClinicaException(
-            "Error técnico al consultar cita ID " + idCita + ": " + ex.getMessage()
-        );
+            throw new PersistenciaClinicaException("Error al obtener la cita por ID: " + ex.getMessage());
         }
 
-        if (cita == null) {
-            throw new PersistenciaClinicaException("Cita no encontrada con ID: " + idCita);
-        }
-
-        return cita;
+        return cita; // Retornamos la cita o null si no se encontró
     }
 
     private Cita mapear(ResultSet rs) throws SQLException {
         Cita cita = new Cita();
-        
+
         cita.setIdCita(rs.getInt("idCita"));
         cita.setFechaHora(rs.getTimestamp("fechaHora").toLocalDateTime());
-        
+
         EstadosCita estado = new EstadosCita();
         estado.setIdEstado(rs.getInt("idEstado"));
         estado.setDescripcion(rs.getString("estadoCita"));
@@ -244,9 +258,9 @@ public class CitaDAO implements ICitaDAO {
         if (rs.getString("tipoCitaNormal") == null) {
             CitaEmergencia emergencia = new CitaEmergencia();
             emergencia.setFolio(rs.getString("folioEmergencia"));
-            emergencia.setFechaExpiracion(rs.getTimestamp("fechaExpiracion") != null 
-                ? rs.getTimestamp("fechaExpiracion").toLocalDateTime() 
-                : null);
+            emergencia.setFechaExpiracion(rs.getTimestamp("fechaExpiracion") != null
+                    ? rs.getTimestamp("fechaExpiracion").toLocalDateTime()
+                    : null);
             cita.setEmergencia(emergencia);
         } else {
             cita.setNormal(new CitaNormal());
@@ -254,7 +268,6 @@ public class CitaDAO implements ICitaDAO {
 
         return cita;
     }
-        
 
     @Override
     public boolean insertarEstadoCita(int idCita, String estado) throws PersistenciaClinicaException {
