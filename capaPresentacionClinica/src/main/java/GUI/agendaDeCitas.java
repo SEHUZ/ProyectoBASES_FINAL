@@ -37,11 +37,13 @@ public class agendaDeCitas extends javax.swing.JFrame {
     private CitaBO citaBO = DependencyInjector.crearCitaBO();
     private PacienteBO pacienteBO = DependencyInjector.crearPacienteBO();
     private ConsultaBO consultaBO = DependencyInjector.crearConsultaBO();
-    private dashBoardMedico VentanaMedico;
+    private dashBoardMedico ventanaMedico;
     private final CitaMapper citaMapper = new CitaMapper();
     private historialConsultasMedico ventanaHistorialConsultasMedicoPaciente;
 
     private panelDeConsulta ventanaAgendarConsulta;
+    
+
 
     public agendaDeCitas(MedicoDTO medico) {
         this.medico = medico;
@@ -65,11 +67,15 @@ public class agendaDeCitas extends javax.swing.JFrame {
     }
 
     public void setVentanaMedico(dashBoardMedico VentanaMedico) {
-        this.VentanaMedico = VentanaMedico;
+        this.ventanaMedico = VentanaMedico;
     }
 
     public void setVentanaHistorialConsultasMedicoPaciente(historialConsultasMedico ventanaHistorialConsultasMedicoPaciente) {
         this.ventanaHistorialConsultasMedicoPaciente = ventanaHistorialConsultasMedicoPaciente;
+    }
+    
+    public void setVentanaPaciente(dashBoardMedico ventanaMedico) {
+        this.ventanaMedico = ventanaMedico;
     }
 
     public agendaDeCitas() {
@@ -99,6 +105,11 @@ public class agendaDeCitas extends javax.swing.JFrame {
         jLabel1.setText("AGENDA DE CITAS");
 
         botonVolver.setText("Volver");
+        botonVolver.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                botonVolverMouseClicked(evt);
+            }
+        });
         botonVolver.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 botonVolverActionPerformed(evt);
@@ -162,6 +173,7 @@ public class agendaDeCitas extends javax.swing.JFrame {
 
     private void botonVolverActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonVolverActionPerformed
         // TODO add your handling code here:
+        volverDashboardMedico();
     }//GEN-LAST:event_botonVolverActionPerformed
 
     private void botonIniciarConsultaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonIniciarConsultaActionPerformed
@@ -191,6 +203,10 @@ public class agendaDeCitas extends javax.swing.JFrame {
             Logger.getLogger(agendaDeCitas.class.getName()).log(Level.SEVERE, null, ex);
         }
     }//GEN-LAST:event_botonHistorialPacienteActionPerformed
+
+    private void botonVolverMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_botonVolverMouseClicked
+        // TODO add your handling code here:
+    }//GEN-LAST:event_botonVolverMouseClicked
 
     /**
      * @param args the command line arguments
@@ -267,7 +283,7 @@ public class agendaDeCitas extends javax.swing.JFrame {
         CitaViejaDTO citaSeleccionada = citaBO.consultarCitaPorsuID(idCita);
 
         panelDeConsulta panelConsulta = new panelDeConsulta(citaSeleccionada, medico);
-        panelConsulta.setVentanaMedico(this.VentanaMedico);
+        panelConsulta.setVentanaMedico(this.ventanaMedico);
         panelConsulta.setVentanaAgendaDeCitas(this);
 
         panelConsulta.setVisible(true);
@@ -284,7 +300,7 @@ public class agendaDeCitas extends javax.swing.JFrame {
 
         historialConsultasMedico historialPaciente = new historialConsultasMedico(pacienteSELECCIONADO);
 
-        historialPaciente.setVentanaMedico(this.VentanaMedico);
+        historialPaciente.setVentanaMedico(this.ventanaMedico);
         historialPaciente.setVentanaAgendaDeCitas(this);
 
         historialPaciente.setVisible(true);
@@ -293,4 +309,16 @@ public class agendaDeCitas extends javax.swing.JFrame {
         this.dispose();
 
     }
+    
+    public void volverDashboardMedico() {
+        if (ventanaMedico == null) {
+            ventanaMedico = new dashBoardMedico();
+        }
+        
+        ventanaMedico.setLocationRelativeTo(null);
+        ventanaMedico.setVisible(true);
+        this.dispose();
+    }
+    
+    
 }
