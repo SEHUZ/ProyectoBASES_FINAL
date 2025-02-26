@@ -168,8 +168,28 @@ public class CitaBO {
         }
     }
 
-    //public CitaViejaDTO consultarCitaPorsuID(int idCita) throws NegocioException, PersistenciaClinicaException {
-    //}
+    public CitaViejaDTO consultarCitaPorsuID(int idCita) throws NegocioException, PersistenciaClinicaException {
+        try {
+        // 1. Validación básica del ID
+        if (idCita <= 0) {
+            throw new NegocioException("El ID de cita debe ser un número positivo");
+        }
+
+        // 2. Obtener cita desde el DAO
+        Cita cita = citaDAO.consultarCitaPorID(idCita);
+
+        // 3. Mapear a DTO con datos extendidos
+        CitaViejaDTO dto = mapper.toViejoDTO(cita);
+        
+        return dto;
+
+    } catch (PersistenciaClinicaException ex) {
+        logger.log(Level.SEVERE, "Fallo al consultar cita ID: " + idCita, ex);
+        throw new NegocioException(ex.getMessage());
+    }    
+    }
+
+    
     public List<CitaViejaDTO> consultarCitasProximasPaciente(PacienteViejoDTO paciente) throws NegocioException {
         try {
             // Convertir DTO a entidad
