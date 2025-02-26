@@ -4,8 +4,15 @@
  */
 package GUI;
 
+import BO.CitaBO;
+import DTO.CitaViejaDTO;
 import DTO.PacienteViejoDTO;
 import Entidades.Paciente;
+import Exception.NegocioException;
+import configuracion.DependencyInjector;
+import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 
 /**
@@ -13,6 +20,8 @@ import javax.swing.JOptionPane;
  * @author sonic
  */
 public class dashboardPaciente extends javax.swing.JFrame {
+
+    private CitaBO citaBO = DependencyInjector.crearCitaBO();
 
     private PacienteViejoDTO paciente;
 
@@ -364,6 +373,17 @@ public class dashboardPaciente extends javax.swing.JFrame {
     }
 
     public void abrirVentanaCitasProximas(PacienteViejoDTO paciente) {
+        List<CitaViejaDTO> citas;
+        try {
+            citas = citaBO.consultarCitasProximasPaciente(paciente);
+            if (citas.isEmpty()) {
+                JOptionPane.showMessageDialog(this, "No tiene citas próximas actualmente.");
+                return;
+            }
+        } catch (NegocioException ex) {
+            Logger.getLogger(dashboardPaciente.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
         if (ventanaCitasProximas == null) {
             ventanaCitasProximas = new listaCitasProximas(paciente);
         }
