@@ -53,19 +53,19 @@ public class ConsultaBO {
 
     public ConsultaViejaDTO insertarConsulta(ConsultaNuevaDTO consultanuevaDTO) throws SQLException, NegocioException, PersistenciaClinicaException {
         try {
-            if (consultanuevaDTO.getFechaHora() == null || consultanuevaDTO.getFechaHora().isBefore(LocalDateTime.now())) {
-                throw new NegocioException("La fecha y hora de la consulta son inválidas.");
-            }
+//            if (consultanuevaDTO.getFechaHora() == null || consultanuevaDTO.getFechaHora().isBefore(LocalDateTime.now())) {
+//                throw new NegocioException("La fecha y hora de la consulta son inválidas.");
+//            }
             System.out.println(consultanuevaDTO);
             if (consultanuevaDTO == null) {
                 throw new NegocioException("Los datos de la cita son requeridos");
             }
 
             Consulta consulta = consultaMapper.toEntityNuevo(consultanuevaDTO);
-//
-//            if (consulta.getCita() == null || consulta.getCita().getIdCita() <= 0) {
-//                throw new NegocioException("La cita asociada a la consulta es inválida.");
-//            }
+
+            if (consulta.getCita() == null || consulta.getCita().getIdCita() <= 0) {
+                throw new NegocioException("La cita asociada a la consulta es inválida.");
+            }
 
             if (citaDAO.consultarCitaPorID(consulta.getCita().getIdCita()) == null) {
                 throw new NegocioException("La cita asociada no existe");

@@ -237,7 +237,7 @@ public class agendaDeCitas extends javax.swing.JFrame {
         jComboBox1.removeAllItems();
         for (CitaViejaDTO cita : citas) {
             // Filtrar citas cuyo estado no sea "Cancelada"
-            if (!"Cancelada".equalsIgnoreCase(cita.getEstado().getDescripcion())) {
+            if ((cita.getEstado().getIdEstado() != 2) && (cita.getEstado().getIdEstado() != 6) && (cita.getEstado().getIdEstado() != 3) && (cita.getEstado().getIdEstado() != 4)) {
                 jComboBox1.addItem(cita.getIdCita() + " " + cita.getPaciente().getIdPaciente() + " " + cita.getPaciente().getNombres() + " " + cita.getPaciente().getApellidoPaterno() + " " + cita.getFechaHora());
             }
         }
@@ -257,7 +257,7 @@ public class agendaDeCitas extends javax.swing.JFrame {
         int idCita = Integer.parseInt(partes[0]); // Convertir la primera parte a entero
         CitaViejaDTO citaSeleccionada = citaBO.consultarCitaPorsuID(idCita);
 
-        panelDeConsulta panelConsulta = new panelDeConsulta(citaSeleccionada);
+        panelDeConsulta panelConsulta = new panelDeConsulta(citaSeleccionada, medico);
         panelConsulta.setVentanaMedico(this.VentanaMedico); 
         panelConsulta.setVentanaAgendaDeCitas(this);
 

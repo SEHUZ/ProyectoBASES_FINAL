@@ -5,11 +5,13 @@
 package GUI;
 
 //import BO.ConsultaBO;
+import BO.CitaBO;
 import BO.ConsultaBO;
 import DTO.CitaNuevaDTO;
 import DTO.CitaViejaDTO;
 import DTO.ConsultaNuevaDTO;
 import DTO.ConsultaViejaDTO;
+import DTO.MedicoDTO;
 import Entidades.Cita;
 import Exception.NegocioException;
 import Exception.PersistenciaClinicaException;
@@ -21,7 +23,7 @@ import java.time.LocalDateTime;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
-
+import GUI.iniciarSesion;
 /**
  *
  * @author sonic
@@ -31,14 +33,18 @@ public class panelDeConsulta extends javax.swing.JFrame {
     private ConsultaBO consultaBO;
     private CitaMapper mapperCita = new CitaMapper();
     private CitaViejaDTO citaActual;
-    private agendaDeCitas ventanaAgendaDeCitas;
-    
+    private MedicoDTO medico;
+    private CitaBO citaBO;
+    private agendaDeCitas ventanaAgendaDeCitas;    
     private dashBoardMedico ventanaMedico;
     
-    public panelDeConsulta(CitaViejaDTO cita) {
+    
+    public panelDeConsulta(CitaViejaDTO cita, MedicoDTO medico) {
         initComponents();
         this.consultaBO = DependencyInjector.crearConsultaBO();
+        this.citaBO = DependencyInjector.crearCitaBO();
         this.citaActual = cita;
+        this.medico = medico;
     }
     
     public panelDeConsulta() {
@@ -52,7 +58,6 @@ public class panelDeConsulta extends javax.swing.JFrame {
     public void setVentanaAgendaDeCitas(agendaDeCitas ventanaAgendaDeCitas) {
         this.ventanaAgendaDeCitas = ventanaAgendaDeCitas;
     }
-    
     
 
     /**
@@ -103,6 +108,11 @@ public class panelDeConsulta extends javax.swing.JFrame {
         });
 
         botonVolver.setText("Volver");
+        botonVolver.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                botonVolverMouseClicked(evt);
+            }
+        });
         botonVolver.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 botonVolverActionPerformed(evt);
@@ -185,6 +195,11 @@ public class panelDeConsulta extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_botonVolverActionPerformed
 
+    private void botonVolverMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_botonVolverMouseClicked
+        // TODO add your handling code here:
+        
+    }//GEN-LAST:event_botonVolverMouseClicked
+
     /**
      * @param args the command line arguments
      */
@@ -246,6 +261,14 @@ public class panelDeConsulta extends javax.swing.JFrame {
             
             Cita citaNueva = mapperCita.toEntityViejo(citaDTO);
             consultaDTO.setCita(citaNueva);
+            String estado = "Confirmada";
+            
+            boolean confirmacion = citaBO.cambiarEstadoCita(estado, citaNueva);
+            
+            if (!confirmacion) {
+                JOptionPane.showMessageDialog(this, "Hubo un error al actualizar el estado de la cita.", "Error", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
             
             System.out.println("consultaDTO");
             ConsultaViejaDTO resultado = consultaBO.insertarConsulta(consultaDTO);
@@ -254,8 +277,13 @@ public class panelDeConsulta extends javax.swing.JFrame {
                 JOptionPane.showMessageDialog(this, "Consulta registrada exitosamente");
                 this.dispose();
             }
+            iniciarSesion iniciarSesion = new iniciarSesion();
+            ventanaMedico = new dashBoardMedico(medico);
+            ventanaMedico.setVentanaInicio(iniciarSesion);
+            ventanaMedico.setLocationRelativeTo(null);
+            ventanaMedico.setVisible(true);
         } catch (NegocioException | SQLException e) {
             JOptionPane.showMessageDialog(this, e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
         }                                
-}
+    }
 }

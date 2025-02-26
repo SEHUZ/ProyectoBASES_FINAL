@@ -207,6 +207,21 @@ public class CitaBO {
             throw new NegocioException("Error al obtener citas próximas: " + ex.getMessage());
         }
     }
+    
+    public boolean cambiarEstadoCita(String estado, Cita cita) throws NegocioException, PersistenciaClinicaException {
+        try {
+            Cita citaActualizar = citaDAO.consultarCitaPorID(cita.getIdCita());
+            boolean i = citaDAO.actualizarEstadoCita(cita.getIdCita(), estado);
+            System.out.println(i);
+            if (i) {
+                return i;
+            }
+        } catch (PersistenciaClinicaException ex){
+            throw new NegocioException("Error al obtener citas próximas: " + ex.getMessage());
+            
+        }
+        return false;
+    }
 
 //    // Método 1: Actualizar estado de una cita
 //    public boolean insertarEstadoCita(int idCita, String descripcion) throws NegocioException {
