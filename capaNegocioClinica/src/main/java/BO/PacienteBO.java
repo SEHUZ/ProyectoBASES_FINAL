@@ -171,6 +171,20 @@ public class PacienteBO {
             throw new NegocioException("Error al recuperar los datos del paciente: " + ex.getMessage());
         }
     }
+    
+    public PacienteViejoDTO buscarPacientePorID(int id) throws NegocioException {
+        try {
+            Paciente paciente = pacienteDAO.consultarPacientePorID(id);
+            if (paciente == null) {
+                return null;
+            }
+
+            return mapper.toViejoDTO(paciente);
+        } catch (PersistenciaClinicaException ex) {
+            logger.log(Level.SEVERE, "Error al recuperar los datos del paciente", ex);
+            throw new NegocioException("Error al recuperar los datos del paciente: " + ex.getMessage());
+        }
+    }
 
     /**
      * Metodo que encripta la contraseña del usuario.
