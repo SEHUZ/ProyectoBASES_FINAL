@@ -32,7 +32,7 @@ public class probarconsulta {
 
             // Crear una cita de ejemplo (asegúrate que este ID exista en tu BD)
             Cita cita = new Cita();
-            cita.setIdCita(1);  // ID de la cita ya existente
+            cita.setIdCita(25);  // ID de la cita ya existente
 
             // Crear la consulta de prueba y asignar los datos necesarios
             Consulta consulta = new Consulta();
