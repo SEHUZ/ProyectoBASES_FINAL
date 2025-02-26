@@ -4,7 +4,16 @@
  */
 package GUI;
 
+import BO.CitaBO;
+import DTO.CitaViejaDTO;
 import DTO.PacienteViejoDTO;
+import Entidades.Cita;
+import Exception.NegocioException;
+import configuracion.DependencyInjector;
+import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.JOptionPane;
 
 /**
  *
@@ -12,17 +21,20 @@ import DTO.PacienteViejoDTO;
  */
 public class listaCitasProximas extends javax.swing.JFrame {
 
+    private CitaBO citaBO = DependencyInjector.crearCitaBO();
+
     private PacienteViejoDTO paciente;
     private dashboardPaciente ventanaPaciente;
-    
+
     /**
      * Creates new form listaCitasProximas
      */
     public listaCitasProximas(PacienteViejoDTO paciente) {
         this.paciente = paciente;
         initComponents();
+        cargarComboBox(paciente);
     }
-    
+
     public listaCitasProximas() {
         initComponents();
     }
@@ -30,7 +42,7 @@ public class listaCitasProximas extends javax.swing.JFrame {
     public void setVentanaPaciente(dashboardPaciente ventanaPaciente) {
         this.ventanaPaciente = ventanaPaciente;
     }
-    
+
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -91,18 +103,16 @@ public class listaCitasProximas extends javax.swing.JFrame {
                 .addComponent(botonVolver)
                 .addGap(0, 0, Short.MAX_VALUE))
             .addGroup(layout.createSequentialGroup()
-                .addGap(154, 154, 154)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(listaCitasProximas, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 325, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addComponent(botonVerDetalles, javax.swing.GroupLayout.PREFERRED_SIZE, 126, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(40, 40, 40)
-                        .addComponent(botonCancelarCita, javax.swing.GroupLayout.PREFERRED_SIZE, 126, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(12, 12, 12)))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGap(175, 175, 175)
+                .addComponent(botonVerDetalles, javax.swing.GroupLayout.PREFERRED_SIZE, 126, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(40, 40, 40)
+                .addComponent(botonCancelarCita, javax.swing.GroupLayout.PREFERRED_SIZE, 126, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(165, Short.MAX_VALUE))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap(132, Short.MAX_VALUE)
-                .addComponent(jLabel1)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(listaCitasProximas, javax.swing.GroupLayout.PREFERRED_SIZE, 390, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel1))
                 .addGap(125, 125, 125))
         );
         layout.setVerticalGroup(
@@ -133,7 +143,7 @@ public class listaCitasProximas extends javax.swing.JFrame {
     }//GEN-LAST:event_botonVolverActionPerformed
 
     private void botonVerDetallesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonVerDetallesActionPerformed
-        // TODO add your handling code here:
+        verDetalleCita();
     }//GEN-LAST:event_botonVerDetallesActionPerformed
 
     private void listaCitasProximasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_listaCitasProximasActionPerformed
@@ -184,6 +194,71 @@ public class listaCitasProximas extends javax.swing.JFrame {
     private javax.swing.JComboBox<String> listaCitasProximas;
     // End of variables declaration//GEN-END:variables
 
+    public void cargarComboBox(PacienteViejoDTO paciente) {
+        try {
+            List<CitaViejaDTO> citas = citaBO.consultarCitasProximasPaciente(paciente);
+            if (citas.isEmpty()) {
+                JOptionPane.showMessageDialog(this, "No tiene citas próximas actualmente.");
+                return;
+            }
+
+            listaCitasProximas.removeAllItems();
+            for (CitaViejaDTO cita : citas) {
+                if (!cita.getEstado().getDescripcion().equals("Cancelada")) {
+                    listaCitasProximas.addItem(cita.getIdCita() + " " + cita.getEstado().getDescripcion() + " " + cita.getFechaHora() + " Dr. " + cita.getMedico().getNombres() + " " + cita.getMedico().getApellidoPaterno());
+                }
+
+            }
+        } catch (NegocioException ex) {
+            JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+        }
+    }
+
+    public void verDetalleCita() {
+        String seleccionada = (String) listaCitasProximas.getSelectedItem();
+
+        if (seleccionada == null || seleccionada.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "No se ha seleccionado ninguna cita.", "Aviso", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+
+        try {
+            String[] partes = seleccionada.split(" ", 2); // Dividir solo en dos partes: ID y resto
+            int idCita = Integer.parseInt(partes[0]); // Convertir la primera parte a entero
+
+            Cita citaSeleccionada = citaBO.consultarCitaPorID(idCita);
+
+            // Construir el mensaje con los detalles de la cita
+            StringBuilder mensaje = new StringBuilder();
+            mensaje.append("ID Cita: ").append(citaSeleccionada.getIdCita()).append("\n");
+            mensaje.append("Fecha y Hora: ").append(citaSeleccionada.getFechaHora()).append("\n");
+            mensaje.append("Estado: ").append(citaSeleccionada.getEstado().getDescripcion()).append("\n");
+            mensaje.append("Paciente: ").append(citaSeleccionada.getPaciente().getNombres()).append(" ")
+                    .append(citaSeleccionada.getPaciente().getApellidoPaterno()).append(" ")
+                    .append(citaSeleccionada.getPaciente().getApellidoMaterno()).append("\n");
+            mensaje.append("Médico: ").append(citaSeleccionada.getMedico().getNombres()).append(" ")
+                    .append(citaSeleccionada.getMedico().getApellidoPaterno()).append(" ")
+                    .append(citaSeleccionada.getMedico().getApellidoMaterno()).append("\n");
+
+            // Verificar si es cita normal o de emergencia
+            if (citaSeleccionada.getNormal() != null) {
+                mensaje.append("Tipo de Cita: Normal\n");
+            } else if (citaSeleccionada.getEmergencia() != null) {
+                mensaje.append("Tipo de Cita: Emergencia\n");
+                mensaje.append("Folio Emergencia: ").append(citaSeleccionada.getEmergencia().getFolio()).append("\n");
+                mensaje.append("Fecha de Expiración: ").append(citaSeleccionada.getEmergencia().getFechaExpiracion()).append("\n");
+            }
+
+            // Mostrar el mensaje
+            JOptionPane.showMessageDialog(this, mensaje.toString(), "Detalles de la Cita", JOptionPane.INFORMATION_MESSAGE);
+
+        } catch (NumberFormatException e) {
+            JOptionPane.showMessageDialog(this, "Error al procesar el ID de la cita.", "Error", JOptionPane.ERROR_MESSAGE);
+        } catch (NegocioException ex) {
+            JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+        }
+    }
+
     public void volverDashboardPaciente() {
         if (ventanaPaciente == null) {
             ventanaPaciente = new dashboardPaciente();
@@ -194,5 +269,5 @@ public class listaCitasProximas extends javax.swing.JFrame {
         ventanaPaciente.setVisible(true);
         this.dispose();
     }
-    
+
 }
