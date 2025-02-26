@@ -4,21 +4,35 @@
  */
 package Entidades;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 /**
+ * Clase que representa una consulta médica.
+ *
+ * Esta clase almacena información sobre la consulta, incluyendo el diagnóstico,
+ * el estado de la consulta, la fecha y hora, y el tratamiento recomendado.
  *
  * @author sonic
  */
 public class Consulta {
-    private int idConsulta;
-    private Cita cita;
-    private String diagnostico;
-    private String estado;
-    private LocalDateTime fechaHora;
-    private String tratamiento;
 
+    private int idConsulta;            // Identificador único de la consulta
+    private Cita cita;                 // Cita asociada a la consulta
+    private String diagnostico;        // Diagnóstico realizado durante la consulta
+    private String estado;             // Estado actual de la consulta
+    private LocalDateTime fechaHora;   // Fecha y hora de la consulta
+    private String tratamiento;         // Tratamiento recomendado durante la consulta
+
+    /**
+     * Constructor de la clase Consulta.
+     *
+     * @param idConsulta Identificador único de la consulta.
+     * @param cita La cita asociada a la consulta.
+     * @param diagnostico El diagnóstico realizado durante la consulta.
+     * @param estado El estado actual de la consulta.
+     * @param fechaHora La fecha y hora de la consulta.
+     * @param tratamiento El tratamiento recomendado durante la consulta.
+     */
     public Consulta(int idConsulta, Cita cita, String diagnostico, String estado, LocalDateTime fechaHora, String tratamiento) {
         this.idConsulta = idConsulta;
         this.cita = cita;
@@ -28,6 +42,15 @@ public class Consulta {
         this.tratamiento = tratamiento;
     }
 
+    /**
+     * Constructor de la clase Consulta sin ID.
+     *
+     * @param cita La cita asociada a la consulta.
+     * @param diagnostico El diagnóstico realizado durante la consulta.
+     * @param estado El estado actual de la consulta.
+     * @param fechaHora La fecha y hora de la consulta.
+     * @param tratamiento El tratamiento recomendado durante la consulta.
+     */
     public Consulta(Cita cita, String diagnostico, String estado, LocalDateTime fechaHora, String tratamiento) {
         this.cita = cita;
         this.diagnostico = diagnostico;
@@ -36,9 +59,13 @@ public class Consulta {
         this.tratamiento = tratamiento;
     }
 
+    /**
+     * Constructor por defecto de la clase Consulta.
+     */
     public Consulta() {
     }
 
+    // Getters y Setters
     public int getIdConsulta() {
         return idConsulta;
     }
@@ -91,6 +118,5 @@ public class Consulta {
     public String toString() {
         return "Consulta{" + "idConsulta=" + idConsulta + ", cita=" + cita + ", diagnostico=" + diagnostico + ", estado=" + estado + ", fechaHora=" + fechaHora + ", tratamiento=" + tratamiento + '}';
     }
-    
-    
+
 }

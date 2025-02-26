@@ -16,19 +16,42 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
+ * Clase que implementa la interfaz IUsuarioDAO para manejar las operaciones de
+ * persistencia relacionadas con los usuarios en la base de datos.
+ *
+ * Esta clase proporciona métodos para el inicio de sesión de pacientes y
+ * médicos.
  *
  * @author Daniel M
  */
 public class UsuarioDAO implements IUsuarioDAO {
 
-    IConexionBD conexion;
+    IConexionBD conexion; // Interfaz para la conexión a la base de datos
 
+    /**
+     * Constructor de la clase UsuarioDAO.
+     *
+     * @param conexion La conexión a la base de datos que se utilizará para las
+     * operaciones.
+     */
     public UsuarioDAO(IConexionBD conexion) {
         this.conexion = conexion;
     }
 
     private static final Logger logger = Logger.getLogger(PacienteDAO.class.getName());
 
+    /**
+     * Verifica las credenciales de inicio de sesión de un paciente.
+     *
+     * Este método compara la contraseña proporcionada con la almacenada en la
+     * base de datos utilizando el algoritmo Argon2 para la verificación.
+     *
+     * @param user El nombre de usuario del paciente.
+     * @param contrasenia La contraseña proporcionada por el paciente.
+     * @return true si las credenciales son válidas, false en caso contrario.
+     * @throws PersistenciaClinicaException Si ocurre un error durante la
+     * verificación.
+     */
     @Override
     public boolean loginPaciente(String user, String contrasenia) throws PersistenciaClinicaException {
         String hashAlmacenado = null;
@@ -53,6 +76,18 @@ public class UsuarioDAO implements IUsuarioDAO {
         }
     }
 
+    /**
+     * Verifica las credenciales de inicio de sesión de un médico.
+     *
+     * Este método compara la contraseña proporcionada con la almacenada en la
+     * base de datos sin utilizar un algoritmo de encriptación.
+     *
+     * @param user El nombre de usuario del médico.
+     * @param contrasenia La contraseña proporcionada por el médico.
+     * @return true si las credenciales son válidas, false en caso contrario.
+     * @throws PersistenciaClinicaException Si ocurre un error durante la
+     * verificación.
+     */
     @Override
     public boolean loginMedico(String user, String contrasenia) throws PersistenciaClinicaException {
         String contraseniaAlmacenada = null;

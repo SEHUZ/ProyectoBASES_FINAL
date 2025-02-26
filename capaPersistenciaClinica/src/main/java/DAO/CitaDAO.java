@@ -4,6 +4,7 @@
  */
 package DAO;
 
+// Imports
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -28,37 +29,49 @@ public class CitaDAO implements ICitaDAO {
 
     public CitaDAO(IConexionBD conexion) {
         this.conexion = conexion;
-
     }
 
-    // Método para insertar una cita general en la tabla Citas
+    /**
+     * Método para agendar una cita en la base de datos utilizando un
+     * procedimiento almacenado.
+     *
+     * @param cita Objeto de tipo Cita con la información de la cita a
+     * registrar.
+     * @return La cita registrada con el ID asignado y, en caso de ser de
+     * emergencia, su folio correspondiente.
+     * @throws PersistenciaClinicaException En caso de error en la ejecución del
+     * procedimiento almacenado.
+     * @throws SQLException En caso de error en la conexión a la base de datos.
+     */
     @Override
     public Cita agendarCita(Cita cita) throws PersistenciaClinicaException, SQLException {
         String sql = "{call AgendarCita(?, ?, ?, ?, ?, ?)}";
 
         try (Connection conn = conexion.crearConexion(); CallableStatement cstmt = conn.prepareCall(sql)) {
-
+            // Asignación de parámetros de entrada
             cstmt.setInt(1, cita.getPaciente().getIdPaciente());
             cstmt.setInt(2, cita.getMedico().getIdMedico());
             cstmt.setTimestamp(3, Timestamp.valueOf(cita.getFechaHora()));
             cstmt.setString(4, cita.getTipoCita().name());
 
+            // Parámetros de salida (ID de la cita y folio si es emergencia)
             cstmt.registerOutParameter(5, Types.INTEGER);
             cstmt.registerOutParameter(6, Types.VARCHAR);
 
+            // Ejecución del procedimiento almacenado
             cstmt.execute();
 
+            // Recuperación de valores de salida
             int idCita = cstmt.getInt(5);
             String folio = cstmt.getString(6);
-
             cita.setIdCita(idCita);
 
+            // Si la cita es de emergencia, se asigna el folio correspondiente
             if (cita.getTipoCita() == Cita.TipoCita.EMERGENCIA) {
                 CitaEmergencia emergencia = new CitaEmergencia();
                 emergencia.setFolio(folio);
                 cita.setEmergencia(emergencia);
             }
-
             return cita;
 
         } catch (SQLException e) {
@@ -66,23 +79,30 @@ public class CitaDAO implements ICitaDAO {
         }
     }
 
+    /**
+     * Consulta todas las citas asociadas a un médico en la base de datos.
+     *
+     * @param medico Objeto de tipo Medico con el ID del médico a consultar.
+     * @return Lista de citas asociadas al médico.
+     * @throws PersistenciaClinicaException En caso de error en la consulta a la
+     * base de datos.
+     */
     @Override
     public List<Cita> consultarCitasMedico(Medico medico) throws PersistenciaClinicaException {
         List<Cita> citas = new ArrayList<>();
         String procedimiento = "{CALL ObtenerCitasPorMedico(?)}";
 
         try (Connection con = conexion.crearConexion(); CallableStatement cs = con.prepareCall(procedimiento)) {
-
             cs.setInt(1, medico.getIdMedico());
 
             try (ResultSet rs = cs.executeQuery()) {
                 while (rs.next()) {
-                    // Datos cita
+                    // Creación y asignación de valores de la cita
                     Cita cita = new Cita();
                     cita.setIdCita(rs.getInt("idCita"));
                     cita.setFechaHora(rs.getTimestamp("fechaHora").toLocalDateTime());
 
-                    // Datos paciente
+                    // Asignación de información del paciente
                     Paciente paciente = new Paciente();
                     paciente.setIdPaciente(rs.getInt("idPaciente"));
                     paciente.setNombres(rs.getString("nombrePaciente"));
@@ -90,7 +110,7 @@ public class CitaDAO implements ICitaDAO {
                     paciente.setApellidoMaterno(rs.getString("apellidoMaternoPaciente"));
                     cita.setPaciente(paciente);
 
-                    // Datos medico
+                    // Asignación de información del médico
                     Medico medicoCita = new Medico();
                     medicoCita.setIdMedico(rs.getInt("idMedico"));
                     medicoCita.setNombres(rs.getString("nombreMedico"));
@@ -98,31 +118,34 @@ public class CitaDAO implements ICitaDAO {
                     medicoCita.setApellidoMaterno(rs.getString("apellidoMaternoMedico"));
                     cita.setMedico(medicoCita);
 
-                    // Datos estadoCita
+                    // Asignación del estado de la cita
                     EstadosCita estado = new EstadosCita();
                     estado.setIdEstado(rs.getInt("idEstado"));
                     estado.setDescripcion(rs.getString("estadoCita"));
                     cita.setEstado(estado);
-                    
-                    
+
                     citas.add(cita);
-                    
                 }
             }
-
         } catch (SQLException ex) {
             throw new PersistenciaClinicaException("Error al obtener citas del médico: " + ex.getMessage());
         }
-
         return citas;
     }
 
+    /**
+     * Consulta el estado de una cita específica en la base de datos.
+     *
+     * @param idCita ID de la cita a consultar.
+     * @return Objeto EstadosCita con la información del estado de la cita.
+     * @throws PersistenciaClinicaException En caso de que no se encuentre la
+     * cita o haya un error en la consulta.
+     */
     @Override
     public EstadosCita consultarEstadoCita(int idCita) throws PersistenciaClinicaException {
         String consultarEstadoSQL = "SELECT * FROM estadosCita WHERE idCita = ?";
 
         try (Connection con = conexion.crearConexion(); PreparedStatement ps = con.prepareStatement(consultarEstadoSQL)) {
-
             ps.setInt(1, idCita);
 
             try (ResultSet rs = ps.executeQuery()) {
@@ -134,12 +157,20 @@ public class CitaDAO implements ICitaDAO {
                     throw new PersistenciaClinicaException("No se encontró la cita con ID: " + idCita);
                 }
             }
-
         } catch (SQLException ex) {
             throw new PersistenciaClinicaException("Error al consultar estado de la cita: " + ex.getMessage());
         }
     }
 
+    /**
+     * Actualiza el estado de una cita en la base de datos.
+     *
+     * @param idCita ID de la cita a actualizar.
+     * @param nuevoEstado El nuevo estado que se asignará a la cita.
+     * @return true si la actualización fue exitosa, false en caso contrario.
+     * @throws PersistenciaClinicaException Si ocurre un error durante la
+     * actualización.
+     */
     @Override
     public boolean actualizarEstadoCita(int idCita, String nuevoEstado) throws PersistenciaClinicaException {
         String actualizarEstadoSQL = "UPDATE Citas SET idEstado = "
@@ -164,6 +195,14 @@ public class CitaDAO implements ICitaDAO {
         }
     }
 
+    /**
+     * Cancela una cita estableciendo su estado a "Cancelada".
+     *
+     * @param idCita ID de la cita a cancelar.
+     * @return true si la cancelación fue exitosa, false en caso contrario.
+     * @throws PersistenciaClinicaException Si ocurre un error durante la
+     * cancelación.
+     */
     @Override
     public boolean cancelarCita(int idCita) throws PersistenciaClinicaException {
         String updateSQL = "UPDATE Citas SET idEstado = "
@@ -186,9 +225,18 @@ public class CitaDAO implements ICitaDAO {
         }
     }
 
+    /**
+     * Consulta una cita por su ID y retorna un objeto Cita con sus detalles.
+     *
+     * @param idCita ID de la cita a consultar.
+     * @return Un objeto Cita con todos los datos correspondientes, o null si no
+     * se encontró.
+     * @throws PersistenciaClinicaException Si ocurre un error durante la
+     * consulta.
+     */
     @Override
     public Cita consultarCitaPorID(int idCita) throws PersistenciaClinicaException {
-        Cita cita = null; // Cambiamos a Cita en lugar de List<Cita>
+        Cita cita = null; // Inicializa la variable cita como null
         String procedimiento = "SELECT c.idCita, c.fechaHora, p.idPaciente, p.nombres, p.apellidoPaterno, p.apellidoMaterno, "
                 + "m.idMedico, m.nombres, m.apellidoPaterno, m.apellidoMaterno, e.idEstado, e.descripcion "
                 + "FROM Citas c "
@@ -209,16 +257,15 @@ public class CitaDAO implements ICitaDAO {
                     // Datos paciente
                     Paciente paciente = new Paciente();
                     paciente.setIdPaciente(rs.getInt("idPaciente"));
-                    paciente.setNombres(rs.getString("nombrePaciente"));
+                    paciente.setNombres(rs.getString("nombres")); // Corregido: 'nombrePaciente' por 'nombres'
                     paciente.setApellidoPaterno(rs.getString("apellidoPaterno"));
                     paciente.setApellidoMaterno(rs.getString("apellidoMaterno"));
                     cita.setPaciente(paciente);
-                    
 
                     // Datos medico
                     Medico medicoCita = new Medico();
                     medicoCita.setIdMedico(rs.getInt("idMedico"));
-                    medicoCita.setNombres(rs.getString("nombreMedico"));
+                    medicoCita.setNombres(rs.getString("nombres")); // Corregido: 'nombreMedico' por 'nombres'
                     medicoCita.setApellidoPaterno(rs.getString("apellidoPaterno"));
                     medicoCita.setApellidoMaterno(rs.getString("apellidoMaterno"));
                     cita.setMedico(medicoCita);
@@ -237,6 +284,14 @@ public class CitaDAO implements ICitaDAO {
         return cita; // Retornamos la cita o null si no se encontró
     }
 
+    /**
+     * Mapea los datos de un ResultSet a un objeto Cita.
+     *
+     * @param rs El ResultSet que contiene los datos de la cita.
+     * @return Un objeto Cita mapeado con todos sus atributos.
+     * @throws SQLException Si ocurre un error al acceder a los datos del
+     * ResultSet.
+     */
     private Cita mapear(ResultSet rs) throws SQLException {
         Cita cita = new Cita();
 
@@ -250,18 +305,19 @@ public class CitaDAO implements ICitaDAO {
 
         Paciente paciente = new Paciente();
         paciente.setIdPaciente(rs.getInt("idPaciente"));
-        paciente.setNombres(rs.getString("nombrePaciente"));
+        paciente.setNombres(rs.getString("nombres")); // Corregido: 'nombrePaciente' por 'nombres'
         paciente.setApellidoPaterno(rs.getString("apellidoPaternoPaciente"));
         paciente.setApellidoMaterno(rs.getString("apellidoMaternoPaciente"));
         cita.setPaciente(paciente);
 
         Medico medico = new Medico();
         medico.setIdMedico(rs.getInt("idMedico"));
-        medico.setNombres(rs.getString("nombreMedico"));
+        medico.setNombres(rs.getString("nombres")); // Corregido: 'nombreMedico' por 'nombres'
         medico.setApellidoPaterno(rs.getString("apellidoPaternoMedico"));
         medico.setApellidoMaterno(rs.getString("apellidoMaternoMedico"));
         cita.setMedico(medico);
 
+        // Verifica si la cita es de emergencia
         if (rs.getString("tipoCitaNormal") == null) {
             CitaEmergencia emergencia = new CitaEmergencia();
             emergencia.setFolio(rs.getString("folioEmergencia"));
@@ -273,10 +329,19 @@ public class CitaDAO implements ICitaDAO {
             cita.setNormal(new CitaNormal());
         }
 
-        return cita;
+        return cita; // Retorna la cita mapeada
     }
 
     @Override
+    /**
+     * Inserta el estado de una cita en la base de datos.
+     *
+     * @param idCita El ID de la cita que se desea actualizar.
+     * @param estado El nuevo estado a asignar a la cita.
+     * @return true si la actualización fue exitosa, false en caso contrario.
+     * @throws PersistenciaClinicaException Si ocurre un error al intentar
+     * actualizar el estado.
+     */
     public boolean insertarEstadoCita(int idCita, String estado) throws PersistenciaClinicaException {
         String UpdateSQL = "UPDATE citas SET estado = ? WHERE idCita = ?";
 
@@ -293,6 +358,16 @@ public class CitaDAO implements ICitaDAO {
     }
 
     @Override
+    /**
+     * Agenda una cita de emergencia en la base de datos.
+     *
+     * @param cita El objeto Cita que contiene los datos de la cita a agendar.
+     * @return El objeto Cita actualizado con el ID y otros datos asignados.
+     * @throws PersistenciaClinicaException Si ocurre un error al intentar
+     * agendar la cita.
+     * @throws SQLException Si ocurre un error de SQL al ejecutar el
+     * procedimiento almacenado.
+     */
     public Cita agendarCitaEmergencia(Cita cita) throws PersistenciaClinicaException, SQLException {
         String procedimientoEmergencia = "{CALL AgendarCitaEmergencia(?, ?, ?, ?, ?)}";
 
@@ -333,6 +408,14 @@ public class CitaDAO implements ICitaDAO {
     }
 
     @Override
+    /**
+     * Consulta las citas próximas para un paciente específico.
+     *
+     * @param paciente El objeto Paciente cuyo citas se desean consultar.
+     * @return Una lista de citas próximas del paciente.
+     * @throws PersistenciaClinicaException Si ocurre un error al intentar
+     * consultar las citas.
+     */
     public List<Cita> consultarCitasProximasPorPaciente(Paciente paciente) throws PersistenciaClinicaException {
         List<Cita> citas = new ArrayList<>();
         String procedimiento = "{CALL ObtenerCitasProximasPorPaciente(?)}";

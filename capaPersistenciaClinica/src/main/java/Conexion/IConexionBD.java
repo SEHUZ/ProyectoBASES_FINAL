@@ -8,7 +8,8 @@ import Exception.PersistenciaClinicaException;
 import java.sql.Connection;
 
 /**
- *
+ * Clase interfaz que crea el metodo para la conexion con la base de datos
+ * 
  * @author sonic
  */
 public interface IConexionBD {

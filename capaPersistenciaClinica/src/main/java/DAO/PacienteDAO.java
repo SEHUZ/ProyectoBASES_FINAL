@@ -27,19 +27,38 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
+ * Clase que implementa la interfaz IPacienteDAO para manejar las operaciones de
+ * persistencia relacionadas con los pacientes en la base de datos.
  *
- * @author Jose
+ * @author Daniel M
  */
 public class PacienteDAO implements IPacienteDAO {
 
-    IConexionBD conexion;
+    IConexionBD conexion; // Interfaz para la conexión a la base de datos
 
+    /**
+     * Constructor de la clase PacienteDAO.
+     *
+     * @param conexion La conexión a la base de datos que se utilizará para las
+     * operaciones.
+     */
     public PacienteDAO(IConexionBD conexion) {
         this.conexion = conexion;
     }
 
     private static final Logger logger = Logger.getLogger(PacienteDAO.class.getName());
 
+    /**
+     * Registra un nuevo paciente en la base de datos, incluyendo su usuario,
+     * datos personales y dirección.
+     *
+     * @param paciente El objeto Paciente que contiene la información a
+     * registrar.
+     * @return El paciente registrado, con su ID asignado.
+     * @throws PersistenciaClinicaException Si ocurre un error durante el
+     * registro del paciente.
+     * @throws SQLException Si ocurre un error relacionado con la base de datos.
+     */
     @Override
     public Paciente registrarPaciente(Paciente paciente) throws PersistenciaClinicaException, SQLException {
         String sentenciaUsuarioSQL = "INSERT INTO usuarios (User, contrasenia, rol) VALUES (?, ?, ?)";
@@ -148,6 +167,20 @@ public class PacienteDAO implements IPacienteDAO {
         }
     }
 
+    /**
+     * Actualiza la información de un paciente en la base de datos.
+     *
+     * Este método primero consulta el paciente actual y verifica cada campo del
+     * objeto Paciente proporcionado. Si un campo es nulo o vacío, se mantiene
+     * el valor actual. Luego, se procede a actualizar los datos en la base de
+     * datos.
+     *
+     * @param paciente El objeto Paciente que contiene la información a
+     * actualizar.
+     * @return El paciente actualizado.
+     * @throws PersistenciaClinicaException Si ocurre un error durante la
+     * actualización o si el paciente no se encuentra.
+     */
     @Override
     public Paciente actualizarPaciente(Paciente paciente) throws PersistenciaClinicaException {
         // Primero, consulta el paciente actual
@@ -173,13 +206,13 @@ public class PacienteDAO implements IPacienteDAO {
         }
         if (paciente.getTelefono() == null || paciente.getTelefono().trim().isEmpty()) {
             paciente.setTelefono(pacienteActual.getTelefono());
-        } else if(paciente.getTelefono().length() != 10) {
+        } else if (paciente.getTelefono().length() != 10) {
             throw new PersistenciaClinicaException("Numero de telefono con formato incorrecto.");
         }
-        
+
         if (paciente.getEmail() == null || paciente.getEmail().trim().isEmpty()) {
             paciente.setEmail(pacienteActual.getEmail());
-        } else if(!validarCorreo(paciente.getEmail())) {
+        } else if (!validarCorreo(paciente.getEmail())) {
             throw new PersistenciaClinicaException("Correo con formato incorrecto.");
         }
 
@@ -262,7 +295,18 @@ public class PacienteDAO implements IPacienteDAO {
         }
     }
 
-
+    /**
+     * Consulta un paciente en la base de datos por su ID.
+     *
+     * Este método obtiene la información del paciente, su dirección y su
+     * usuario asociado.
+     *
+     * @param id El ID del paciente que se desea consultar.
+     * @return El objeto Paciente correspondiente al ID proporcionado, o null si
+     * no se encuentra.
+     * @throws PersistenciaClinicaException Si ocurre un error durante la
+     * consulta.
+     */
     @Override
     public Paciente consultarPacientePorID(int id) throws PersistenciaClinicaException {
         Paciente paciente = null;
@@ -329,6 +373,18 @@ public class PacienteDAO implements IPacienteDAO {
         return paciente;
     }
 
+    /**
+     * Consulta un paciente en la base de datos por su correo electrónico.
+     *
+     * Este método obtiene la información del paciente, su dirección y su
+     * usuario asociado utilizando el correo proporcionado.
+     *
+     * @param correo El correo electrónico del paciente que se desea consultar.
+     * @return El objeto Paciente correspondiente al correo proporcionado, o
+     * null si no se encuentra.
+     * @throws PersistenciaClinicaException Si ocurre un error durante la
+     * consulta.
+     */
     @Override
     public Paciente consultarPacientePorCorreo(String correo) throws PersistenciaClinicaException {
         Paciente paciente = null;
@@ -397,6 +453,19 @@ public class PacienteDAO implements IPacienteDAO {
         return paciente;
     }
 
+    /**
+     * Consulta un paciente en la base de datos por su número de teléfono.
+     *
+     * Este método obtiene la información del paciente, su dirección y su
+     * usuario asociado utilizando el número de teléfono proporcionado.
+     *
+     * @param telefono El número de teléfono del paciente que se desea
+     * consultar.
+     * @return El objeto Paciente correspondiente al teléfono proporcionado, o
+     * null si no se encuentra.
+     * @throws PersistenciaClinicaException Si ocurre un error durante la
+     * consulta.
+     */
     @Override
     public Paciente consultarPacientePorTelefono(String telefono) throws PersistenciaClinicaException {
         Paciente paciente = null;
@@ -465,6 +534,18 @@ public class PacienteDAO implements IPacienteDAO {
         return paciente;
     }
 
+    /**
+     * Consulta un paciente en la base de datos por su nombre de usuario.
+     *
+     * Este método obtiene la información del paciente, su dirección y su
+     * usuario asociado utilizando el nombre de usuario proporcionado.
+     *
+     * @param user El nombre de usuario del paciente que se desea consultar.
+     * @return El objeto Paciente correspondiente al usuario proporcionado, o
+     * null si no se encuentra.
+     * @throws PersistenciaClinicaException Si ocurre un error durante la
+     * consulta.
+     */
     @Override
     public Paciente consultarPacientePorUsuario(String user) throws PersistenciaClinicaException {
         Paciente paciente = null;
@@ -532,52 +613,74 @@ public class PacienteDAO implements IPacienteDAO {
 
         return paciente;
     }
-    
+
+    /**
+     * Obtiene una lista de citas próximas para un paciente específico.
+     *
+     * Este método llama a un procedimiento almacenado en la base de datos que
+     * devuelve las citas próximas asociadas al ID del paciente proporcionado.
+     *
+     * @param idPaciente El ID del paciente para el cual se desean obtener las
+     * citas.
+     * @return Una lista de objetos Cita que representan las citas próximas del
+     * paciente.
+     * @throws PersistenciaClinicaException Si ocurre un error durante la
+     * consulta a la base de datos.
+     */
     @Override
     public List<Cita> obtenerCitasProximasPorPaciente(int idPaciente) throws PersistenciaClinicaException {
         List<Cita> citasProximas = new ArrayList<>();
-    String procedimiento = "{CALL ObtenerCitasProximasPorPaciente(?)}";
+        String procedimiento = "{CALL ObtenerCitasProximasPorPaciente(?)}";
 
-    try (Connection con = conexion.crearConexion();
-         CallableStatement cs = con.prepareCall(procedimiento)) {
+        try (Connection con = conexion.crearConexion(); CallableStatement cs = con.prepareCall(procedimiento)) {
 
-        cs.setInt(1, idPaciente);
+            cs.setInt(1, idPaciente);
 
-        try (ResultSet rs = cs.executeQuery()) {
-            while (rs.next()) {
-                Cita cita = new Cita();
-                
-                cita.setIdCita(rs.getInt("idCita"));
-                cita.setFechaHora(rs.getTimestamp("fechaHoraCita").toLocalDateTime());
-                
-                // Crear objeto Medico
-                Medico medico = new Medico();
-                medico.setNombres(rs.getString("nombreMedico"));
-                medico.setApellidoPaterno(rs.getString("apellidoMedico"));
-                medico.setEspecialidad(rs.getString("especialidad"));
-                cita.setMedico(medico);
-                
-                // Crear objeto EstadosCita
-                EstadosCita estado = new EstadosCita();
-                estado.setDescripcion(rs.getString("estadoCita"));
-                cita.setEstado(estado);
-                
-                String tipoStr = rs.getString("tipoCita"); //Se recibe como tipo string
-                Cita.TipoCita tipo = Cita.TipoCita.valueOf(tipoStr.toUpperCase()); //Se debe convertir a el valor del Enum
-                cita.setTipoCita(tipo);
+            try (ResultSet rs = cs.executeQuery()) {
+                while (rs.next()) {
+                    Cita cita = new Cita();
 
-                citasProximas.add(cita);
+                    cita.setIdCita(rs.getInt("idCita"));
+                    cita.setFechaHora(rs.getTimestamp("fechaHoraCita").toLocalDateTime());
+
+                    // Crear objeto Medico
+                    Medico medico = new Medico();
+                    medico.setNombres(rs.getString("nombreMedico"));
+                    medico.setApellidoPaterno(rs.getString("apellidoMedico"));
+                    medico.setEspecialidad(rs.getString("especialidad"));
+                    cita.setMedico(medico);
+
+                    // Crear objeto EstadosCita
+                    EstadosCita estado = new EstadosCita();
+                    estado.setDescripcion(rs.getString("estadoCita"));
+                    cita.setEstado(estado);
+
+                    String tipoStr = rs.getString("tipoCita"); //Se recibe como tipo string
+                    Cita.TipoCita tipo = Cita.TipoCita.valueOf(tipoStr.toUpperCase()); //Se debe convertir a el valor del Enum
+                    cita.setTipoCita(tipo);
+
+                    citasProximas.add(cita);
+                }
             }
+
+        } catch (SQLException ex) {
+            logger.log(Level.SEVERE, "Error al obtener citas próximas", ex);
+            throw new PersistenciaClinicaException("Error al obtener citas próximas: " + ex.getMessage());
         }
-        
-    } catch (SQLException ex) {
-        logger.log(Level.SEVERE, "Error al obtener citas próximas", ex);
-        throw new PersistenciaClinicaException("Error al obtener citas próximas: " + ex.getMessage());
+
+        return citasProximas;
     }
 
-    return citasProximas;
-    }
-    
+    /**
+     * Valida el formato de un correo electrónico.
+     *
+     * Este método utiliza una expresión regular para verificar si el correo
+     * electrónico proporcionado cumple con un formato válido.
+     *
+     * @param correo El correo electrónico que se desea validar.
+     * @return true si el correo tiene un formato válido, false en caso
+     * contrario.
+     */
     public static boolean validarCorreo(String correo) {
         String regex = "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$";
 

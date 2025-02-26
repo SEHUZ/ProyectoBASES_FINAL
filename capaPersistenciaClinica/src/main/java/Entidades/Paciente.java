@@ -7,27 +7,45 @@ package Entidades;
 import java.time.LocalDate;
 
 /**
+ * Clase que representa a un paciente.
+ *
+ * Esta clase almacena información sobre el paciente, incluyendo su
+ * identificación, dirección, datos personales, fecha de nacimiento, correo
+ * electrónico y teléfono.
  *
  * @author sonic
  */
 public class Paciente {
 
-    private int idPaciente;
-    private DireccionPaciente direccion;
-    private Usuario usuario;
-    private String nombres;
-    private String apellidoPaterno;
-    private String apellidoMaterno;
-    private LocalDate fechaNacimiento;
-    private String email;
-    private String telefono;
- 
- 
- 
+    private int idPaciente;                // Identificador único del paciente
+    private DireccionPaciente direccion;    // Dirección del paciente
+    private Usuario usuario;                // Usuario asociado al paciente
+    private String nombres;                 // Nombres del paciente
+    private String apellidoPaterno;         // Apellido paterno del paciente
+    private String apellidoMaterno;         // Apellido materno del paciente
+    private LocalDate fechaNacimiento;      // Fecha de nacimiento del paciente
+    private String email;                   // Correo electrónico del paciente
+    private String telefono;                 // Número de teléfono del paciente
 
+    /**
+     * Constructor por defecto de la clase Paciente.
+     */
     public Paciente() {
     }
 
+    /**
+     * Constructor de la clase Paciente con todos los parámetros.
+     *
+     * @param idPaciente Identificador único del paciente.
+     * @param direccion La dirección del paciente.
+     * @param usuario El usuario asociado al paciente.
+     * @param nombres Los nombres del paciente.
+     * @param apellidoPaterno El apellido paterno del paciente.
+     * @param apellidoMaterno El apellido materno del paciente.
+     * @param fechaNacimiento La fecha de nacimiento del paciente.
+     * @param email El correo electrónico del paciente.
+     * @param telefono El número de teléfono del paciente.
+     */
     public Paciente(int idPaciente, DireccionPaciente direccion, Usuario usuario, String nombres, String apellidoPaterno, String apellidoMaterno, LocalDate fechaNacimiento, String email, String telefono) {
         this.idPaciente = idPaciente;
         this.direccion = direccion;
@@ -40,6 +58,18 @@ public class Paciente {
         this.telefono = telefono;
     }
 
+    /**
+     * Constructor de la clase Paciente sin idPaciente.
+     *
+     * @param direccion La dirección del paciente.
+     * @param usuario El usuario asociado al paciente.
+     * @param nombres Los nombres del paciente.
+     * @param apellidoPaterno El apellido paterno del paciente.
+     * @param apellidoMaterno El apellido materno del paciente.
+     * @param fechaNacimiento La fecha de nacimiento del paciente.
+     * @param email El correo electrónico del paciente.
+     * @param telefono El número de teléfono del paciente.
+     */
     public Paciente(DireccionPaciente direccion, Usuario usuario, String nombres, String apellidoPaterno, String apellidoMaterno, LocalDate fechaNacimiento, String email, String telefono) {
         this.direccion = direccion;
         this.usuario = usuario;
@@ -51,6 +81,7 @@ public class Paciente {
         this.telefono = telefono;
     }
 
+    // Getters y Setters
     public int getIdPaciente() {
         return idPaciente;
     }
@@ -127,8 +158,5 @@ public class Paciente {
     public String toString() {
         return "Paciente{" + "idPaciente=" + idPaciente + ", direccion=" + direccion + ", usuario=" + usuario + ", nombres=" + nombres + ", apellidoPaterno=" + apellidoPaterno + ", apellidoMaterno=" + apellidoMaterno + ", fechaNacimiento=" + fechaNacimiento + ", email=" + email + ", telefono=" + telefono + '}';
     }
-    
-    
-    
 
 }
