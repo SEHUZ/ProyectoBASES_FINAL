@@ -9,21 +9,15 @@ import BO.ConsultaBO;
 import BO.MedicoBO;
 import BO.PacienteBO;
 import DTO.CitaViejaDTO;
-import DTO.ConsultaNuevaDTO;
-import DTO.ConsultaViejaDTO;
 import DTO.MedicoDTO;
 import DTO.PacienteViejoDTO;
-import Entidades.Cita;
 import Exception.NegocioException;
 import Exception.PersistenciaClinicaException;
 import Mappers.CitaMapper;
-import Mappers.MedicoMapper;
 import configuracion.DependencyInjector;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.sql.SQLException;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -45,6 +39,7 @@ public class agendaDeCitas extends javax.swing.JFrame {
     private ConsultaBO consultaBO = DependencyInjector.crearConsultaBO();
     private dashBoardMedico VentanaMedico;
     private final CitaMapper citaMapper = new CitaMapper();
+    private historialConsultasMedico ventanaHistorialConsultasMedicoPaciente;
 
     private panelDeConsulta ventanaAgendarConsulta;
 
@@ -71,6 +66,10 @@ public class agendaDeCitas extends javax.swing.JFrame {
 
     public void setVentanaMedico(dashBoardMedico VentanaMedico) {
         this.VentanaMedico = VentanaMedico;
+    }
+
+    public void setVentanaHistorialConsultasMedicoPaciente(historialConsultasMedico ventanaHistorialConsultasMedicoPaciente) {
+        this.ventanaHistorialConsultasMedicoPaciente = ventanaHistorialConsultasMedicoPaciente;
     }
 
     public agendaDeCitas() {
@@ -180,7 +179,17 @@ public class agendaDeCitas extends javax.swing.JFrame {
     }//GEN-LAST:event_botonIniciarConsultaActionPerformed
 
     private void botonHistorialPacienteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonHistorialPacienteActionPerformed
-        // TODO add your handling code here:
+        try {
+            revisarHistorialPaciente();
+
+            // TODO add your handling code here:
+        } catch (NegocioException ex) {
+            Logger.getLogger(agendaDeCitas.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (PersistenciaClinicaException ex) {
+            Logger.getLogger(agendaDeCitas.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (SQLException ex) {
+            Logger.getLogger(agendaDeCitas.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }//GEN-LAST:event_botonHistorialPacienteActionPerformed
 
     /**
@@ -228,23 +237,23 @@ public class agendaDeCitas extends javax.swing.JFrame {
     // End of variables declaration//GEN-END:variables
     private void cargarCitas() throws NegocioException, PersistenciaClinicaException {
         try {
-        List<CitaViejaDTO> citas = citaBO.consultarCitasMedico(medico);
-        if (citas.isEmpty()) {
-            JOptionPane.showMessageDialog(this, "El médico no tiene ninguna cita");
-            return;
-        }
-
-        jComboBox1.removeAllItems();
-        for (CitaViejaDTO cita : citas) {
-            // Filtrar citas cuyo estado no sea "Cancelada"
-            if ((cita.getEstado().getIdEstado() != 2) && (cita.getEstado().getIdEstado() != 6) && (cita.getEstado().getIdEstado() != 3) && (cita.getEstado().getIdEstado() != 4)) {
-                jComboBox1.addItem(cita.getIdCita() + " " + cita.getPaciente().getIdPaciente() + " " + cita.getPaciente().getNombres() + " " + cita.getPaciente().getApellidoPaterno() + " " + cita.getFechaHora());
+            List<CitaViejaDTO> citas = citaBO.consultarCitasMedico(medico);
+            if (citas.isEmpty()) {
+                JOptionPane.showMessageDialog(this, "El médico no tiene ninguna cita");
+                return;
             }
+
+            jComboBox1.removeAllItems();
+            for (CitaViejaDTO cita : citas) {
+                // Filtrar citas cuyo estado no sea "Cancelada"
+                if ((cita.getEstado().getIdEstado() != 2) && (cita.getEstado().getIdEstado() != 6) && (cita.getEstado().getIdEstado() != 3) && (cita.getEstado().getIdEstado() != 4)) {
+                    jComboBox1.addItem(cita.getIdCita() + " " + cita.getPaciente().getIdPaciente() + " " + cita.getPaciente().getNombres() + " " + cita.getPaciente().getApellidoPaterno() + " " + cita.getFechaHora());
+                }
+            }
+        } catch (NegocioException ex) {
+            JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
         }
-    } catch (NegocioException ex) {
-        JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
     }
-}
 
     private void iniciarConsulta() throws NegocioException, PersistenciaClinicaException, SQLException {
         String seleccionado = (String) jComboBox1.getSelectedItem();
@@ -258,7 +267,7 @@ public class agendaDeCitas extends javax.swing.JFrame {
         CitaViejaDTO citaSeleccionada = citaBO.consultarCitaPorsuID(idCita);
 
         panelDeConsulta panelConsulta = new panelDeConsulta(citaSeleccionada, medico);
-        panelConsulta.setVentanaMedico(this.VentanaMedico); 
+        panelConsulta.setVentanaMedico(this.VentanaMedico);
         panelConsulta.setVentanaAgendaDeCitas(this);
 
         panelConsulta.setVisible(true);
@@ -266,13 +275,22 @@ public class agendaDeCitas extends javax.swing.JFrame {
         this.dispose();
 
     }
-    
+
     private void revisarHistorialPaciente() throws NegocioException, PersistenciaClinicaException, SQLException {
         String seleccionado = (String) jComboBox1.getSelectedItem();
         String[] partes = seleccionado.split(" ", 3);
-        String pacienteUsuario = partes[1];
-        PacienteViejoDTO pacienteSELECCIONADO = pacienteBO.buscarPacientePorUsuario(pacienteUsuario);
-        
-        
+        int pacienteID = Integer.parseInt(partes[1]);
+        PacienteViejoDTO pacienteSELECCIONADO = pacienteBO.buscarPacientePorID(pacienteID);
+
+        historialConsultasMedico historialPaciente = new historialConsultasMedico(pacienteSELECCIONADO);
+
+        historialPaciente.setVentanaMedico(this.VentanaMedico);
+        historialPaciente.setVentanaAgendaDeCitas(this);
+
+        historialPaciente.setVisible(true);
+
+        // 7. Cerrar o disponer el frame actual, si así lo deseas.
+        this.dispose();
+
     }
 }

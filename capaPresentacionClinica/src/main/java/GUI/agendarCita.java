@@ -454,6 +454,7 @@ public class agendarCita extends javax.swing.JFrame {
         
         return null;
     }
+    
 
     public void volverDashboardPaciente() {
         if (ventanaPaciente == null) {
