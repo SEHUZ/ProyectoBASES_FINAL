@@ -264,7 +264,11 @@ public class dashboardPaciente extends javax.swing.JFrame {
 
     private void botonHistorialConsultasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonHistorialConsultasActionPerformed
         abrirVentanaHistorialConsultas();
-        historialConsultas.cargarHistorialConsultas();
+        try {
+            historialConsultas.cargarHistorialConsultas();
+        } catch (NegocioException ex) {
+            Logger.getLogger(dashboardPaciente.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }//GEN-LAST:event_botonHistorialConsultasActionPerformed
 
     /**
