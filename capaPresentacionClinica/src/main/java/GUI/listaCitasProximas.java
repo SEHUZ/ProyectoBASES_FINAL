@@ -137,8 +137,7 @@ public class listaCitasProximas extends javax.swing.JFrame {
     private void botonCancelarCitaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonCancelarCitaActionPerformed
         try {
             cancelarCita();
-            
-            
+
 // TODO add your handling code here:
         } catch (NegocioException ex) {
             Logger.getLogger(listaCitasProximas.class.getName()).log(Level.SEVERE, null, ex);
@@ -200,42 +199,55 @@ public class listaCitasProximas extends javax.swing.JFrame {
     private javax.swing.JScrollBar jScrollBar1;
     private javax.swing.JComboBox<String> listaCitasProximas;
     // End of variables declaration//GEN-END:variables
+// Carga las citas próximas del paciente en un ComboBox
 
     public void cargarComboBox(PacienteViejoDTO paciente) {
         try {
+            // Obtiene las citas próximas del paciente desde la lógica de negocio
             List<CitaViejaDTO> citas = citaBO.consultarCitasProximasPaciente(paciente);
+
+            // Si no hay citas próximas, muestra un mensaje y termina el método
             if (citas.isEmpty()) {
                 JOptionPane.showMessageDialog(this, "No tiene citas próximas actualmente.");
                 return;
             }
 
+            // Elimina los ítems previamente añadidos al ComboBox
             listaCitasProximas.removeAllItems();
+
+            // Itera sobre las citas obtenidas
             for (CitaViejaDTO cita : citas) {
+                // Si la cita no está cancelada, la añade al ComboBox
                 if (!cita.getEstado().getDescripcion().equals("Cancelada")) {
                     listaCitasProximas.addItem(cita.getIdCita() + " " + cita.getEstado().getDescripcion() + " " + cita.getFechaHora() + " Dr. " + cita.getMedico().getNombres() + " " + cita.getMedico().getApellidoPaterno());
                 }
-
             }
         } catch (NegocioException ex) {
+            // Si ocurre un error de negocio, muestra un mensaje de error
             JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
         }
     }
 
+// Muestra los detalles de la cita seleccionada
     public void verDetalleCita() {
+        // Obtiene la cita seleccionada del ComboBox
         String seleccionada = (String) listaCitasProximas.getSelectedItem();
 
+        // Verifica si no se ha seleccionado ninguna cita
         if (seleccionada == null || seleccionada.isEmpty()) {
             JOptionPane.showMessageDialog(this, "No se ha seleccionado ninguna cita.", "Aviso", JOptionPane.WARNING_MESSAGE);
             return;
         }
 
         try {
-            String[] partes = seleccionada.split(" ", 2); // Dividir solo en dos partes: ID y resto
-            int idCita = Integer.parseInt(partes[0]); // Convertir la primera parte a entero
+            // Divide la cadena seleccionada para obtener el ID de la cita
+            String[] partes = seleccionada.split(" ", 2); // Divide solo en dos partes: ID y resto
+            int idCita = Integer.parseInt(partes[0]); // Convierte la primera parte a entero
 
+            // Consulta la cita completa usando el ID
             Cita citaSeleccionada = citaBO.consultarCitaPorID(idCita);
 
-            // Construir el mensaje con los detalles de la cita
+            // Construye el mensaje con los detalles de la cita
             StringBuilder mensaje = new StringBuilder();
             mensaje.append("ID Cita: ").append(citaSeleccionada.getIdCita()).append("\n");
             mensaje.append("Fecha y Hora: ").append(citaSeleccionada.getFechaHora()).append("\n");
@@ -247,7 +259,7 @@ public class listaCitasProximas extends javax.swing.JFrame {
                     .append(citaSeleccionada.getMedico().getApellidoPaterno()).append(" ")
                     .append(citaSeleccionada.getMedico().getApellidoMaterno()).append("\n");
 
-            // Verificar si es cita normal o de emergencia
+            // Verifica si la cita es de tipo normal o de emergencia
             if (citaSeleccionada.getNormal() != null) {
                 mensaje.append("Tipo de Cita: Normal\n");
             } else if (citaSeleccionada.getEmergencia() != null) {
@@ -256,45 +268,60 @@ public class listaCitasProximas extends javax.swing.JFrame {
                 mensaje.append("Fecha de Expiración: ").append(citaSeleccionada.getEmergencia().getFechaExpiracion()).append("\n");
             }
 
-            // Mostrar el mensaje
+            // Muestra el mensaje con los detalles de la cita
             JOptionPane.showMessageDialog(this, mensaje.toString(), "Detalles de la Cita", JOptionPane.INFORMATION_MESSAGE);
 
         } catch (NumberFormatException e) {
+            // Si hay un error al procesar el ID de la cita, muestra un mensaje de error
             JOptionPane.showMessageDialog(this, "Error al procesar el ID de la cita.", "Error", JOptionPane.ERROR_MESSAGE);
         } catch (NegocioException ex) {
+            // Si ocurre un error de negocio, muestra un mensaje de error
             JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
         }
     }
-    
+
+// Cancela la cita seleccionada
     public void cancelarCita() throws NegocioException {
-    String seleccionada = (String) listaCitasProximas.getSelectedItem();
-    if (seleccionada == null || seleccionada.isEmpty()) {
-        JOptionPane.showMessageDialog(this, "No se ha seleccionado ninguna cita.", "Aviso", JOptionPane.WARNING_MESSAGE);
-        return;
-    }
-    
-    try {
-        String[] partes = seleccionada.split(" ", 2);
-        int idCita = Integer.parseInt(partes[0]);
-        
-        citaBO.cancelarCita(idCita);
-        
-        JOptionPane.showMessageDialog(this, "Cita cancelada con éxito.", "Información", JOptionPane.INFORMATION_MESSAGE);
-        
-    } catch (NegocioException ex) {
-        JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
-    }
+        // Obtiene la cita seleccionada del ComboBox
+        String seleccionada = (String) listaCitasProximas.getSelectedItem();
+
+        // Verifica si no se ha seleccionado ninguna cita
+        if (seleccionada == null || seleccionada.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "No se ha seleccionado ninguna cita.", "Aviso", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+
+        try {
+            // Divide la cadena seleccionada para obtener el ID de la cita
+            String[] partes = seleccionada.split(" ", 2);
+            int idCita = Integer.parseInt(partes[0]);
+
+            // Cancela la cita usando el ID
+            citaBO.cancelarCita(idCita);
+
+            // Muestra un mensaje de éxito
+            JOptionPane.showMessageDialog(this, "Cita cancelada con éxito.", "Información", JOptionPane.INFORMATION_MESSAGE);
+
+        } catch (NegocioException ex) {
+            // Si ocurre un error de negocio, muestra un mensaje de error
+            JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+        }
     }
 
+// Vuelve al dashboard del paciente
     public void volverDashboardPaciente() {
+        // Si la ventana de dashboard del paciente no ha sido creada aún, la crea
         if (ventanaPaciente == null) {
             ventanaPaciente = new dashboardPaciente();
         }
 
+        // Establece esta ventana como la ventana de citas próximas
         ventanaPaciente.setVentanaCitasProximas(this);
+        // Centra la ventana en la pantalla
         ventanaPaciente.setLocationRelativeTo(null);
+        // Hace visible la ventana
         ventanaPaciente.setVisible(true);
+        // Cierra la ventana actual
         this.dispose();
     }
-
 }

@@ -48,8 +48,6 @@ public class dashBoardMedico extends javax.swing.JFrame {
     public void setVentanaAgendaDeCitas(agendaDeCitas ventanaAgendaDeCitas) {
         this.ventanaAgendaDeCitas = ventanaAgendaDeCitas;
     }
-    
-    
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -248,16 +246,24 @@ public class dashBoardMedico extends javax.swing.JFrame {
     private javax.swing.JLabel lblRol;
     // End of variables declaration//GEN-END:variables
 
+    /**
+     * Método para dar de baja temporal a un médico. Se solicita confirmación al
+     * usuario antes de proceder con la baja. Si el médico acepta, se actualiza
+     * su estado a inactivo.
+     */
     public void darBajaMedico(MedicoDTO medico) {
+        // Mostrar un cuadro de confirmación al usuario
         int respuesta = JOptionPane.showConfirmDialog(
                 this,
-                "No podras ofrecer servicios hasta que vuelvas a activar tu cuenta.",
+                "No podrás ofrecer servicios hasta que vuelvas a activar tu cuenta.",
                 "¿Dar baja temporal?",
                 JOptionPane.YES_NO_OPTION
         );
 
+        // Si el usuario acepta la baja
         if (respuesta == JOptionPane.YES_OPTION) {
             try {
+                // Crear un nuevo objeto MedicoDTO con el estado actualizado (inactivo)
                 MedicoDTO bajaMedico = new MedicoDTO(
                         medico.getIdMedico(),
                         medico.getUsuario(),
@@ -266,24 +272,35 @@ public class dashBoardMedico extends javax.swing.JFrame {
                         medico.getApellidoMaterno(),
                         medico.getCedula(),
                         medico.getEspecialidad(),
-                        false);
+                        false // Se cambia el estado a inactivo
+                );
 
+                // Actualizar el estado del médico en la base de datos
                 medicoBO.actualizarEstadoMedico(bajaMedico);
 
-                JOptionPane.showMessageDialog(this, "Has sido dado de baja. Para volver a ofrecer servicios, tendras que activar tu cuenta.");
+                // Mostrar mensaje de confirmación
+                JOptionPane.showMessageDialog(this, "Has sido dado de baja. Para volver a ofrecer servicios, tendrás que activar tu cuenta.");
+
+                // Redirigir a la ventana de inicio de sesión
                 ventanaInicio.setVentanaMedico(this);
                 ventanaInicio.setLocationRelativeTo(null);
                 ventanaInicio.setVisible(true);
-                this.dispose();
+                this.dispose(); // Cerrar la ventana actual
             } catch (NegocioException ex) {
-                JOptionPane.showMessageDialog(this, "Ocurrió un error en el proceso de baja." + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+                // Manejo de error en caso de fallo en la lógica de negocio
+                JOptionPane.showMessageDialog(this, "Ocurrió un error en el proceso de baja: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
             }
         } else {
             System.out.println("El usuario canceló.");
         }
     }
 
+    /**
+     * Método para cerrar la sesión del usuario actual. Se solicita confirmación
+     * antes de cerrar sesión.
+     */
     public void cerrarSesion() {
+        // Mostrar cuadro de confirmación al usuario
         int respuesta = JOptionPane.showConfirmDialog(
                 this,
                 "¿Cerrar sesión?",
@@ -291,17 +308,22 @@ public class dashBoardMedico extends javax.swing.JFrame {
                 JOptionPane.YES_NO_OPTION
         );
 
+        // Si el usuario acepta cerrar sesión
         if (respuesta == JOptionPane.YES_OPTION) {
+            // Redirigir a la ventana de inicio de sesión
             ventanaInicio.setVentanaMedico(this);
             ventanaInicio.setLocationRelativeTo(null);
             ventanaInicio.setVisible(true);
-            this.dispose();
-
+            this.dispose(); // Cerrar la ventana actual
         } else {
             System.out.println("El usuario canceló.");
         }
     }
 
+    /**
+     * Método para cargar los datos de un médico en la interfaz gráfica. Se
+     * actualizan las etiquetas con la información del médico.
+     */
     private void cargarDatosMedico(MedicoDTO medico) {
         lblRol.setText("Médico:");
         lblNombre.setText(medico.getNombres());
@@ -311,19 +333,25 @@ public class dashBoardMedico extends javax.swing.JFrame {
         lblEspecialidad.setText(medico.getEspecialidad());
     }
 
+    /**
+     * Método para cargar y mostrar los horarios de un médico. Se obtiene la
+     * lista de horarios del médico y se formatea para su visualización.
+     */
     public void cargarHorariosMedico(MedicoDTO medico) {
         try {
+            // Obtener la lista de horarios del médico desde la base de datos
             List<HorarioMedicoNuevoDTO> horarios = medicoBO.obtenerHorariosMedico(medico);
 
+            // Verificar si el médico no tiene horarios registrados
             if (horarios.isEmpty()) {
                 jTextAreaHorarios.setText("El médico no tiene horarios registrados");
                 return;
             }
 
-            // Crear formateador para la hora
+            // Formateador para la hora en formato HH:mm
             DateTimeFormatter formateadorHora = DateTimeFormatter.ofPattern("HH:mm");
 
-            // Construir el texto con formato
+            // Construcción del texto a mostrar en la interfaz
             StringBuilder horariosTexto = new StringBuilder();
             horariosTexto.append("Horarios del Dr. ")
                     .append(medico.getNombres())
@@ -331,6 +359,7 @@ public class dashBoardMedico extends javax.swing.JFrame {
                     .append(medico.getApellidoPaterno())
                     .append("\n\n");
 
+            // Recorrer los horarios y agregarlos al texto
             for (HorarioMedicoNuevoDTO horario : horarios) {
                 horariosTexto.append("• ")
                         .append(horario.getDiaSemana())
@@ -341,27 +370,42 @@ public class dashBoardMedico extends javax.swing.JFrame {
                         .append("\n");
             }
 
-            // Mostrar en el JTextArea
+            // Mostrar los horarios en el JTextArea
             jTextAreaHorarios.setText(horariosTexto.toString());
-            jTextAreaHorarios.setCaretPosition(0); // Mover scroll al inicio
+            jTextAreaHorarios.setCaretPosition(0); // Mover el scroll al inicio
 
         } catch (NegocioException ex) {
+            // Manejo de error en caso de fallo en la obtención de horarios
             JOptionPane.showMessageDialog(this, "Error al cargar horarios: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
         } catch (Exception e) {
+            // Manejo de cualquier otro error inesperado
             JOptionPane.showMessageDialog(this, "Error inesperado al mostrar horarios", "Error", JOptionPane.ERROR_MESSAGE);
         }
     }
-    
-    
+
+    /**
+     * Método para abrir la ventana de agenda de citas del médico. Se pasa el
+     * objeto del médico como referencia.
+     */
     public void abrirVentanaAgendaDeCitas(MedicoDTO medico) {
+        // Verificar si la ventana de agenda de citas ya está instanciada
         if (ventanaAgendaDeCitas == null) {
             ventanaAgendaDeCitas = new agendaDeCitas(medico);
         }
 
+        // Crear una nueva instancia de la ventana de agenda de citas
         ventanaAgendaDeCitas = new agendaDeCitas(medico);
+
+        // Establecer la referencia de la ventana actual en la agenda de citas
         ventanaAgendaDeCitas.setVentanaMedico(this);
+
+        // Centrar la ventana en la pantalla
         ventanaAgendaDeCitas.setLocationRelativeTo(null);
+
+        // Hacer visible la ventana de agenda de citas
         ventanaAgendaDeCitas.setVisible(true);
+
+        // Cerrar la ventana actual
         this.dispose();
     }
 }

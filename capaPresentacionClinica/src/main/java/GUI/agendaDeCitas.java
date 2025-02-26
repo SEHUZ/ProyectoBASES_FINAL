@@ -42,8 +42,6 @@ public class agendaDeCitas extends javax.swing.JFrame {
     private historialConsultasMedico ventanaHistorialConsultasMedicoPaciente;
 
     private panelDeConsulta ventanaAgendarConsulta;
-    
-
 
     public agendaDeCitas(MedicoDTO medico) {
         this.medico = medico;
@@ -72,10 +70,6 @@ public class agendaDeCitas extends javax.swing.JFrame {
 
     public void setVentanaHistorialConsultasMedicoPaciente(historialConsultasMedico ventanaHistorialConsultasMedicoPaciente) {
         this.ventanaHistorialConsultasMedicoPaciente = ventanaHistorialConsultasMedicoPaciente;
-    }
-    
-    public void setVentanaPaciente(dashBoardMedico ventanaMedico) {
-        this.ventanaMedico = ventanaMedico;
     }
 
     public agendaDeCitas() {
@@ -251,74 +245,104 @@ public class agendaDeCitas extends javax.swing.JFrame {
     private javax.swing.JComboBox<String> jComboBox1;
     private javax.swing.JLabel jLabel1;
     // End of variables declaration//GEN-END:variables
-    private void cargarCitas() throws NegocioException, PersistenciaClinicaException {
+private void cargarCitas() throws NegocioException, PersistenciaClinicaException {
         try {
+            // Obtener la lista de citas asociadas al médico
             List<CitaViejaDTO> citas = citaBO.consultarCitasMedico(medico);
+
+            // Si el médico no tiene citas, mostrar un mensaje y salir del método
             if (citas.isEmpty()) {
                 JOptionPane.showMessageDialog(this, "El médico no tiene ninguna cita");
                 return;
             }
 
+            // Limpiar el comboBox antes de cargar nuevas citas
             jComboBox1.removeAllItems();
+
+            // Iterar sobre las citas y agregarlas al comboBox, filtrando las canceladas o estados específicos
             for (CitaViejaDTO cita : citas) {
-                // Filtrar citas cuyo estado no sea "Cancelada"
-                if ((cita.getEstado().getIdEstado() != 2) && (cita.getEstado().getIdEstado() != 6) && (cita.getEstado().getIdEstado() != 3) && (cita.getEstado().getIdEstado() != 4)) {
-                    jComboBox1.addItem(cita.getIdCita() + " " + cita.getPaciente().getIdPaciente() + " " + cita.getPaciente().getNombres() + " " + cita.getPaciente().getApellidoPaterno() + " " + cita.getFechaHora());
+                if ((cita.getEstado().getIdEstado() != 2) && (cita.getEstado().getIdEstado() != 6)
+                        && (cita.getEstado().getIdEstado() != 3) && (cita.getEstado().getIdEstado() != 4)) {
+
+                    // Agregar la cita al comboBox con información del paciente y fecha
+                    jComboBox1.addItem(cita.getIdCita() + " " + cita.getPaciente().getIdPaciente() + " "
+                            + cita.getPaciente().getNombres() + " " + cita.getPaciente().getApellidoPaterno()
+                            + " " + cita.getFechaHora());
                 }
             }
         } catch (NegocioException ex) {
+            // Manejo de excepción en caso de error en la lógica de negocio
             JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
         }
     }
 
     private void iniciarConsulta() throws NegocioException, PersistenciaClinicaException, SQLException {
+        // Obtener el elemento seleccionado del comboBox
         String seleccionado = (String) jComboBox1.getSelectedItem();
+
+        // Validar que se haya seleccionado una cita
         if (seleccionado == null || seleccionado.isEmpty()) {
             JOptionPane.showMessageDialog(this, "Debe seleccionar una cita para iniciar la consulta.");
             return;
         }
 
-        String[] partes = seleccionado.split(" ", 2); // Dividir solo en dos partes: ID y resto
-        int idCita = Integer.parseInt(partes[0]); // Convertir la primera parte a entero
+        // Dividir la cadena seleccionada para obtener el ID de la cita
+        String[] partes = seleccionado.split(" ", 2); // Separa en dos partes: ID y el resto
+        int idCita = Integer.parseInt(partes[0]); // Convertir la primera parte (ID) a entero
+
+        // Consultar la cita por su ID
         CitaViejaDTO citaSeleccionada = citaBO.consultarCitaPorsuID(idCita);
 
+        // Crear una nueva instancia del panel de consulta con la cita seleccionada
         panelDeConsulta panelConsulta = new panelDeConsulta(citaSeleccionada, medico);
+
+        // Configurar la relación con otras ventanas
         panelConsulta.setVentanaMedico(this.ventanaMedico);
         panelConsulta.setVentanaAgendaDeCitas(this);
 
+        // Mostrar el panel de consulta
         panelConsulta.setVisible(true);
 
+        // Cerrar la ventana actual
         this.dispose();
-
     }
 
     private void revisarHistorialPaciente() throws NegocioException, PersistenciaClinicaException, SQLException {
+        // Obtener la cita seleccionada en el comboBox
         String seleccionado = (String) jComboBox1.getSelectedItem();
+
+        // Dividir la cadena para extraer el ID del paciente
         String[] partes = seleccionado.split(" ", 3);
-        int pacienteID = Integer.parseInt(partes[1]);
+        int pacienteID = Integer.parseInt(partes[1]); // Segunda parte corresponde al ID del paciente
+
+        // Buscar la información del paciente por su ID
         PacienteViejoDTO pacienteSELECCIONADO = pacienteBO.buscarPacientePorID(pacienteID);
 
+        // Crear la ventana de historial de consultas del paciente
         historialConsultasMedico historialPaciente = new historialConsultasMedico(pacienteSELECCIONADO);
 
+        // Configurar la relación con otras ventanas
         historialPaciente.setVentanaMedico(this.ventanaMedico);
         historialPaciente.setVentanaAgendaDeCitas(this);
 
+        // Mostrar la ventana del historial del paciente
         historialPaciente.setVisible(true);
 
-        // 7. Cerrar o disponer el frame actual, si así lo deseas.
+        // Cerrar la ventana actual
         this.dispose();
-
     }
-    
+
     public void volverDashboardMedico() {
+        // Si la ventana del dashboard del médico no está instanciada, crearla
         if (ventanaMedico == null) {
             ventanaMedico = new dashBoardMedico();
         }
-        
+
+        // Centrar la ventana en la pantalla y mostrarla
         ventanaMedico.setLocationRelativeTo(null);
         ventanaMedico.setVisible(true);
+
+        // Cerrar la ventana actual
         this.dispose();
     }
-    
-    
 }

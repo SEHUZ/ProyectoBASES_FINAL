@@ -37,6 +37,7 @@ public class dashboardPaciente extends javax.swing.JFrame {
     private historialConsultas ventanaHistorialConsultas;
     private PacienteMapper mapperPaciente = new PacienteMapper();
     historialConsultas historialConsultas;
+
     /**
      * Creates new form dashboardPaciente
      *
@@ -54,6 +55,7 @@ public class dashboardPaciente extends javax.swing.JFrame {
         initComponents();
     }
 //
+
     public void setVentanaInicio(iniciarSesion ventanaInicio) {
         this.ventanaInicio = ventanaInicio;
     }
@@ -322,8 +324,10 @@ public class dashboardPaciente extends javax.swing.JFrame {
     private javax.swing.JLabel lblRol;
     private javax.swing.JLabel lblTelefono;
     // End of variables declaration//GEN-END:variables
+// Actualiza los datos del paciente en la interfaz gráfica
 
     public void actualizarDatos(Paciente paciente) {
+        // Actualiza los labels con la información del paciente
         lblNombre.setText("Nombres: " + paciente.getNombres());
         lblApellidoPaterno.setText("Apellido Materno:" + paciente.getApellidoPaterno());
         lblApellidoMaterno.setText("Apellido Materno:" + paciente.getApellidoMaterno());
@@ -334,7 +338,9 @@ public class dashboardPaciente extends javax.swing.JFrame {
         lblCodigoPostal.setText("CP: " + paciente.getDireccion().getCodigoPostal());
     }
 
+// Carga los datos de un paciente desde un objeto de tipo PacienteViejoDTO
     private void cargarDatosPaciente(PacienteViejoDTO paciente) {
+        // Asigna los valores de los atributos al respectivo label
         lblRol.setText("Paciente:");
         lblNombre.setText(paciente.getNombres());
         lblApellidoPaterno.setText(paciente.getApellidoPaterno());
@@ -345,23 +351,26 @@ public class dashboardPaciente extends javax.swing.JFrame {
         lblCodigoPostal.setText(paciente.getDireccion().getCodigoPostal());
     }
 
+// Abre la ventana para editar el perfil del paciente
     public void abrirVentanaEditarPerfil(PacienteViejoDTO paciente) {
+        // Si la ventana aún no ha sido inicializada, la crea
         if (ventanaEditarPerfil == null) {
             ventanaEditarPerfil = new editarPerfilPaciente(paciente);
         }
-
+        // Siempre crea una nueva instancia (esto podría ser innecesario si solo quieres la inicialización una vez)
         ventanaEditarPerfil = new editarPerfilPaciente(paciente);
-        ventanaEditarPerfil.setVentanaPaciente(this);
-        ventanaEditarPerfil.setLocationRelativeTo(null);
-        ventanaEditarPerfil.setVisible(true);
-        this.dispose();
+        ventanaEditarPerfil.setVentanaPaciente(this); // Establece la ventana actual
+        ventanaEditarPerfil.setLocationRelativeTo(null); // Centra la ventana en la pantalla
+        ventanaEditarPerfil.setVisible(true); // Muestra la ventana
+        this.dispose(); // Cierra la ventana actual
     }
 
+// Abre la ventana para agendar una cita de emergencia
     public void abrirVentanaCitaEmergencia(PacienteViejoDTO paciente) {
+        // Si la ventana aún no ha sido inicializada, la crea
         if (ventanaAgendarCitaEmergencia == null) {
             ventanaAgendarCitaEmergencia = new agendarCitaEmergencia(paciente);
         }
-
         ventanaAgendarCitaEmergencia = new agendarCitaEmergencia(paciente);
         ventanaAgendarCitaEmergencia.setVentanaPaciente(this);
         ventanaAgendarCitaEmergencia.setLocationRelativeTo(null);
@@ -369,11 +378,11 @@ public class dashboardPaciente extends javax.swing.JFrame {
         this.dispose();
     }
 
+// Abre la ventana para agendar una cita regular
     public void abrirVentanaCitas(PacienteViejoDTO paciente) {
         if (ventanaAgendarCita == null) {
             ventanaAgendarCita = new agendarCita(paciente);
         }
-
         ventanaAgendarCita = new agendarCita(paciente);
         ventanaAgendarCita.setVentanaPaciente(this);
         ventanaAgendarCita.setLocationRelativeTo(null);
@@ -381,10 +390,13 @@ public class dashboardPaciente extends javax.swing.JFrame {
         this.dispose();
     }
 
+// Abre la ventana con las citas próximas del paciente
     public void abrirVentanaCitasProximas(PacienteViejoDTO paciente) {
         List<CitaViejaDTO> citas;
         try {
+            // Obtiene las citas próximas del paciente
             citas = citaBO.consultarCitasProximasPaciente(paciente);
+            // Si no tiene citas, muestra un mensaje
             if (citas.isEmpty()) {
                 JOptionPane.showMessageDialog(this, "No tiene citas próximas actualmente.");
                 return;
@@ -393,6 +405,7 @@ public class dashboardPaciente extends javax.swing.JFrame {
             Logger.getLogger(dashboardPaciente.class.getName()).log(Level.SEVERE, null, ex);
         }
 
+        // Si la ventana aún no ha sido inicializada, la crea
         if (ventanaCitasProximas == null) {
             ventanaCitasProximas = new listaCitasProximas(paciente);
         }
@@ -404,6 +417,7 @@ public class dashboardPaciente extends javax.swing.JFrame {
         this.dispose();
     }
 
+// Abre la ventana con el historial de consultas del paciente
     public void abrirVentanaHistorialConsultas() {
         Paciente pacienteNormal = mapperPaciente.toEntityViejo(paciente);
         if (ventanaHistorialConsultas == null) {
@@ -417,6 +431,7 @@ public class dashboardPaciente extends javax.swing.JFrame {
         this.dispose();
     }
 
+// Cierra la sesión del paciente
     public void cerrarSesion() {
         int respuesta = JOptionPane.showConfirmDialog(
                 this,
@@ -425,15 +440,15 @@ public class dashboardPaciente extends javax.swing.JFrame {
                 JOptionPane.YES_NO_OPTION
         );
 
+        // Si el usuario acepta cerrar sesión, se muestra la ventana de inicio
         if (respuesta == JOptionPane.YES_OPTION) {
             ventanaInicio.setVentanaPaciente(this);
             ventanaInicio.setLocationRelativeTo(null);
             ventanaInicio.setVisible(true);
             this.dispose();
-
         } else {
+            // Si el usuario cancela, imprime un mensaje en la consola
             System.out.println("El usuario canceló.");
         }
     }
-
 }

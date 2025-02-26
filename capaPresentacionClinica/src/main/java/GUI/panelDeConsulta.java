@@ -24,21 +24,21 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 import GUI.iniciarSesion;
+
 /**
  *
  * @author sonic
  */
 public class panelDeConsulta extends javax.swing.JFrame {
-    
+
     private ConsultaBO consultaBO;
     private CitaMapper mapperCita = new CitaMapper();
     private CitaViejaDTO citaActual;
     private MedicoDTO medico;
     private CitaBO citaBO;
-    private agendaDeCitas ventanaAgendaDeCitas;    
+    private agendaDeCitas ventanaAgendaDeCitas;
     private dashBoardMedico ventanaMedico;
-    
-    
+
     public panelDeConsulta(CitaViejaDTO cita, MedicoDTO medico) {
         initComponents();
         this.consultaBO = DependencyInjector.crearConsultaBO();
@@ -46,7 +46,7 @@ public class panelDeConsulta extends javax.swing.JFrame {
         this.citaActual = cita;
         this.medico = medico;
     }
-    
+
     public panelDeConsulta() {
         initComponents();
     }
@@ -58,7 +58,6 @@ public class panelDeConsulta extends javax.swing.JFrame {
     public void setVentanaAgendaDeCitas(agendaDeCitas ventanaAgendaDeCitas) {
         this.ventanaAgendaDeCitas = ventanaAgendaDeCitas;
     }
-    
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -180,7 +179,7 @@ public class panelDeConsulta extends javax.swing.JFrame {
     private void botonTerminarConsultaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonTerminarConsultaActionPerformed
         try {
             terminarConsulta();
-            
+
 // TODO add your handling code here:
         } catch (NegocioException ex) {
             Logger.getLogger(panelDeConsulta.class.getName()).log(Level.SEVERE, null, ex);
@@ -197,7 +196,7 @@ public class panelDeConsulta extends javax.swing.JFrame {
 
     private void botonVolverMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_botonVolverMouseClicked
         // TODO add your handling code here:
-        
+
     }//GEN-LAST:event_botonVolverMouseClicked
 
     /**
@@ -244,46 +243,62 @@ public class panelDeConsulta extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     // End of variables declaration//GEN-END:variables
+    // Método para terminar una consulta, registrando diagnóstico y tratamiento, y cambiando el estado de la cita
+
     private void terminarConsulta() throws NegocioException, SQLException, PersistenciaClinicaException {
         try {
+            // Verifica que el diagnóstico y tratamiento no estén vacíos
             if (fieldDiagnostico.getText().isBlank() || fieldTratamiento.getText().isBlank()) {
                 JOptionPane.showMessageDialog(this, "Diagnóstico y tratamiento son requeridos", "Error", JOptionPane.ERROR_MESSAGE);
-                return;
+                return; // Termina la ejecución si los campos están vacíos
             }
 
+            // Crea un objeto DTO para la nueva consulta y asigna los valores del diagnóstico y tratamiento
             ConsultaNuevaDTO consultaDTO = new ConsultaNuevaDTO();
             consultaDTO.setDiagnostico(fieldDiagnostico.getText());
             consultaDTO.setTratamiento(fieldTratamiento.getText());
-            consultaDTO.setFechaHora(LocalDateTime.now());
-            
+            consultaDTO.setFechaHora(LocalDateTime.now()); // Establece la fecha y hora actuales
+
+            // Crea un objeto DTO para la cita asociada
             CitaViejaDTO citaDTO = new CitaViejaDTO();
-            citaDTO.setIdCita(citaActual.getIdCita());
-            
+            citaDTO.setIdCita(citaActual.getIdCita()); // Asocia la cita actual
+
+            // Mapea la cita DTO a una entidad de tipo Cita
             Cita citaNueva = mapperCita.toEntityViejo(citaDTO);
-            consultaDTO.setCita(citaNueva);
+            consultaDTO.setCita(citaNueva); // Asocia la cita a la consulta
+
+            // Define el estado de la cita como "Confirmada"
             String estado = "Confirmada";
-            
+
+            // Cambia el estado de la cita a "Confirmada"
             boolean confirmacion = citaBO.cambiarEstadoCita(estado, citaNueva);
-            
+
+            // Si no se pudo cambiar el estado de la cita, muestra un mensaje de error
             if (!confirmacion) {
                 JOptionPane.showMessageDialog(this, "Hubo un error al actualizar el estado de la cita.", "Error", JOptionPane.ERROR_MESSAGE);
-                return;
+                return; // Termina la ejecución si el cambio de estado falla
             }
-            
-            System.out.println("consultaDTO");
+
+            System.out.println("consultaDTO"); // Mensaje de depuración (puede eliminarse o mejorarse)
+
+            // Inserta la nueva consulta en el sistema
             ConsultaViejaDTO resultado = consultaBO.insertarConsulta(consultaDTO);
 
+            // Si la consulta se inserta correctamente, muestra un mensaje de éxito
             if (resultado != null) {
                 JOptionPane.showMessageDialog(this, "Consulta registrada exitosamente");
-                this.dispose();
+                this.dispose(); // Cierra la ventana actual
             }
+
+            // Redirige al médico al panel de inicio y dashboard médico
             iniciarSesion iniciarSesion = new iniciarSesion();
             ventanaMedico = new dashBoardMedico(medico);
-            ventanaMedico.setVentanaInicio(iniciarSesion);
-            ventanaMedico.setLocationRelativeTo(null);
-            ventanaMedico.setVisible(true);
+            ventanaMedico.setVentanaInicio(iniciarSesion); // Establece la ventana de inicio
+            ventanaMedico.setLocationRelativeTo(null); // Centra la ventana en la pantalla
+            ventanaMedico.setVisible(true); // Muestra la ventana
         } catch (NegocioException | SQLException e) {
+            // Si ocurre un error de negocio o de SQL, muestra el mensaje de error correspondiente
             JOptionPane.showMessageDialog(this, e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
-        }                                
+        }
     }
 }

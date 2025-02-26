@@ -456,8 +456,10 @@ public class editarPerfilPaciente extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel8;
     private javax.swing.JLabel jLabel9;
     // End of variables declaration//GEN-END:variables
+// Actualiza los datos del paciente con la nueva información proporcionada
 
     public void actualizarPaciente(PacienteViejoDTO paciente) throws PersistenciaClinicaException, NegocioException {
+        // Obtiene los datos de los campos de texto en la interfaz
         String nombres = fieldNombre.getText();
         String apellidoPaterno = fieldApellidoPaterno.getText();
         String apellidoMaterno = fieldApellidoMaterno.getText();
@@ -467,7 +469,7 @@ public class editarPerfilPaciente extends javax.swing.JFrame {
         String telefono = fieldTelefono.getText();
         String cp = fieldCodigoPostal.getText();
 
-        // Obtener la fecha del JDateChooser y convertirla a LocalDate
+        // Obtiene la fecha del JDateChooser y la convierte a LocalDate
         java.util.Date fechaNacimientoUtil = fechaNacimientoChooser.getDate();
         LocalDate fechaNacimiento = null;
         if (fechaNacimientoUtil != null) {
@@ -476,7 +478,7 @@ public class editarPerfilPaciente extends javax.swing.JFrame {
                     .toLocalDate();
         }
 
-        // Verificar si hay al menos un campo diferente y no vacío
+        // Verifica si hay al menos un campo diferente entre los datos anteriores y los nuevos
         boolean hayCambios = !nombres.equals(paciente.getNombres())
                 || !apellidoPaterno.equals(paciente.getApellidoPaterno())
                 || !apellidoMaterno.equals(paciente.getApellidoMaterno())
@@ -487,7 +489,7 @@ public class editarPerfilPaciente extends javax.swing.JFrame {
                 || !telefono.equals(paciente.getTelefono())
                 || (paciente.getFechaNacimiento() != null && !paciente.getFechaNacimiento().equals(fechaNacimiento));
 
-        // Verificar si hay al menos un campo ingresado
+        // Verifica si hay al menos un campo lleno
         boolean hayCampoLleno = !nombres.isEmpty()
                 || !apellidoPaterno.isEmpty()
                 || !apellidoMaterno.isEmpty()
@@ -498,12 +500,13 @@ public class editarPerfilPaciente extends javax.swing.JFrame {
                 || !cp.isEmpty()
                 || (fechaNacimiento != null);
 
-        // Verificar si se realizaron cambios y hay campos llenos
+        // Si no hay cambios o no hay campos llenos, muestra un mensaje de error
         if (!hayCambios || !hayCampoLleno) {
             JOptionPane.showMessageDialog(this, "Debe realizar al menos un cambio y llenar al menos un campo.");
-            return; // Salir sin actualizar
+            return; // Sale sin actualizar
         }
 
+        // Muestra un mensaje de confirmación antes de realizar la actualización
         int respuesta = JOptionPane.showConfirmDialog(
                 this,
                 "Antes de actualizar, verifique correctamente cada dato ingresado.",
@@ -511,35 +514,44 @@ public class editarPerfilPaciente extends javax.swing.JFrame {
                 JOptionPane.YES_NO_OPTION
         );
 
+        // Si el usuario acepta, intenta actualizar los datos
         if (respuesta == JOptionPane.YES_OPTION) {
             try {
+                // Crea el nuevo objeto de dirección y el objeto PacienteViejoDTO con los nuevos datos
                 DireccionPaciente direccion = new DireccionPaciente(calle, numero, cp);
                 PacienteViejoDTO pacienteActualizado = new PacienteViejoDTO(paciente.getIdPaciente(), direccion, paciente.getUsuario(), nombres, apellidoPaterno, apellidoMaterno, fechaNacimiento, email, telefono);
 
+                // Llama al método para actualizar el paciente en la base de datos
                 Paciente exito = pacienteBO.actualizarPaciente(pacienteActualizado);
                 if (exito != null) {
+                    // Si la actualización es exitosa, muestra un mensaje y limpia los campos
                     JOptionPane.showMessageDialog(this, "El paciente se ha actualizado exitosamente. Vuelva a iniciar sesión para aplicar los cambios.");
                     limpiarCampos();
-                    if(ventanaInicio == null) {
+                    // Si la ventana de inicio no ha sido creada, la crea
+                    if (ventanaInicio == null) {
                         ventanaInicio = new iniciarSesion();
                     }
-                    
+
                     ventanaInicio.setVentanaEditarPerfil(this);
                     ventanaInicio.setLocationRelativeTo(null);
                     ventanaInicio.setVisible(true);
                     this.dispose();
-                    
+
                 } else {
+                    // Si no se pudo actualizar, muestra un mensaje de error
                     JOptionPane.showMessageDialog(this, "ERROR al actualizar al paciente");
                 }
             } catch (NegocioException | SQLException ex) {
+                // Si ocurre un error, muestra un mensaje con el detalle
                 JOptionPane.showMessageDialog(this, "Error: " + ex.getMessage(), "Advertencia", JOptionPane.WARNING_MESSAGE);
             }
         } else {
+            // Si el usuario cancela, se imprime un mensaje en la consola
             System.out.println("El usuario canceló.");
         }
     }
 
+// Carga los datos del paciente en los campos de edición
     public void cargarDatosEditar(PacienteViejoDTO paciente) {
         cargarNombres.setText(paciente.getNombres());
         cargarApellidoPaterno.setText(paciente.getApellidoPaterno());
@@ -552,6 +564,7 @@ public class editarPerfilPaciente extends javax.swing.JFrame {
         cargarNumeroExterior.setText(paciente.getDireccion().getNumero());
     }
 
+// Vuelve a la ventana principal del paciente (dashboard)
     public void volverDashboardPaciente() {
         if (ventanaPaciente == null) {
             ventanaPaciente = new dashboardPaciente();
@@ -563,8 +576,9 @@ public class editarPerfilPaciente extends javax.swing.JFrame {
         this.dispose();
     }
 
+// Limpia todos los campos de entrada en la interfaz
     public void limpiarCampos() {
-        // Limpiar campos de texto
+        // Limpia los campos de texto
         fieldNombre.setText("");
         fieldApellidoPaterno.setText("");
         fieldApellidoMaterno.setText("");
@@ -573,8 +587,7 @@ public class editarPerfilPaciente extends javax.swing.JFrame {
         fieldTelefono.setText("");
         fieldCodigoPostal.setText("");
 
-        // Reiniciar fecha
+        // Reinicia la fecha
         fechaNacimientoChooser.setDate(null);
     }
-
 }

@@ -183,20 +183,26 @@ public class altaMedico extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     // End of variables declaration//GEN-END:variables
-
-    public void darAltaMedico() {
+public void darAltaMedico() {
+        // Obtener el nombre de usuario y la contraseña ingresados por el médico
         String user = fieldUsuarioMedico.getText();
         String contrasenia = fieldContrasenia.getText();
 
+        // Verificar que los campos no estén vacíos
         if (user.isBlank() || contrasenia.isBlank()) {
             JOptionPane.showMessageDialog(this, "Ingrese los datos requeridos.");
             return;
         }
 
         try {
+            // Buscar si el médico existe en la base de datos
             if (medicoBO.buscarMedicoParaAlta(user) != null) {
+                // Verificar si las credenciales del médico son correctas
                 if (usuarioBO.loginMedico(user, contrasenia)) {
+                    // Obtener el objeto MedicoDTO correspondiente al usuario ingresado
                     MedicoDTO medico = medicoBO.buscarMedicoParaAlta(user);
+
+                    // Crear un nuevo objeto MedicoDTO con el estado actualizado (activo)
                     MedicoDTO altaMedico = new MedicoDTO(
                             medico.getIdMedico(),
                             medico.getUsuario(),
@@ -205,10 +211,16 @@ public class altaMedico extends javax.swing.JFrame {
                             medico.getApellidoMaterno(),
                             medico.getCedula(),
                             medico.getEspecialidad(),
-                            true);
+                            true // Se cambia el estado a activo
+                    );
 
+                    // Actualizar el estado del médico en la base de datos
                     medicoBO.actualizarEstadoMedico(altaMedico);
-                    JOptionPane.showMessageDialog(this, "Medico dado de alta.");
+
+                    // Mostrar mensaje de éxito
+                    JOptionPane.showMessageDialog(this, "Médico dado de alta.");
+
+                    // Limpiar los campos de entrada
                     limpiarCampos();
                 } else {
                     JOptionPane.showMessageDialog(this, "Usuario o contraseña incorrectos.");
@@ -217,27 +229,42 @@ public class altaMedico extends javax.swing.JFrame {
                 JOptionPane.showMessageDialog(this, "Usuario o contraseña incorrectos.");
             }
         } catch (NegocioException ex) {
+            // Manejo de excepción en caso de error en la lógica de negocio
             JOptionPane.showMessageDialog(this, "Error: " + ex.getMessage(), "Advertencia", JOptionPane.WARNING_MESSAGE);
         }
     }
 
+    /**
+     * Método para volver a la ventana de inicio de sesión.
+     */
     public void volverInicioSesion() {
+        // Si la ventana de inicio no está creada, se instancia
         if (ventanaInicio == null) {
             ventanaInicio = new iniciarSesion();
         }
 
+        // Crear una nueva instancia de la ventana de inicio de sesión
         ventanaInicio = new iniciarSesion();
+
+        // Establecer la referencia de la ventana actual en la de inicio de sesión
         ventanaInicio.setventanaAltaMedico(this);
+
+        // Centrar la ventana en la pantalla
         ventanaInicio.setLocationRelativeTo(null);
+
+        // Hacer visible la ventana de inicio de sesión
         ventanaInicio.setVisible(true);
+
+        // Cerrar la ventana actual
         this.dispose();
     }
 
+    /**
+     * Método para limpiar los campos de entrada de usuario y contraseña.
+     */
     public void limpiarCampos() {
         // Limpiar campos de texto
         fieldUsuarioMedico.setText("");
         fieldContrasenia.setText("");
-
     }
-
 }

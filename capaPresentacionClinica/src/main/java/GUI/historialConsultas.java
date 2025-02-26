@@ -33,7 +33,9 @@ public class historialConsultas extends javax.swing.JFrame {
     private CitaBO citaBO = DependencyInjector.crearCitaBO();
     private PacienteBO pacienteBO = DependencyInjector.crearPacienteBO();
     private ConsultaBO consultaBO = DependencyInjector.crearConsultaBO();
-    private MedicoBO medicoBO = DependencyInjector.crearMedicoBO();;
+    private MedicoBO medicoBO = DependencyInjector.crearMedicoBO();
+
+    ;
 
     /**
      * Creates new form historialConsultas
@@ -41,7 +43,7 @@ public class historialConsultas extends javax.swing.JFrame {
     public historialConsultas(Paciente paciente) {
         this.paciente = paciente;
         initComponents();
-        
+
         this.addWindowListener(new java.awt.event.WindowAdapter() {
             @Override
             public void windowOpened(java.awt.event.WindowEvent e) {
@@ -234,73 +236,88 @@ public class historialConsultas extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel7;
     private java.awt.List listConsultas;
     // End of variables declaration//GEN-END:variables
+// Vuelve a la ventana del dashboard del paciente
 
     public void volverDashboardPaciente() {
+        // Si la ventana de dashboard no ha sido creada aún, la crea
         if (ventanaPaciente == null) {
             ventanaPaciente = new dashboardPaciente();
         }
 
+        // Establece esta ventana como la ventana de historial de consultas
         ventanaPaciente.setVentanaHistorialConsultas(this);
+        // Centra la ventana en la pantalla
         ventanaPaciente.setLocationRelativeTo(null);
+        // Hace visible la ventana
         ventanaPaciente.setVisible(true);
+        // Cierra la ventana actual
         this.dispose();
     }
 
+// Carga el historial de consultas del paciente
     public void cargarHistorialConsultas() throws NegocioException {
         try {
-        List<ConsultaViejaDTO> consultas = consultaBO.historialConsultasPaciente(paciente);
+            // Obtiene las consultas registradas del paciente
+            List<ConsultaViejaDTO> consultas = consultaBO.historialConsultasPaciente(paciente);
 
-        listConsultas.removeAll();
+            // Elimina cualquier ítem previamente agregado a la lista de consultas
+            listConsultas.removeAll();
 
-        if (consultas.isEmpty()) {
-            listConsultas.add("-- No hay consultas registradas --");
-            JOptionPane.showMessageDialog(this, 
-                "El paciente no tiene consultas registradas", 
-                "Historial Vacío", 
-                JOptionPane.INFORMATION_MESSAGE);
-            return;
-        }
-        
-        
-
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
-        
-        for (ConsultaViejaDTO consulta : consultas) {
-            String item;
-            
-            if (consulta.getCita().getTipoCita() == Cita.TipoCita.EMERGENCIA) {
-                item = String.format("ID: %d | %s | Dr. %s %s | Diagnóstico: %s | Tratamiento: %s | Folio: %s | Estado: %s",
-                    consulta.getIdConsulta(),
-                    consulta.getFechaHora().format(formatter),
-                    consulta.getCita().getMedico().getNombres(),
-                    consulta.getCita().getMedico().getApellidoPaterno(),
-                    consulta.getDiagnostico(),
-                    consulta.getTratamiento(),
-                    consulta.getCita().getEmergencia().getFolio(),
-                    consulta.getCita().getEstado().getDescripcion());
-            } else {
-                item = String.format("ID: %d | %s | Dr. %s %s | Diagnóstico: %s | Tratamiento: %s",
-                    consulta.getIdConsulta(),
-                    consulta.getFechaHora().format(formatter),
-                    consulta.getCita().getMedico().getNombres(),
-                    consulta.getCita().getMedico().getApellidoPaterno(),
-                    consulta.getDiagnostico(),
-                    consulta.getTratamiento());
+            // Si no hay consultas, muestra un mensaje de información y termina el método
+            if (consultas.isEmpty()) {
+                listConsultas.add("-- No hay consultas registradas --");
+                JOptionPane.showMessageDialog(this,
+                        "El paciente no tiene consultas registradas",
+                        "Historial Vacío",
+                        JOptionPane.INFORMATION_MESSAGE);
+                return;
             }
-            
-            listConsultas.add(item);
-        }
 
-    } catch (NegocioException ex) {
-        JOptionPane.showMessageDialog(this, 
-            "Error al cargar consultas: " + ex.getMessage(), 
-            "Error", 
-            JOptionPane.ERROR_MESSAGE);
-    } catch (Exception e) {
-        JOptionPane.showMessageDialog(this, 
-            "Error inesperado: " + e.getMessage(), 
-            "Error Crítico", 
-            JOptionPane.ERROR_MESSAGE);
+            // Crea un formateador de fecha y hora para mostrar en el formato "dd/MM/yyyy HH:mm"
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
+
+            // Itera a través de cada consulta y formatea la información
+            for (ConsultaViejaDTO consulta : consultas) {
+                String item;
+
+                // Si la cita fue de tipo emergencia, muestra información adicional (folio de emergencia)
+                if (consulta.getCita().getTipoCita() == Cita.TipoCita.EMERGENCIA) {
+                    item = String.format("ID: %d | %s | Dr. %s %s | Diagnóstico: %s | Tratamiento: %s | Folio: %s | Estado: %s",
+                            consulta.getIdConsulta(),
+                            consulta.getFechaHora().format(formatter),
+                            consulta.getCita().getMedico().getNombres(),
+                            consulta.getCita().getMedico().getApellidoPaterno(),
+                            consulta.getDiagnostico(),
+                            consulta.getTratamiento(),
+                            consulta.getCita().getEmergencia().getFolio(),
+                            consulta.getCita().getEstado().getDescripcion());
+                } else {
+                    // Si la cita no es de emergencia, muestra solo la información básica
+                    item = String.format("ID: %d | %s | Dr. %s %s | Diagnóstico: %s | Tratamiento: %s",
+                            consulta.getIdConsulta(),
+                            consulta.getFechaHora().format(formatter),
+                            consulta.getCita().getMedico().getNombres(),
+                            consulta.getCita().getMedico().getApellidoPaterno(),
+                            consulta.getDiagnostico(),
+                            consulta.getTratamiento());
+                }
+
+                // Agrega el ítem con la consulta formateada a la lista de consultas
+                listConsultas.add(item);
+            }
+
+        } catch (NegocioException ex) {
+            // Si ocurre un error relacionado con la lógica de negocio, muestra un mensaje de error
+            JOptionPane.showMessageDialog(this,
+                    "Error al cargar consultas: " + ex.getMessage(),
+                    "Error",
+                    JOptionPane.ERROR_MESSAGE);
+        } catch (Exception e) {
+            // Si ocurre un error inesperado, muestra un mensaje de error crítico
+            JOptionPane.showMessageDialog(this,
+                    "Error inesperado: " + e.getMessage(),
+                    "Error Crítico",
+                    JOptionPane.ERROR_MESSAGE);
+        }
     }
-}
 }

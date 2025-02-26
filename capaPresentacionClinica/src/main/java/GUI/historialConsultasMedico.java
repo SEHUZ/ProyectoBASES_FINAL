@@ -26,9 +26,9 @@ public class historialConsultasMedico extends javax.swing.JFrame {
     private PacienteViejoDTO paciente;
     private PacienteBO pacienteBO = DependencyInjector.crearPacienteBO();
     private ConsultaBO consultaBO = DependencyInjector.crearConsultaBO();
-    private dashBoardMedico VentanaMedico;
+    private dashBoardMedico ventanaMedico;
     private final PacienteMapper pacienteMapper = new PacienteMapper();
-    private agendaDeCitas VentanaAgendaDeCitas;
+    private agendaDeCitas ventanaAgendaDeCitas;
 
     /**
      * Creates new form historialConsultasMedico
@@ -55,26 +55,22 @@ public class historialConsultasMedico extends javax.swing.JFrame {
         initComponents();
     }
 
-    public historialConsultasMedico(dashBoardMedico VentanaMedico) {
-        this.VentanaMedico = VentanaMedico;
+    public historialConsultasMedico(dashBoardMedico ventanaMedico) {
+        this.ventanaMedico = ventanaMedico;
     }
 
-    public historialConsultasMedico(dashBoardMedico VentanaMedico, agendaDeCitas VentanaAgendaDeCitas) {
-        this.VentanaMedico = VentanaMedico;
-        this.VentanaAgendaDeCitas = VentanaAgendaDeCitas;
+    public historialConsultasMedico(dashBoardMedico ventanaMedico, agendaDeCitas ventanaAgendaDeCitas) {
+        this.ventanaMedico = ventanaMedico;
+        this.ventanaAgendaDeCitas = ventanaAgendaDeCitas;
     }
 
-    public void setVentanaMedico(dashBoardMedico VentanaMedico) {
-        this.VentanaMedico = VentanaMedico;
+    public void setVentanaMedico(dashBoardMedico ventanaMedico) {
+        this.ventanaMedico = ventanaMedico;
     }
 
-    public void setVentanaAgendaDeCitas(agendaDeCitas VentanaAgendaDeCitas) {
-        this.VentanaAgendaDeCitas = VentanaAgendaDeCitas;
+    public void setVentanaAgendaDeCitas(agendaDeCitas ventanaAgendaDeCitas) {
+        this.ventanaAgendaDeCitas = ventanaAgendaDeCitas;
     }
-    
-    
-    
-    
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -159,7 +155,7 @@ public class historialConsultasMedico extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void botonVolverActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonVolverActionPerformed
-
+        volverAgendaCitas();
     }//GEN-LAST:event_botonVolverActionPerformed
 
     private void fieldPACIENTEActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_fieldPACIENTEActionPerformed
@@ -210,67 +206,93 @@ public class historialConsultasMedico extends javax.swing.JFrame {
     // End of variables declaration//GEN-END:variables
     private void cargarConsultas() throws NegocioException {
         try {
-        Paciente pacienteSELECCIONADO = pacienteMapper.toEntityViejo(paciente);
-        List<ConsultaViejaDTO> consultas = consultaBO.historialConsultasPaciente(pacienteSELECCIONADO);
+            // Convertir el paciente seleccionado a una entidad usando el mapper
+            Paciente pacienteSELECCIONADO = pacienteMapper.toEntityViejo(paciente);
 
-        listConsultas.removeAll();
+            // Obtener el historial de consultas del paciente
+            List<ConsultaViejaDTO> consultas = consultaBO.historialConsultasPaciente(pacienteSELECCIONADO);
 
-        if (consultas.isEmpty()) {
-            listConsultas.add("-- No hay consultas registradas --");
-            JOptionPane.showMessageDialog(this, 
-                "El paciente no tiene consultas registradas", 
-                "Historial Vacío", 
-                JOptionPane.INFORMATION_MESSAGE);
-            return;
-        }
-        
-        String nombre = paciente.getNombres();
-        String apellidop = paciente.getApellidoPaterno();
-        String apellidom = paciente.getApellidoMaterno();
-        
-        String nombrePaciente = (nombre + apellidop + apellidom);
-        
-        fieldPACIENTE.setText(nombrePaciente);
-        
+            // Limpiar la lista de consultas antes de cargar nuevas
+            listConsultas.removeAll();
 
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
-        
-        for (ConsultaViejaDTO consulta : consultas) {
-            String item;
-            
-            if (consulta.getCita().getTipoCita() == Cita.TipoCita.EMERGENCIA) {
-                item = String.format("ID: %d | %s | Dr. %s %s | Diagnóstico: %s | Tratamiento: %s | Folio: %s | Estado: %s",
-                    consulta.getIdConsulta(),
-                    consulta.getFechaHora().format(formatter),
-                    consulta.getCita().getMedico().getNombres(),
-                    consulta.getCita().getMedico().getApellidoPaterno(),
-                    consulta.getDiagnostico(),
-                    consulta.getTratamiento(),
-                    consulta.getCita().getEmergencia().getFolio(),
-                    consulta.getCita().getEstado().getDescripcion());
-            } else {
-                item = String.format("ID: %d | %s | Dr. %s %s | Diagnóstico: %s | Tratamiento: %s",
-                    consulta.getIdConsulta(),
-                    consulta.getFechaHora().format(formatter),
-                    consulta.getCita().getMedico().getNombres(),
-                    consulta.getCita().getMedico().getApellidoPaterno(),
-                    consulta.getDiagnostico(),
-                    consulta.getTratamiento());
+            // Verificar si el paciente no tiene consultas registradas
+            if (consultas.isEmpty()) {
+                listConsultas.add("-- No hay consultas registradas --");
+                JOptionPane.showMessageDialog(this,
+                        "El paciente no tiene consultas registradas",
+                        "Historial Vacío",
+                        JOptionPane.INFORMATION_MESSAGE);
+                return;
             }
-            
-            listConsultas.add(item);
+
+            // Obtener el nombre completo del paciente
+            String nombre = paciente.getNombres();
+            String apellidop = paciente.getApellidoPaterno();
+            String apellidom = paciente.getApellidoMaterno();
+            String nombrePaciente = (nombre + apellidop + apellidom);
+
+            // Mostrar el nombre del paciente en el campo correspondiente
+            fieldPACIENTE.setText(nombrePaciente);
+
+            // Formateador para mostrar la fecha y hora en un formato legible
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
+
+            // Iterar sobre las consultas y agregarlas a la lista
+            for (ConsultaViejaDTO consulta : consultas) {
+                String item;
+
+                // Si la consulta es de tipo emergencia, incluir información adicional
+                if (consulta.getCita().getTipoCita() == Cita.TipoCita.EMERGENCIA) {
+                    item = String.format("ID: %d | %s | Dr. %s %s | Diagnóstico: %s | Tratamiento: %s | Folio: %s | Estado: %s",
+                            consulta.getIdConsulta(),
+                            consulta.getFechaHora().format(formatter),
+                            consulta.getCita().getMedico().getNombres(),
+                            consulta.getCita().getMedico().getApellidoPaterno(),
+                            consulta.getDiagnostico(),
+                            consulta.getTratamiento(),
+                            consulta.getCita().getEmergencia().getFolio(),
+                            consulta.getCita().getEstado().getDescripcion());
+                } else {
+                    // Formato para consultas regulares
+                    item = String.format("ID: %d | %s | Dr. %s %s | Diagnóstico: %s | Tratamiento: %s",
+                            consulta.getIdConsulta(),
+                            consulta.getFechaHora().format(formatter),
+                            consulta.getCita().getMedico().getNombres(),
+                            consulta.getCita().getMedico().getApellidoPaterno(),
+                            consulta.getDiagnostico(),
+                            consulta.getTratamiento());
+                }
+
+                // Agregar la consulta formateada a la lista
+                listConsultas.add(item);
+            }
+
+        } catch (NegocioException ex) {
+            // Manejo de excepciones específicas de la lógica de negocio
+            JOptionPane.showMessageDialog(this,
+                    "Error al cargar consultas: " + ex.getMessage(),
+                    "Error",
+                    JOptionPane.ERROR_MESSAGE);
+        } catch (Exception e) {
+            // Manejo de excepciones generales
+            JOptionPane.showMessageDialog(this,
+                    "Error inesperado: " + e.getMessage(),
+                    "Error Crítico",
+                    JOptionPane.ERROR_MESSAGE);
+        }
+    }
+
+    private void volverAgendaCitas() {
+        // Si la ventana de agenda de citas no ha sido creada, se instancia
+        if (ventanaAgendaDeCitas == null) {
+            ventanaAgendaDeCitas = new agendaDeCitas();
         }
 
-    } catch (NegocioException ex) {
-        JOptionPane.showMessageDialog(this, 
-            "Error al cargar consultas: " + ex.getMessage(), 
-            "Error", 
-            JOptionPane.ERROR_MESSAGE);
-    } catch (Exception e) {
-        JOptionPane.showMessageDialog(this, 
-            "Error inesperado: " + e.getMessage(), 
-            "Error Crítico", 
-            JOptionPane.ERROR_MESSAGE);
+        // Centrar la ventana en la pantalla y mostrarla
+        ventanaAgendaDeCitas.setLocationRelativeTo(null);
+        ventanaAgendaDeCitas.setVisible(true);
+
+        // Cerrar la ventana actual
+        this.dispose();
     }
-}
 }

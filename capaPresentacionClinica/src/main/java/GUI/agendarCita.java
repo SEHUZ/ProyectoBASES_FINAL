@@ -308,43 +308,56 @@ public class agendarCita extends javax.swing.JFrame {
     private javax.swing.JTextArea jTextAreaHorarios;
     // End of variables declaration//GEN-END:variables
     private void cargarMedicosPorEspecialidad() throws NegocioException {
+        // Obtener la especialidad ingresada por el usuario
         String especialidad = fieldEspecialidad.getText().trim();
+
+        // Validar que el campo no esté vacío
         if (especialidad.isEmpty()) {
             JOptionPane.showMessageDialog(this, "Ingrese una especialidad válida");
             return;
         }
 
         try {
+            // Consultar los médicos con la especialidad ingresada
             List<MedicoDTO> medicos = medicoBO.consultarMedicoPorEspecialidad(especialidad);
+
+            // Validar si existen médicos con esa especialidad
             if (medicos.isEmpty()) {
                 JOptionPane.showMessageDialog(this, "La especialidad ingresada no existe");
                 return;
             }
 
+            // Limpiar el ComboBox antes de agregar nuevos elementos
             jComboBox1.removeAllItems();
+
+            // Agregar cada médico encontrado al ComboBox
             for (MedicoDTO medico : medicos) {
                 jComboBox1.addItem(medico.getIdMedico() + " " + medico.getNombres() + " " + medico.getApellidoPaterno());
             }
         } catch (NegocioException ex) {
             JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
         }
+
+        // Obtener el médico seleccionado en el ComboBox
         String seleccionado = (String) jComboBox1.getSelectedItem();
-        String[] partes = seleccionado.split(" ", 2); // Dividir solo en dos partes: ID y resto
-        int idMedico = Integer.parseInt(partes[0]); // Convertir la primera parte a entero
+        String[] partes = seleccionado.split(" ", 2); // Dividir en ID y nombre
+        int idMedico = Integer.parseInt(partes[0]); // Obtener el ID del médico
         MedicoDTO medicoSELECCIONADO = medicoBO.consultarMedicoPorID(idMedico);
 
         try {
+            // Consultar los horarios del médico seleccionado
             List<HorarioMedicoNuevoDTO> horarios = medicoBO.obtenerHorariosMedico(medicoSELECCIONADO);
 
+            // Validar si el médico tiene horarios registrados
             if (horarios.isEmpty()) {
                 jTextAreaHorarios.setText("El médico no tiene horarios registrados");
                 return;
             }
 
-            // Crear formateador para la hora
+            // Formateador para la hora en formato HH:mm
             DateTimeFormatter formateadorHora = DateTimeFormatter.ofPattern("HH:mm");
 
-            // Construir el texto con formato
+            // Construir el texto con los horarios del médico
             StringBuilder horariosTexto = new StringBuilder();
             horariosTexto.append("Horarios del Dr. ")
                     .append(medicoSELECCIONADO.getNombres())
@@ -362,7 +375,7 @@ public class agendarCita extends javax.swing.JFrame {
                         .append("\n");
             }
 
-            // Mostrar en el JTextArea
+            // Mostrar horarios en el JTextArea
             jTextAreaHorarios.setText(horariosTexto.toString());
             jTextAreaHorarios.setCaretPosition(0); // Mover scroll al inicio
 
@@ -374,37 +387,42 @@ public class agendarCita extends javax.swing.JFrame {
     }
 
     private void agendarCita() throws NegocioException, SQLException {
-        // Obtener médico seleccionado   
+        // Validar que los campos requeridos no estén vacíos
         if (fieldHora.getText().isBlank() || fieldEspecialidad.getText().isBlank()) {
             JOptionPane.showMessageDialog(this, "Llene los campos requeridos.");
-            return; // Salir sin actualizar
+            return;
         }
 
+        // Obtener la fecha y hora seleccionada
         LocalDateTime fechaHoraCita = obtenerFechaHoraSeleccionada();
 
+        // Validar que la fecha y hora sean correctas
         if (fechaHoraCita == null) {
             JOptionPane.showMessageDialog(this, "Verifique correctamente fecha y hora seleccionados. Formato para hora: HH:mm");
-            return; // Salir sin actualizar
+            return;
         }
-        
+
+        // Obtener el médico seleccionado del ComboBox
         String seleccionado = (String) jComboBox1.getSelectedItem();
-        String[] partes = seleccionado.split(" ", 2); // Dividir solo en dos partes: ID y resto
-        int idMedico = Integer.parseInt(partes[0]); // Convertir la primera parte a entero
+        String[] partes = seleccionado.split(" ", 2); // Dividir en ID y nombre
+        int idMedico = Integer.parseInt(partes[0]); // Obtener el ID del médico
         MedicoDTO medicoSELECCIONADO = medicoBO.consultarMedicoPorID(idMedico);
 
+        // Validar que se haya seleccionado un médico
         if (medicoSELECCIONADO == null) {
             JOptionPane.showMessageDialog(this, "Seleccione un médico");
             return;
         }
 
-        // Crear DTO y agendar
+        // Crear el objeto DTO de la cita y asignar valores
         try {
             CitaNuevaDTO citaDTO = new CitaNuevaDTO();
             citaDTO.setPaciente(pacienteMAPPER.toEntityViejo(paciente));
             citaDTO.setMedico(mapper.toEntityDTO(medicoSELECCIONADO));
             citaDTO.setFechaHora(fechaHoraCita);
-            citaDTO.setTipoCita(Cita.TipoCita.PROGRAMADA); // o EMERGENCIA según lógica
+            citaDTO.setTipoCita(Cita.TipoCita.PROGRAMADA); // Puede ser PROGRAMADA o EMERGENCIA
 
+            // Agendar la cita
             CitaViejaDTO citaAgendada = citaBO.agendarCita(citaDTO);
 
             JOptionPane.showMessageDialog(this, "Cita agendada con éxito");
@@ -415,24 +433,26 @@ public class agendarCita extends javax.swing.JFrame {
     }
 
     private LocalDateTime obtenerFechaHoraSeleccionada() {
-        // 1. Obtener fecha del JCalendar (JDateChooser)
+        // Obtener la fecha seleccionada en el JCalendar
         Date fechaSeleccionada = jCalendar1.getDate();
         if (fechaSeleccionada == null) {
             return null;
         }
 
-        // 2. Convertir Date a LocalDate
+        // Convertir Date a LocalDate
         LocalDate fecha = fechaSeleccionada.toInstant()
                 .atZone(ZoneId.systemDefault())
                 .toLocalDate();
 
-        // 3. Obtener hora del ComboBox/TextField
+        // Obtener la hora del campo de texto
         String horaStr = fieldHora.getText().trim();
-        if (!horaStr.matches("^([0-1]?\\d|2[0-3]):[0-5]\\d$")) { // Formato HH:mm
+
+        // Validar que la hora tenga el formato correcto (HH:mm)
+        if (!horaStr.matches("^([0-1]?\\d|2[0-3]):[0-5]\\d$")) {
             return null;
         }
 
-        // 4. Parsear la hora
+        // Parsear la hora ingresada
         try {
             String[] partesHora = horaStr.split(":");
             int horas = Integer.parseInt(partesHora[0]);
@@ -445,24 +465,27 @@ public class agendarCita extends javax.swing.JFrame {
 
             LocalTime hora = LocalTime.of(horas, minutos);
 
-            // 5. Combinar fecha y hora
+            // Retornar la combinación de fecha y hora como LocalDateTime
             return LocalDateTime.of(fecha, hora);
 
         } catch (ArrayIndexOutOfBoundsException | NumberFormatException e) {
             JOptionPane.showMessageDialog(this, "Error inesperado al validar el horario/hora seleccionados", "Error", JOptionPane.ERROR_MESSAGE);
         }
-        
+
         return null;
     }
-    
 
     public void volverDashboardPaciente() {
+        // Si la ventana del dashboard no está instanciada, crearla
         if (ventanaPaciente == null) {
             ventanaPaciente = new dashboardPaciente();
         }
 
+        // Configurar la relación con la ventana actual
         ventanaPaciente.setAgendarCita(this);
         ventanaPaciente.setLocationRelativeTo(null);
+
+        // Mostrar la ventana del paciente y cerrar la actual
         ventanaPaciente.setVisible(true);
         this.dispose();
     }
