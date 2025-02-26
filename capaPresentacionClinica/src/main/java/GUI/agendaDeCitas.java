@@ -12,6 +12,7 @@ import DTO.CitaViejaDTO;
 import DTO.ConsultaNuevaDTO;
 import DTO.ConsultaViejaDTO;
 import DTO.MedicoDTO;
+import DTO.PacienteViejoDTO;
 import Entidades.Cita;
 import Exception.NegocioException;
 import Exception.PersistenciaClinicaException;
@@ -237,7 +238,7 @@ public class agendaDeCitas extends javax.swing.JFrame {
         for (CitaViejaDTO cita : citas) {
             // Filtrar citas cuyo estado no sea "Cancelada"
             if (!"Cancelada".equalsIgnoreCase(cita.getEstado().getDescripcion())) {
-                jComboBox1.addItem(cita.getIdCita() + " " + cita.getPaciente().getNombres() + " " + cita.getPaciente().getApellidoPaterno() + " " + cita.getFechaHora());
+                jComboBox1.addItem(cita.getIdCita() + " " + cita.getPaciente().getIdPaciente() + " " + cita.getPaciente().getNombres() + " " + cita.getPaciente().getApellidoPaterno() + " " + cita.getFechaHora());
             }
         }
     } catch (NegocioException ex) {
@@ -252,17 +253,26 @@ public class agendaDeCitas extends javax.swing.JFrame {
             return;
         }
 
-//        String[] partes = seleccionado.split(" ", 2); // Dividir solo en dos partes: ID y resto
-//        int idCita = Integer.parseInt(partes[0]); // Convertir la primera parte a entero
-//        CitaViejaDTO citaSeleccionada = citaBO.consultarCitaPorsuID(idCita);
-//
-//        panelDeConsulta panelConsulta = new panelDeConsulta(citaSeleccionada);
-//        panelConsulta.setVentanaMedico(this.VentanaMedico); 
-//        panelConsulta.setVentanaAgendaDeCitas(this);
-//
-//        panelConsulta.setVisible(true);
-//
-//        this.dispose();
+        String[] partes = seleccionado.split(" ", 2); // Dividir solo en dos partes: ID y resto
+        int idCita = Integer.parseInt(partes[0]); // Convertir la primera parte a entero
+        CitaViejaDTO citaSeleccionada = citaBO.consultarCitaPorsuID(idCita);
 
+        panelDeConsulta panelConsulta = new panelDeConsulta(citaSeleccionada);
+        panelConsulta.setVentanaMedico(this.VentanaMedico); 
+        panelConsulta.setVentanaAgendaDeCitas(this);
+
+        panelConsulta.setVisible(true);
+
+        this.dispose();
+
+    }
+    
+    private void revisarHistorialPaciente() throws NegocioException, PersistenciaClinicaException, SQLException {
+        String seleccionado = (String) jComboBox1.getSelectedItem();
+        String[] partes = seleccionado.split(" ", 3);
+        String pacienteUsuario = partes[1];
+        PacienteViejoDTO pacienteSELECCIONADO = pacienteBO.buscarPacientePorUsuario(pacienteUsuario);
+        
+        
     }
 }
